@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
 using QuanLiNhanSu.Models;
-using System.Linq;
 
 namespace QuanLiNhanSu.Controllers
 {
-    // Bỏ chữ partial đi cho đơn giản nếu không cần thiết
     public class AccountController : Controller
     {
         private readonly AppDbContext _context;
@@ -14,29 +15,51 @@ namespace QuanLiNhanSu.Controllers
             _context = context;
         }
 
-        // Trang hiển thị giao diện đăng nhập (GET)
         [HttpGet]
         public IActionResult Login()
         {
+            // Nếu đã đăng nhập rồi thì không cho vào trang Login nữa, đẩy thẳng ra Home
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
-        // Hàm xử lý khi nhấn nút Đăng nhập (POST)
         [HttpPost]
-        public IActionResult Login(string username, string password)
+        public async Task<IActionResult> Login(string username, string password)
         {
-            // Kiểm tra database
             var user = _context.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
 
             if (user != null)
             {
-                // Đăng nhập thành công
+                // 1. Tạo các thông tin định danh (Claims)
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Role, user.Role) // Lưu luôn quyền Admin/User
+                };
+
+                // 2. Tạo "Thẻ bài" (Identity)
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                // 3. Đăng nhập và lưu Cookie
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity));
+
                 return RedirectToAction("Index", "Home");
             }
 
-            // Nếu sai, báo lỗi
             ViewBag.Error = "Tài khoản hoặc mật khẩu không đúng!";
             return View();
+        }
+
+        // Thêm hàm Đăng xuất luôn cho chuẩn
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Account");
         }
     }
 }

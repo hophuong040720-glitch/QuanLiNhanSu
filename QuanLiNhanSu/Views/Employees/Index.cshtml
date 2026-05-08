@@ -1,59 +1,52 @@
 ﻿@model IEnumerable<QuanLiNhanSu.Models.Employee>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Quản lý Nhân sự";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.MaNV)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.HoTen)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ChucVu)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Luong)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhongBan)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaNV)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HoTen)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChucVu)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Luong)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhongBan)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="container-fluid mt-4">
+    <div class="card shadow mb-4 border-0">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h4 class="m-0 font-weight-bold text-primary">Danh sách Nhân viên</h4>
+            <a asp-action="Create" class="btn btn-primary btn-sm shadow-sm">
+                + Thêm nhân viên mới
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle">
+                    <thead class="table-light text-center">
+                        <tr>
+                            <th>Mã NV</th>
+                            <th>Họ và Tên</th>
+                            <th>Phòng Ban</th>
+                            <th>Chức Vụ</th>
+                            <th>Mức Lương</th>
+                            <th style="width: 150px;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="text-center fw-bold">@Html.DisplayFor(modelItem => item.MaNV)</td>
+                                <td>@Html.DisplayFor(modelItem => item.HoTen)</td>
+                                <td class="text-center">
+                                    <span class="badge bg-info text-dark">@Html.DisplayFor(modelItem => item.PhongBan)</span>
+                                </td>
+                                <td>@Html.DisplayFor(modelItem => item.ChucVu)</td>
+                                <td class="text-end text-success fw-bold">
+                                    @item.Luong.ToString("N0") VNĐ
+                                </td>
+                                <td class="text-center">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Sửa</a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Xóa</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
