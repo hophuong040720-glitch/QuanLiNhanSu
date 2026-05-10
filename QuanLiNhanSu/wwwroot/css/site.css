@@ -1,31 +1,131 @@
+/* ================= 1. CẤU HÌNH GỐC CỦA ASP.NET CORE ================= */
 html {
-  font-size: 14px;
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
-body {
-  margin-bottom: 60px;
+    html {
+        font-size: 16px;
+    }
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+    color: #94a3b8;
+    text-align: start;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+/* ================= 2. TÔNG MÀU SANG TRỌNG: VÀNG - TRẮNG - BẠCH KIM ================= */
+body.luxury-theme {
+    margin-bottom: 60px;
+    /* Nền kết hợp dải màu trắng bạch kim (Platinum White), xám bạc sáng (Brushed Silver) và ánh vàng kim (Champagne Gold) */
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #fef3c7 100%);
+    background-attachment: fixed;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #1e293b;
 }
+
+/* Màu vàng ánh kim chuyên dụng */
+.text-gold {
+    color: #d97706 !important;
+}
+
+.text-gold-dark {
+    color: #b45309 !important;
+}
+
+/* Hiệu ứng chữ chuyển màu vàng hoàng gia */
+.text-gradient-gold {
+    background: linear-gradient(90deg, #b45309 0%, #d97706 50%, #9a3412 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+}
+
+/* Badge vàng */
+.bg-gold {
+    background-color: #fde68a !important;
+    color: #78350f !important;
+    font-weight: 600;
+}
+
+/* ================= 3. KHUNG CARD BẠCH KIM (GLASSMORPHISM CAO CẤP) ================= */
+.luxury-card {
+    /* Tấm kính mờ bạch kim, trong suốt nhẹ cực kỳ cao cấp */
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    box-shadow: 0 25px 50px -12px rgba(100, 116, 139, 0.25) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .luxury-card:hover {
+        box-shadow: 0 30px 60px -10px rgba(100, 116, 139, 0.3) !important;
+    }
+
+/* ================= 4. NÚT BẤM HOÀNG GIA (BUTTONS) ================= */
+.btn-luxury {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: #f8fafc !important;
+    border: 1px solid #334155;
+    transition: all 0.3s ease;
+}
+
+    .btn-luxury:hover {
+        background: linear-gradient(135deg, #b45309 0%, #d97706 100%);
+        color: #ffffff !important;
+        border-color: #fde68a;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(180, 83, 9, 0.3);
+    }
+
+.btn-outline-gold {
+    color: #b45309 !important;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 2px solid #d97706 !important;
+    transition: all 0.3s ease;
+}
+
+    .btn-outline-gold:hover {
+        background-color: #d97706 !important;
+        color: #ffffff !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(217, 119, 6, 0.2);
+    }
+
+/* ================= 5. Ô NHẬP LIỆU BẠCH KIM (INPUTS) ================= */
+.luxury-input {
+    background-color: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+    font-weight: 500;
+    border-radius: 10px;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+    transition: all 0.2s ease;
+}
+
+    .luxury-input:focus {
+        border-color: #d97706 !important;
+        box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.15) !important;
+        background-color: #ffffff !important;
+    }
+
+/* ================= 6. NAVBAR BẠCH KIM ================= */
+.luxury-navbar {
+    background: rgba(255, 255, 255, 0.75) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 4px 20px rgba(100, 116, 139, 0.08) !important;
+}
+
+    .luxury-navbar .nav-link {
+        color: #334155 !important;
+        transition: color 0.2s ease;
+    }
+
+        .luxury-navbar .nav-link:hover {
+            color: #d97706 !important;
+        }

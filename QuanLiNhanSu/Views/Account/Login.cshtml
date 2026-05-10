@@ -1,60 +1,65 @@
 ﻿@{
-    Layout = "_Layout"; // Sử dụng khung chung của web
+    Layout = "_Layout";
     ViewData["Title"] = "Đăng nhập hệ thống";
 }
 
-<div class="row justify-content-center" style="margin-top: 100px;">
-    <div class="col-md-4">
-        <div class="card shadow-lg border-0 rounded-lg">
-            <div class="card-header bg-primary text-white text-center py-3">
-                <h3 class="font-weight-light my-1">ĐĂNG NHẬP</h3>
-            </div>
-            <div class="card-body p-4">
+<div class="row justify-content-center" style="margin-top: 8vh;">
+    <div class="col-11 col-md-6 col-lg-5">
+        <div class="card shadow-lg border-0 rounded-4 luxury-card">
+            <div class="card-body p-5">
+                
+                <div class="text-center mb-4">
+                    <h3 class="fw-bold text-gradient-gold m-0">ĐĂNG NHẬP HỆ THỐNG</h3>
+                    <p class="text-muted small mt-1">Vui lòng điền thông tin xác thực để truy cập</p>
+                </div>
+
                 <form asp-controller="Account" asp-action="Login" method="post">
-                    <div class="form-floating mb-3">
-                        <input class="form-control" name="username" id="inputUser" type="text" placeholder="Tên đăng nhập" required />
-                        <label for="inputUser">Tên đăng nhập</label>
+                    <div class="form-floating mb-4">
+                        <input class="form-control luxury-input" name="username" id="inputUser" type="text" placeholder="Tên đăng nhập" required />
+                        <label for="inputUser" class="text-muted"><i class="bi bi-person-fill me-1"></i> Tên đăng nhập</label>
                     </div>
 
-                    <div class="form-floating mb-3">
-                        <input class="form-control" name="password" id="inputPassword" type="password" placeholder="Mật khẩu" required />
-                        <label for="inputPassword">Mật khẩu</label>
+                    <div class="form-floating mb-4">
+                        <input class="form-control luxury-input" name="password" id="inputPassword" type="password" placeholder="Mật khẩu" required />
+                        <label for="inputPassword" class="text-muted"><i class="bi bi-lock-fill me-1"></i> Mật khẩu</label>
                     </div>
 
                     @if (ViewBag.Error != null)
                     {
-                        <div class="alert alert-danger py-2" role="alert">
+                        <div class="alert alert-danger py-2 px-3 rounded-3 small text-center" role="alert">
                             <i class="bi bi-exclamation-triangle-fill"></i> @ViewBag.Error
                         </div>
                     }
 
-                    <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success py-2 px-3 rounded-3 small text-center" role="alert">
+                            <i class="bi bi-check-circle-fill"></i> @TempData["Success"]
+                        </div>
+                    }
+
+                    <div class="d-flex align-items-center justify-content-between mt-3 mb-4 small">
                         <div class="form-check">
                             <input class="form-check-input" id="rememberPass" type="checkbox" value="" />
-                            <label class="form-check-label" for="rememberPass">Ghi nhớ mật khẩu</label>
+                            <label class="form-check-label text-secondary" for="rememberPass">Ghi nhớ phiên</label>
                         </div>
-                        <button type="submit" class="btn btn-primary px-4">Đăng nhập</button>
+                        <a asp-action="ForgotPassword" class="text-decoration-none fw-semibold text-gold-dark">Quên mật khẩu?</a>
                     </div>
+
+                    <button type="submit" class="btn btn-luxury w-100 py-3 fw-bold rounded-3 shadow-sm">
+                        ĐĂNG NHẬP
+                    </button>
                 </form>
             </div>
-            <div class="card-footer text-center py-3">
-                <div class="small"><a href="#">Quên mật khẩu? Liên hệ Admin</a></div>
+            
+            <div class="card-footer bg-transparent text-center py-4 border-top-0">
+                <div class="d-flex justify-content-center gap-3 small">
+                    <span class="text-muted">Chưa có tài khoản?</span>
+                    <a asp-action="Register" class="text-decoration-none fw-bold text-gold-dark">Đăng ký ngay</a>
+                    <span class="text-muted">|</span>
+                    <a asp-action="ContactAdmin" class="text-decoration-none text-secondary">Hỗ trợ kỹ thuật</a>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <style>
-        /* Thêm một chút CSS để trang đẹp hơn */
-        body {
-            background-color: #f8f9fa;
-        }
-        .card {
-            transition: all 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-        }
-    </style>
-}

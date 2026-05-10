@@ -1,0 +1,35 @@
+﻿@model QuanLiNhanSu.Models.ContactAdminViewModel
+@{
+    Layout = "_Layout"; ViewData["Title"] = "Liên hệ hỗ trợ";
+}
+
+<div class="row justify-content-center" style="margin-top: 50px;">
+    <div class="col-md-6">
+        <div class="card shadow-lg border-0 rounded-lg">
+            <div class="card-header bg-dark text-white text-center py-3">
+                <h3 class="font-weight-light my-1">GỬI YÊU CẦU HỖ TRỢ</h3>
+            </div>
+            <div class="card-body p-4">
+                @if (ViewBag.Success != null)
+                {
+                    <div class="alert alert-success text-center">@ViewBag.Success</div>
+                }
+                <form asp-action="ContactAdmin" method="post">
+                    <div class="form-floating mb-3">
+                        <input asp-for="HoTen" class="form-control" placeholder="Họ và tên" required />
+                        <label>Họ và tên của bạn</label>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted small">Nội dung cần hỗ trợ (Mất tài khoản, lỗi hệ thống...)</label>
+                        <textarea asp-for="NoiDung" class="form-control" rows="4" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-dark w-100">Gửi Admin</button>
+                </form>
+            </div>
+            <div class="card-footer text-center py-3">
+                <div class="small"><a asp-action="Login">Quay lại trang Đăng nhập</a></div>
+            </div>
+        </div>
+    </div>
+</div>
