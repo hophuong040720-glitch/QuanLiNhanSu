@@ -16,6 +16,9 @@ namespace QuanLiNhanSu.Models
 
         [Compare("Password", ErrorMessage = "Mật khẩu xác nhận không khớp")]
         public string ConfirmPassword { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng chọn vai trò")]
+        public string Role { get; set; }
     }
 
     public class ForgotPasswordViewModel

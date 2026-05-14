@@ -1,48 +1,84 @@
 ﻿@model QuanLiNhanSu.Models.RegisterViewModel
 @{
-    Layout = "_Layout"; ViewData["Title"] = "Đăng ký tài khoản";
+    Layout = "_Layout";
+    ViewData["Title"] = "Đăng ký tài khoản";
 }
 
-<div class="row justify-content-center" style="margin-top: 50px;">
-    <div class="col-md-5">
-        <div class="card shadow-lg border-0 rounded-lg">
-            <div class="card-header bg-success text-white text-center py-3">
-                <h3 class="font-weight-light my-1">ĐĂNG KÝ TÀI KHOẢN</h3>
-            </div>
-            <div class="card-body p-4">
+<div class="row justify-content-center" style="margin-top: 5vh;">
+    <div class="col-11 col-md-7 col-lg-6">
+        <div class="card shadow-lg border-0 rounded-4 luxury-card">
+            <div class="card-body p-5">
+                
+                <div class="text-center mb-4">
+                    <h3 class="fw-bold text-gradient-gold m-0">TẠO TÀI KHOẢN MỚI</h3>
+                    <p class="text-muted small mt-1">Đăng ký định danh truy cập hệ thống HR</p>
+                </div>
+
                 <form asp-action="Register" method="post">
                     <div class="form-floating mb-3">
-                        <input asp-for="Username" class="form-control" placeholder="Tên đăng nhập" required />
-                        <label>Tên đăng nhập</label>
+                        <input asp-for="Username" class="form-control luxury-input" placeholder="Tên đăng nhập" required />
+                        <label class="text-muted"><i class="bi bi-person-fill me-1"></i> Tên đăng nhập</label>
                         <span asp-validation-for="Username" class="text-danger small"></span>
                     </div>
+
                     <div class="form-floating mb-3">
-                        <input asp-for="Email" type="email" class="form-control" placeholder="name@example.com" required />
-                        <label>Địa chỉ Email</label>
+                        <input asp-for="Email" type="email" class="form-control luxury-input" placeholder="name@example.com" required />
+                        <label class="text-muted"><i class="bi bi-envelope-fill me-1"></i> Địa chỉ Email</label>
                         <span asp-validation-for="Email" class="text-danger small"></span>
                     </div>
-                    <div class="form-floating mb-3">
-                        <input asp-for="Password" type="password" class="form-control" placeholder="Mật khẩu" required />
-                        <label>Mật khẩu</label>
-                        <span asp-validation-for="Password" class="text-danger small"></span>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Password" type="password" class="form-control luxury-input" placeholder="Mật khẩu" required />
+                                <label class="text-muted"><i class="bi bi-lock-fill me-1"></i> Mật khẩu</label>
+                                <span asp-validation-for="Password" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="ConfirmPassword" type="password" class="form-control luxury-input" placeholder="Xác nhận mật khẩu" required />
+                                <label class="text-muted"><i class="bi bi-check2-circle me-1"></i> Xác nhận mật khẩu</label>
+                                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-floating mb-3">
-                        <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Xác nhận mật khẩu" required />
-                        <label>Xác nhận mật khẩu</label>
-                        <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+
+                    <div class="form-floating mb-4">
+                        <select asp-for="Role" class="form-select luxury-input fw-semibold" id="roleSelect" required>
+                            <option value="" selected disabled>-- Chọn vai trò đăng ký --</option>
+                            <option value="Employee">Employee (Nhân viên nội bộ)</option>
+                            <option value="Guest">Guest (Khách vãng lai)</option>
+                        </select>
+                        <label for="roleSelect" class="text-muted"><i class="bi bi-shield-check me-1"></i> Cấp quyền truy cập</label>
+                        <span asp-validation-for="Role" class="text-danger small"></span>
                     </div>
 
                     @if (ViewBag.Error != null)
                     {
-                        <div class="alert alert-danger py-2">@ViewBag.Error</div>
+                        <div class="alert alert-danger py-2 px-3 rounded-3 small text-center mb-3">
+                            <i class="bi bi-exclamation-triangle-fill"></i> @ViewBag.Error
+                        </div>
                     }
 
-                    <button type="submit" class="btn btn-success w-100 mt-2">Tạo tài khoản</button>
+                    <button type="submit" class="btn btn-luxury w-100 py-3 mt-2 fw-bold rounded-3 shadow-sm">
+                        ĐĂNG KÝ TÀI KHOẢN
+                    </button>
                 </form>
             </div>
-            <div class="card-footer text-center py-3">
-                <div class="small"><a asp-action="Login">Đã có tài khoản? Đăng nhập ngay</a></div>
+            
+            <div class="card-footer bg-transparent text-center py-4 border-top-0">
+                <div class="small">
+                    <span class="text-muted">Đã có tài khoản?</span>
+                    <a asp-action="Login" class="text-decoration-none fw-bold text-gold-dark">Đăng nhập ngay</a>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

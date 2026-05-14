@@ -4,19 +4,24 @@ namespace QuanLiNhanSu.Models
 {
     public class Employee
     {
-        [Key] // Xác định đây là khóa chính
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Mã nhân viên không được để trống")]
+        [Required(ErrorMessage = "Vui lòng nhập mã nhân viên")]
         public string MaNV { get; set; }
 
-        [Required(ErrorMessage = "Họ tên không được để trống")]
+        [Required(ErrorMessage = "Vui lòng nhập họ và tên")]
         public string HoTen { get; set; }
 
+        [Required(ErrorMessage = "Vui lòng chọn phòng ban")]
+        public string PhongBan { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng nhập chức vụ")]
         public string ChucVu { get; set; }
 
+        [Required(ErrorMessage = "Vui lòng nhập mức lương")]
         public decimal Luong { get; set; }
 
-        public string PhongBan { get; set; }
+        // THÊM MỚI: Trường lưu đường dẫn ảnh Avatar
+        public string? AvatarUrl { get; set; }
     }
 }

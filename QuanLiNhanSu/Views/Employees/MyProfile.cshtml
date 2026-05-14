@@ -1,0 +1,76 @@
+﻿@model QuanLiNhanSu.Models.Employee
+@{
+    ViewData["Title"] = "Hồ sơ của tôi"; Layout = "_Layout";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-lg-10">
+        <div class="card luxury-card border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="p-4 bg-light border-bottom d-flex align-items-center gap-3">
+                <div class="rounded-circle bg-gold p-3 shadow-sm"><i class="bi bi-person-bounding-box fs-3"></i></div>
+                <div>
+                    <h4 class="fw-bold text-gradient-gold m-0">HOÀN THIỆN HỒ SƠ NHÂN SỰ</h4>
+                    <p class="text-muted small m-0">Thông tin này sẽ được lưu trực tiếp vào danh sách nhân sự công ty</p>
+                </div>
+            </div>
+            <div class="card-body p-5">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success border-0 shadow-sm mb-4">@TempData["Success"]</div>
+                }
+                <form asp-action="UpdateProfile" enctype="multipart/form-data" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="row g-5">
+                        <div class="col-md-4 text-center border-end pe-md-5">
+                            <img src="@(Model.AvatarUrl ?? "/images/default-avatar.png")" class="rounded-circle border border-4 border-gold shadow mb-4" style="width:200px; height:200px; object-fit:cover;" />
+                            <label class="btn btn-outline-gold w-100 rounded-pill fw-bold">
+                                <i class="bi bi-camera-fill me-2"></i>Chọn ảnh đại diện
+                                <input type="file" name="avatarFile" class="d-none" accept="image/*" />
+                            </label>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="fw-bold small text-muted">MÃ NHÂN VIÊN</label>
+                                    <input asp-for="MaNV" class="form-control luxury-input" required placeholder="VD: NV001" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="fw-bold small text-muted">HỌ VÀ TÊN</label>
+                                    <input asp-for="HoTen" class="form-control luxury-input" required placeholder="Nhập tên đầy đủ" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="fw-bold small text-muted">PHÒNG BAN</label>
+                                    <select asp-for="PhongBan" class="form-select luxury-input" required>
+                                        <option value="">-- Chọn phòng --</option>
+                                        <option value="IT">Kỹ thuật (IT)</option>
+                                        <option value="Kế toán">Kế toán</option>
+                                        <option value="Nhân sự">Nhân sự</option>
+                                        <option value="Kinh doanh">Kinh doanh</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="fw-bold small text-muted">CHỨC VỤ</label>
+                                    <input asp-for="ChucVu" class="form-control luxury-input" required placeholder="VD: Developer" />
+                                </div>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <div class="col-md-12">
+                                        <label class="fw-bold small text-muted">LƯƠNG (VNĐ)</label>
+                                        <input asp-for="Luong" type="number" class="form-control luxury-input" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <input type="hidden" asp-for="Luong" />
+                                }
+                            </div>
+                            <button type="submit" class="btn btn-luxury w-100 mt-5 py-3 fw-bold rounded-3 shadow">
+                                <i class="bi bi-cloud-check-fill me-2"></i>CẬP NHẬT DỮ LIỆU VÀO DATABASE
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,8 +1,80 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Dashboard Tổng quan";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row g-4 mb-4 mt-2">
+    <div class="col-md-6">
+        <div class="card luxury-card p-4 border-0 shadow-sm d-flex flex-row align-items-center">
+            <div class="rounded-circle bg-gold p-3 me-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                <i class="bi bi-people-fill text-dark" style="font-size: 1.8rem;"></i>
+            </div>
+            <div>
+                <p class="text-muted small m-0 fw-semibold">TỔNG NHÂN SỰ</p>
+                <h2 class="fw-bold text-dark m-0">@ViewBag.TotalEmployees <span class="fs-6 fw-normal text-secondary">người</span></h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card luxury-card p-4 border-0 shadow-sm d-flex flex-row align-items-center">
+            <div class="rounded-circle bg-gold p-3 me-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                <i class="bi bi-cash-stack text-dark" style="font-size: 1.8rem;"></i>
+            </div>
+            <div>
+                <p class="text-muted small m-0 fw-semibold">TỔNG QUỸ LƯƠNG</p>
+                <h2 class="fw-bold text-gold-dark m-0">@string.Format("{0:N0}", ViewBag.TotalSalary) <span class="fs-6 fw-normal text-secondary">VNĐ</span></h2>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div class="row g-4 mb-5">
+    <div class="col-lg-6">
+        <div class="card luxury-card p-4 border-0 shadow-sm h-100">
+            <h5 class="fw-bold text-gradient-gold mb-4 text-center">TỶ LỆ NHÂN SỰ THEO PHÒNG BAN</h5>
+            <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="deptPieChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card luxury-card p-4 border-0 shadow-sm h-100">
+            <h5 class="fw-bold text-gradient-gold mb-4 text-center">QUỸ LƯƠNG THEO BỘ PHẬN</h5>
+            <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="salaryBarChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Lấy dữ liệu từ Backend truyền sang
+        const labels = @Html.Raw(Json.Serialize(ViewBag.Labels));
+        const counts = @Html.Raw(Json.Serialize(ViewBag.Counts));
+        const salaries = @Html.Raw(Json.Serialize(ViewBag.Salaries));
+        
+        // Bảng màu sang trọng Vàng - Bạc - Xám hoàng gia
+        const colors = ['#b45309', '#d97706', '#fde68a', '#94a3b8', '#334155'];
+
+        // 1. Vẽ Biểu đồ Tròn (Pie Chart)
+        new Chart(document.getElementById('deptPieChart'), {
+        type: 'doughnut',
+        data: {
+        labels: labels,
+        datasets: [{ data: counts, backgroundColor: colors, borderWidth: 0 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        // 2. Vẽ Biểu đồ Cột (Bar Chart)
+        new Chart(document.getElementById('salaryBarChart'), {
+        type: 'bar',
+        data: {
+        labels: labels,
+        datasets: [{ label: 'Quỹ lương (VNĐ)', data: salaries, backgroundColor: '#d97706', borderRadius: 8 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+        });
+    </script>
+}

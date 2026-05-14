@@ -1,58 +1,127 @@
 ﻿@model QuanLiNhanSu.Models.Employee
-
 @{
-    ViewData["Title"] = "Cập nhật Nhân Viên";
+    ViewData["Title"] = "Cập nhật Hồ sơ";
+    Layout = "_Layout";
+    bool isAdmin = User.IsInRole("Admin");
 }
 
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-warning text-dark">
-                    <h5 class="mb-0">Cập Nhật Thông Tin: @Model.HoTen</h5>
+<div class="row justify-content-center mt-4 mb-5">
+    <div class="col-lg-10">
+        <div class="card luxury-card border-0 shadow-lg overflow-hidden rounded-4">
+            
+            <div class="p-4 bg-light border-bottom d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-gold p-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 55px; height: 55px;">
+                        <i class="bi bi-person-lines-fill text-dark fs-3"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold text-gradient-gold m-0">CẬP NHẬT HỒ SƠ NHÂN SỰ</h4>
+                        <p class="text-muted small m-0">@(@isAdmin ? "Bảng điều khiển toàn quyền quản trị (Admin)" : "Chế độ chuẩn hóa thông tin cá nhân (Employee)")</p>
+                    </div>
                 </div>
-                <div class="card-body p-4">
-                    <form asp-action="Edit">
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-                        <input type="hidden" asp-for="Id" />
-                        
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label asp-for="MaNV" class="form-label fw-bold">Mã NV</label>
-                                <input asp-for="MaNV" class="form-control" readonly /> <span asp-validation-for="MaNV" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label asp-for="HoTen" class="form-label fw-bold">Họ và Tên</label>
-                                <input asp-for="HoTen" class="form-control" />
-                                <span asp-validation-for="HoTen" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label asp-for="PhongBan" class="form-label fw-bold">Phòng Ban</label>
-                                <input asp-for="PhongBan" class="form-control" />
-                                <span asp-validation-for="PhongBan" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label asp-for="ChucVu" class="form-label fw-bold">Chức Vụ</label>
-                                <input asp-for="ChucVu" class="form-control" />
-                                <span asp-validation-for="ChucVu" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <label asp-for="Luong" class="form-label fw-bold">Mức Lương (VNĐ)</label>
-                            <input asp-for="Luong" class="form-control" type="number" />
-                            <span asp-validation-for="Luong" class="text-danger"></span>
-                        </div>
-
-                        <div class="d-flex justify-content-between">
-                            <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
-                            <button type="submit" class="btn btn-warning px-4">Lưu thay đổi</button>
-                        </div>
-                    </form>
+                <div class="text-end d-none d-sm-block">
+                    <span class="text-muted small d-block">Mã định danh</span>
+                    <span class="badge bg-gold text-dark border px-3 py-2 fw-bold fs-6 shadow-sm">@Model.MaNV</span>
                 </div>
+            </div>
+
+            <div class="card-body p-4 p-md-5">
+                <form asp-action="Edit" enctype="multipart/form-data" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="AvatarUrl" />
+
+                    <div class="row g-4">
+                        <div class="col-md-4 text-center border-end pe-md-4 d-flex flex-column justify-content-center">
+                            <span class="fw-bold text-muted small mb-3 d-block">ẢNH ĐẠI DIỆN CHÍNH THỨC</span>
+                            
+                            <div class="position-relative mx-auto mb-3" style="width: 160px; height: 160px;">
+                                @if (!string.IsNullOrEmpty(Model.AvatarUrl))
+                                {
+                                    <img src="@Model.AvatarUrl" class="rounded-circle object-fit-cover border border-3 border-gold shadow" style="width: 100%; height: 100%;" alt="Avatar" />
+                                }
+                                else
+                                {
+                                    <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center border border-3 border-gold shadow" style="width: 100%; height: 100%; font-size: 4rem;">
+                                        @Model.HoTen.Substring(0, 1).ToUpper()
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="mt-2">
+                                <label class="btn btn-outline-gold btn-sm px-4 py-2 rounded-pill fw-bold shadow-sm cursor-pointer w-100">
+                                    <i class="bi bi-camera-fill me-1"></i> Đổi ảnh đại diện
+                                    <input type="file" name="avatarFile" class="d-none" accept="image/*" onchange="this.parentElement.nextElementSibling.innerText = 'File sẵn sàng: ' + this.files[0].name" />
+                                </label>
+                                <div class="text-success small mt-2 fw-semibold text-truncate"></div>
+                            </div>
+                            <span class="text-muted small mt-2 d-block" style="font-size: 0.75rem;">Hỗ trợ JPG, PNG. Khuyên dùng ảnh vuông.</span>
+                        </div>
+
+                        <div class="col-md-8 ps-md-4">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted">MÃ NHÂN VIÊN</label>
+                                    <input asp-for="MaNV" class="form-control luxury-input" readonly="@(!isAdmin)" />
+                                    @if (!isAdmin)
+                                    {
+                                        <span class="text-secondary small" style="font-size:0.75rem"><i class="bi bi-lock-fill"></i> Sếp/Admin quản lý mã</span>
+                                    }
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted">HỌ VÀ TÊN</label>
+                                    <input asp-for="HoTen" class="form-control luxury-input" placeholder="Nhập họ tên đầy đủ..." required />
+                                    <span asp-validation-for="HoTen" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted">PHÒNG BAN HOẠT ĐỘNG</label>
+                                    @if (isAdmin)
+                                    {
+                                        <select asp-for="PhongBan" class="form-select luxury-input" required>
+                                            <option value="IT">Kỹ thuật (IT)</option>
+                                            <option value="Kế toán">Kế toán</option>
+                                            <option value="Nhân sự">Nhân sự</option>
+                                            <option value="Kinh doanh">Kinh doanh</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="PhongBan" class="form-control luxury-input bg-light" readonly />
+                                    }
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted">CHỨC VỤ ĐẢM NHIỆM</label>
+                                    <input asp-for="ChucVu" class="form-control luxury-input @(!isAdmin ? "bg-light" : "")" readonly="@(!isAdmin)" />
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="form-label small fw-bold text-muted">MỨC LƯƠNG THỎA THUẬN (VNĐ)</label>
+                                    <div class="input-group shadow-sm rounded-3">
+                                        <span class="input-group-text bg-light text-gold-dark fw-bold border-end-0">₫</span>
+                                        <input asp-for="Luong" type="text" value="@Model.Luong.ToString("G")" class="form-control luxury-input border-start-0 @(!isAdmin ? "bg-light text-muted" : "")" readonly="@(!isAdmin)" required />
+                                    </div>
+                                    @if (!isAdmin)
+                                    {
+                                        <span class="text-secondary small mt-1 d-block" style="font-size:0.75rem">
+                                            <i class="bi bi-shield-lock-fill text-warning"></i> Thuộc tính bảo mật, vui lòng liên hệ bộ phận Nhân sự / Admin nếu cần điều chỉnh.
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+
+                            <hr class="my-4 border-secondary opacity-25" />
+
+                            <div class="d-flex justify-content-end gap-2">
+                                <a asp-action="Index" class="btn btn-outline-secondary px-4 fw-bold rounded-3">Quay lại</a>
+                                <button type="submit" class="btn btn-luxury px-5 fw-bold rounded-3 shadow-sm">
+                                    <i class="bi bi-check2-circle me-1"></i> Lưu Dữ Liệu
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -62,4 +131,5 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
 }

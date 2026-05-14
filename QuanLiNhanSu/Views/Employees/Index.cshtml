@@ -1,52 +1,151 @@
 ﻿@model IEnumerable<QuanLiNhanSu.Models.Employee>
-
 @{
     ViewData["Title"] = "Quản lý Nhân sự";
+    // Check xem user hiện tại đã có tên trong danh sách chưa
+    var currentUserName = User.Identity!.Name ?? "";
+    bool hasProfile = Model.Any(e => e.HoTen.ToLower().Contains(currentUserName.ToLower()) ||
+                                     e.MaNV.ToLower() == currentUserName.ToLower());
 }
 
-<div class="container-fluid mt-4">
-    <div class="card shadow mb-4 border-0">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-            <h4 class="m-0 font-weight-bold text-primary">Danh sách Nhân viên</h4>
-            <a asp-action="Create" class="btn btn-primary btn-sm shadow-sm">
-                + Thêm nhân viên mới
-            </a>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered align-middle">
-                    <thead class="table-light text-center">
-                        <tr>
-                            <th>Mã NV</th>
-                            <th>Họ và Tên</th>
-                            <th>Phòng Ban</th>
-                            <th>Chức Vụ</th>
-                            <th>Mức Lương</th>
-                            <th style="width: 150px;">Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td class="text-center fw-bold">@Html.DisplayFor(modelItem => item.MaNV)</td>
-                                <td>@Html.DisplayFor(modelItem => item.HoTen)</td>
-                                <td class="text-center">
-                                    <span class="badge bg-info text-dark">@Html.DisplayFor(modelItem => item.PhongBan)</span>
-                                </td>
-                                <td>@Html.DisplayFor(modelItem => item.ChucVu)</td>
-                                <td class="text-end text-success fw-bold">
-                                    @item.Luong.ToString("N0") VNĐ
-                                </td>
-                                <td class="text-center">
-                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Sửa</a>
-                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Xóa</a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+<div class="card luxury-card border-0 shadow-lg my-4 rounded-4">
+    <div class="card-body p-4 p-md-5">
+        
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+            <div>
+                <h3 class="fw-bold text-gradient-gold m-0">QUẢN LÝ NHÂN SỰ</h3>
+                <p class="text-muted small m-0">Hệ thống danh bạ tổ chức & Quản trị dữ liệu nhân viên</p>
+            </div>
+            
+            <div class="d-flex gap-2">
+                <a asp-action="ExportExcel" class="btn btn-outline-gold px-3 py-2 fw-bold rounded-pill shadow-sm small d-flex align-items-center">
+                    <i class="bi bi-file-earmark-excel-fill me-1"></i> Xuất Excel
+                </a>
+                
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Create" class="btn btn-luxury px-3 py-2 fw-bold rounded-pill shadow-sm small d-flex align-items-center">
+                        <i class="bi bi-person-plus-fill me-1"></i> Thêm Mới
+                    </a>
+                }
             </div>
         </div>
+
+        @* THÔNG BÁO NHẮC NHỞ NHÂN VIÊN CHƯA CÓ HỒ SƠ *@
+        @if (User.IsInRole("Employee") && !hasProfile)
+        {
+            <div class="alert alert-warning border-0 shadow-sm rounded-3 d-flex justify-content-between align-items-center mb-4">
+                <span><i class="bi bi-exclamation-triangle-fill me-2"></i> Bạn chưa hoàn thiện hồ sơ cá nhân trên hệ thống!</span>
+                <a asp-action="MyProfile" class="btn btn-dark btn-sm rounded-pill px-3">Tạo hồ sơ ngay</a>
+            </div>
+        }
+
+        <form asp-action="Index" method="get" class="row g-2 mb-4 bg-light p-3 rounded-4 border shadow-sm">
+            <div class="col-md-5">
+                <input type="text" name="searchString" value="@ViewBag.CurrentSearch" class="form-control luxury-input" placeholder="Nhập tên hoặc Mã NV..." />
+            </div>
+            <div class="col-md-4">
+                <select name="phongBan" class="form-select luxury-input">
+                    <option value="">-- Tất cả phòng ban --</option>
+                    @if (ViewBag.PhongBans != null)
+                    {
+                        foreach (var pb in ViewBag.PhongBans)
+                        {
+                            <option value="@pb" selected="@(pb == ViewBag.CurrentPhongBan)">@pb</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-3 d-flex gap-1">
+                <button type="submit" class="btn btn-luxury w-100 fw-bold rounded-3"><i class="bi bi-funnel-fill"></i> Lọc</button>
+                <a asp-action="Index" class="btn btn-outline-secondary rounded-3 px-3" title="Xóa lọc"><i class="bi bi-arrow-clockwise"></i></a>
+            </div>
+        </form>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success py-2 px-3 rounded-3 small text-center mb-3 fw-medium shadow-sm">
+                <i class="bi bi-check-circle-fill"></i> @TempData["Success"]
+            </div>
+        }
+
+        <div class="table-responsive mb-3 overflow-hidden rounded-3 border">
+            <table class="table table-hover align-middle mb-0 custom-luxury-table bg-white">
+                <thead class="table-light border-bottom border-2">
+                    <tr class="text-secondary small fw-semibold">
+                        <th class="ps-3" style="width: 70px;">AVATAR</th>
+                        <th>MÃ NV</th>
+                        <th>HỌ VÀ TÊN</th>
+                        <th>PHÒNG BAN</th>
+                        <th>CHỨC VỤ</th>
+                        <th class="text-end">MỨC LƯƠNG</th>
+                        <th class="text-center pe-3" style="width: 140px;">THAO TÁC</th>
+                    </tr>
+                </thead>
+                <tbody class="border-top-0">
+                    @if (!Model.Any())
+                    {
+                        <tr><td colspan="7" class="text-center py-4 text-muted">Không tìm thấy dữ liệu phù hợp.</td></tr>
+                    }
+                    @foreach (var item in Model)
+                    {
+                        bool isMyRow = item.HoTen.ToLower().Contains(currentUserName.ToLower()) ||
+                                       item.MaNV.ToLower() == currentUserName.ToLower();
+
+                        <tr class="@(isMyRow ? "table-warning bg-opacity-25" : "")">
+                            <td class="ps-3">
+                                @if (!string.IsNullOrEmpty(item.AvatarUrl))
+                                {
+                                    <img src="@item.AvatarUrl" class="rounded-circle object-fit-cover border shadow-sm" style="width: 45px; height: 45px;" />
+                                }
+                                else
+                                {
+                                    <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 45px; height: 45px;">
+                                        @item.HoTen.Substring(0, 1).ToUpper()
+                                    </div>
+                                }
+                            </td>
+                            <td class="fw-bold text-gold-dark">@item.MaNV</td>
+                            <td class="fw-semibold text-dark">@item.HoTen @(isMyRow ? " (Bạn)" : "")</td>
+                            <td><span class="badge bg-gold text-dark px-2 py-1">@item.PhongBan</span></td>
+                            <td class="text-secondary small">@item.ChucVu</td>
+                            <td class="text-end fw-bold text-dark">@item.Luong.ToString("N0") đ</td>
+                            <td class="text-center pe-3">
+                                <div class="btn-group shadow-sm">
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary px-2"><i class="bi bi-eye-fill"></i></a>
+                                    
+                                    @* GUEST KHÔNG THẤY NÚT EDIT VÀ DELETE *@
+                                    @if (User.IsInRole("Admin") || (User.IsInRole("Employee") && isMyRow))
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-gold px-2"><i class="bi bi-pencil-square"></i></a>
+                                    }
+
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger px-2"><i class="bi bi-trash3-fill"></i></a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (ViewBag.TotalPages > 1)
+        {
+            <nav class="d-flex justify-content-center mt-4">
+                <ul class="pagination pagination-sm m-0 shadow-sm">
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                            <a class="page-link @(i == ViewBag.CurrentPage ? "bg-gold text-dark border-gold fw-bold" : "text-secondary")"
+                                   asp-action="Index" asp-route-page="@i" asp-route-searchString="@ViewBag.CurrentSearch" asp-route-phongBan="@ViewBag.CurrentPhongBan">
+                                @i
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
     </div>
 </div>

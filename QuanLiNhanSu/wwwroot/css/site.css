@@ -11,11 +11,6 @@ html {
     }
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-    color: #94a3b8;
-    text-align: start;
-}
-
 /* ================= 2. TÔNG MÀU SANG TRỌNG: VÀNG - TRẮNG - BẠCH KIM ================= */
 body.luxury-theme {
     margin-bottom: 60px;
@@ -95,12 +90,12 @@ body.luxury-theme {
         box-shadow: 0 6px 15px rgba(217, 119, 6, 0.2);
     }
 
-/* ================= 5. Ô NHẬP LIỆU BẠCH KIM (INPUTS) ================= */
+/* ================= 5. Ô NHẬP LIỆU BẠCH KIM & FIX LỖI ĐÈ CHỮ ================= */
 .luxury-input {
     background-color: #ffffff !important;
     border: 1px solid #cbd5e1 !important;
     color: #0f172a !important;
-    font-weight: 500;
+    font-weight: 600; /* Tăng độ đậm nhẹ cho chữ gõ vào */
     border-radius: 10px;
     box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
     transition: all 0.2s ease;
@@ -111,6 +106,25 @@ body.luxury-theme {
         box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.15) !important;
         background-color: #ffffff !important;
     }
+
+/* FIX ĐÈ CHỮ: Khi input chưa focus -> Ẩn hoàn toàn placeholder */
+.form-floating > .form-control::placeholder {
+    color: transparent !important;
+    transition: color 0.2s ease;
+}
+
+/* FIX ĐÈ CHỮ: Khi click vào (focus) -> Label bay lên, lúc này mới hiện placeholder */
+.form-floating > .form-control:focus::placeholder {
+    color: #94a3b8 !important;
+    text-align: start;
+}
+
+/* Tinh chỉnh Label nằm êm ái, không sát lề */
+.form-floating > label {
+    color: #64748b !important;
+    font-weight: 500;
+    padding-left: 1.25rem;
+}
 
 /* ================= 6. NAVBAR BẠCH KIM ================= */
 .luxury-navbar {

@@ -11,5 +11,13 @@ namespace QuanLiNhanSu.Models
 
         // Thêm dòng này để tạo bảng Nhân viên
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<WorkReport> WorkReports { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Employee>()
+                .Property(e => e.Luong)
+                .HasPrecision(18, 0);
+        }
     }
 }

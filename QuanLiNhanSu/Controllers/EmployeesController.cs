@@ -1,138 +1,159 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using QuanLiNhanSu.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ClosedXML.Excel;
+using QuanLiNhanSu.Models;
 
 namespace QuanLiNhanSu.Controllers
 {
-    // Giữ Authorize chung: Bắt buộc phải đăng nhập mới được vào xem Nhân viên
-    [Authorize]
+    [Authorize(Roles = "Admin,Employee,Guest")]
     public class EmployeesController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public EmployeesController(AppDbContext context)
+        public EmployeesController(AppDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
-        // ================= 1. XEM DANH SÁCH (Ai đăng nhập cũng xem được) =================
-        // GET: Employees
-        public async Task<IActionResult> Index()
+        // ================= 1. DANH SÁCH CHUNG =================
+        public async Task<IActionResult> Index(string searchString, string phongBan, int page = 1)
         {
-            return View(await _context.Employees.ToListAsync());
+            int pageSize = 5;
+            var employees = _context.Employees.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+                employees = employees.Where(e => e.HoTen.Contains(searchString) || e.MaNV.Contains(searchString));
+
+            if (!string.IsNullOrEmpty(phongBan))
+                employees = employees.Where(e => e.PhongBan == phongBan);
+
+            ViewBag.CurrentSearch = searchString;
+            ViewBag.CurrentPhongBan = phongBan;
+            ViewBag.PhongBans = await _context.Employees.Select(e => e.PhongBan).Distinct().ToListAsync();
+
+            int totalItems = await employees.CountAsync();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            page = page < 1 ? 1 : page;
+            page = page > totalPages && totalPages > 0 ? totalPages : page;
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            return View(await employees.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync());
         }
 
-        // ================= 2. XEM CHI TIẾT (Ai đăng nhập cũng xem được) =================
-        // GET: Employees/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // ================= 2. HỒ SƠ CÁ NHÂN (EMPLOYEE TỰ KHAI BÁO) =================
+        [Authorize(Roles = "Admin,Employee")]
+        public async Task<IActionResult> MyProfile()
         {
-            if (id == null) return NotFound();
+            var currentUser = User.Identity!.Name;
+            // Tìm theo Mã NV hoặc Họ tên trùng với Username đăng ký
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => e.MaNV == currentUser || e.HoTen == currentUser);
 
-            var employee = await _context.Employees.FirstOrDefaultAsync(m => m.Id == id);
-            if (employee == null) return NotFound();
-
+            if (employee == null)
+            {
+                // Nếu chưa có trong bảng Employee, khởi tạo mẫu để họ tự điền
+                return View(new Employee { MaNV = currentUser, HoTen = currentUser, PhongBan = "", ChucVu = "", Luong = 0 });
+            }
             return View(employee);
         }
 
-        // ================= 3. THÊM MỚI (CHỈ ADMIN MỚI ĐƯỢC LÀM) =================
-        // GET: Employees/Create
-        [Authorize(Roles = "Admin")] // KHÓA QUYỀN TRUY CẬP GET
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Employees/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")] // KHÓA QUYỀN TRUY CẬP POST
-        public async Task<IActionResult> Create([Bind("Id,MaNV,HoTen,ChucVu,Luong,PhongBan")] Employee employee)
+        public async Task<IActionResult> UpdateProfile(Employee model, IFormFile? avatarFile)
         {
+            var currentUser = User.Identity!.Name;
+            var dbEntry = await _context.Employees.FirstOrDefaultAsync(e => e.Id == model.Id || e.MaNV == currentUser);
+
+            if (dbEntry == null)
+            {
+                // TẠO MỚI (Dữ liệu chạy thẳng vào bảng database)
+                if (avatarFile != null) model.AvatarUrl = await SaveFile(avatarFile);
+                _context.Employees.Add(model);
+                TempData["Success"] = "Chào mừng! Hồ sơ nhân sự của bạn đã được khởi tạo.";
+            }
+            else
+            {
+                // CẬP NHẬT
+                dbEntry.MaNV = model.MaNV;
+                dbEntry.HoTen = model.HoTen;
+                dbEntry.PhongBan = model.PhongBan;
+                dbEntry.ChucVu = model.ChucVu;
+                if (User.IsInRole("Admin")) dbEntry.Luong = model.Luong; // Chỉ Admin mới ghi đè lương ở đây
+
+                if (avatarFile != null) dbEntry.AvatarUrl = await SaveFile(avatarFile);
+                _context.Employees.Update(dbEntry);
+                TempData["Success"] = "Thông tin cá nhân đã được cập nhật!";
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("MyProfile");
+        }
+
+        // ================= 3. CẬP NHẬT (ADMIN HOẶC CHỦ SỞ HỮU) =================
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null) return NotFound();
+            var employee = await _context.Employees.FindAsync(id);
+            if (employee == null) return NotFound();
+
+            if (User.IsInRole("Employee"))
+            {
+                var user = User.Identity!.Name;
+                if (employee.MaNV != user && !employee.HoTen.Contains(user))
+                    return RedirectToAction("AccessDenied", "Account");
+            }
+            return View(employee);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Employee employee, IFormFile? avatarFile)
+        {
+            if (id != employee.Id) return NotFound();
+
+            if (User.IsInRole("Employee"))
+            {
+                var original = await _context.Employees.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
+                employee.Luong = original.Luong; // Không cho Employee tự nâng lương
+            }
+
             if (ModelState.IsValid)
             {
-                _context.Add(employee);
+                if (avatarFile != null) employee.AvatarUrl = await SaveFile(avatarFile);
+                _context.Update(employee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(employee);
         }
 
-        // ================= 4. SỬA (CHỈ ADMIN MỚI ĐƯỢC LÀM) =================
-        // GET: Employees/Edit/5
-        [Authorize(Roles = "Admin")] // KHÓA QUYỀN TRUY CẬP GET
-        public async Task<IActionResult> Edit(int? id)
+        // ================= 4. CÁC QUYỀN CỦA ADMIN =================
+        [Authorize(Roles = "Admin")]
+        public IActionResult Create() => View();
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int? id) => View(await _context.Employees.FindAsync(id));
+
+        private async Task<string> SaveFile(IFormFile file)
         {
-            if (id == null) return NotFound();
-
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee == null) return NotFound();
-
-            return View(employee);
+            string folder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+            Directory.CreateDirectory(folder);
+            string fileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+            using (var fs = new FileStream(Path.Combine(folder, fileName), FileMode.Create)) { await file.CopyToAsync(fs); }
+            return "/uploads/" + fileName;
         }
 
-        // POST: Employees/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")] // KHÓA QUYỀN TRUY CẬP POST
-        public async Task<IActionResult> Edit(int id, [Bind("Id,MaNV,HoTen,ChucVu,Luong,PhongBan")] Employee employee)
-        {
-            if (id != employee.Id) return NotFound();
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(employee);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EmployeeExists(employee.Id)) return NotFound();
-                    else throw;
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(employee);
-        }
-
-        // ================= 5. XÓA (CHỈ ADMIN MỚI ĐƯỢC LÀM) =================
-        // GET: Employees/Delete/5
-        [Authorize(Roles = "Admin")] // KHÓA QUYỀN TRUY CẬP GET
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var employee = await _context.Employees.FirstOrDefaultAsync(m => m.Id == id);
-            if (employee == null) return NotFound();
-
-            return View(employee);
-        }
-
-        // POST: Employees/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")] // KHÓA QUYỀN TRUY CẬP POST
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee != null)
-            {
-                _context.Employees.Remove(employee);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool EmployeeExists(int id)
-        {
-            return _context.Employees.Any(e => e.Id == id);
-        }
+        private bool EmployeeExists(int id) => _context.Employees.Any(e => e.Id == id);
     }
 }

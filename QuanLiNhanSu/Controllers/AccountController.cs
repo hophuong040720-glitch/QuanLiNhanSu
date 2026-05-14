@@ -22,8 +22,7 @@ namespace QuanLiNhanSu.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            // Nếu đã đăng nhập rồi thì không cho vào trang Login nữa, đẩy thẳng ra Home
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity!.IsAuthenticated)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -37,17 +36,14 @@ namespace QuanLiNhanSu.Controllers
 
             if (user != null)
             {
-                // 1. Tạo các thông tin định danh (Claims)
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.Username),
-                    new Claim(ClaimTypes.Role, user.Role) // Lưu luôn quyền Admin/User
+                    new Claim(ClaimTypes.Role, user.Role)
                 };
 
-                // 2. Tạo "Thẻ bài" (Identity)
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                // 3. Đăng nhập và lưu Cookie
                 await HttpContext.SignInAsync(
                     CookieAuthenticationDefaults.AuthenticationScheme,
                     new ClaimsPrincipal(claimsIdentity));
@@ -70,6 +66,10 @@ namespace QuanLiNhanSu.Controllers
         [HttpGet]
         public IActionResult Register()
         {
+            if (User.Identity!.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
@@ -78,7 +78,7 @@ namespace QuanLiNhanSu.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Kiểm tra xem user gõ tên đăng nhập này đã có ai xài chưa
+                // Kiểm tra trùng lặp Username
                 var userExists = _context.Users.Any(u => u.Username == model.Username);
                 if (userExists)
                 {
@@ -86,18 +86,21 @@ namespace QuanLiNhanSu.Controllers
                     return View(model);
                 }
 
+                // Chốt kiểm soát phân quyền: Chỉ cho phép nhận quyền Employee hoặc Guest từ giao diện
+                var safeRole = (model.Role == "Employee" || model.Role == "Guest") ? model.Role : "Guest";
+
                 var newUser = new User
                 {
                     Username = model.Username,
                     Password = model.Password,
                     Email = model.Email,
-                    Role = "Employee" // Mặc định tài khoản mới tạo là nhân viên
+                    Role = safeRole
                 };
 
                 _context.Users.Add(newUser);
                 await _context.SaveChangesAsync();
 
-                TempData["Success"] = "Đăng ký thành công! Vui lòng đăng nhập.";
+                TempData["Success"] = $"Đăng ký thành công tài khoản với quyền {safeRole}!";
                 return RedirectToAction("Login");
             }
             return View(model);
@@ -115,7 +118,6 @@ namespace QuanLiNhanSu.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Khớp đúng Username và Email trong DB thì cho đổi mật khẩu thẳng
                 var user = _context.Users.FirstOrDefault(u => u.Username == model.Username && u.Email == model.Email);
                 if (user != null)
                 {
@@ -143,10 +145,15 @@ namespace QuanLiNhanSu.Controllers
         {
             if (ModelState.IsValid)
             {
-                ViewBag.Success = "Cảm ơn " + model.HoTen + ". Yêu cầu của bạn đã được gửi tới Admin!";
+                ViewBag.Success = $"Cảm ơn {model.HoTen}. Yêu cầu hỗ trợ của bạn đã được gửi tới Admin!";
                 return View();
             }
             return View(model);
+        }
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }
