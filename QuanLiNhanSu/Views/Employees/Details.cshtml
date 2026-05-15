@@ -1,48 +1,85 @@
 ﻿@model QuanLiNhanSu.Models.Employee
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Chi tiết Nhân sự";
+    Layout = "_Layout";
+    
+    // Kiểm tra quyền: Chỉ Admin hoặc chủ sở hữu hồ sơ mới thấy nút "Chỉnh sửa" ở trang này
+    var currentUserName = User.Identity!.Name ?? "";
+    bool isMyProfile = Model.HoTen.ToLower().Contains(currentUserName.ToLower()) ||
+                       Model.MaNV.ToLower() == currentUserName.ToLower();
+    bool canEdit = User.IsInRole("Admin") || (User.IsInRole("Employee") && isMyProfile);
 }
 
-<h1>Details</h1>
+<div class="row justify-content-center mt-4 mb-5">
+    <div class="col-lg-8">
+        <div class="card luxury-card border-0 shadow-lg rounded-4 overflow-hidden">
+            
+            <div class="p-4 bg-light border-bottom d-flex align-items-center gap-3">
+                <div class="rounded-circle bg-gold p-3 shadow-sm">
+                    <i class="bi bi-person-vcard fs-3 text-dark"></i>
+                </div>
+                <div>
+                    <h4 class="fw-bold text-gradient-gold m-0">HỒ SƠ CHI TIẾT NHÂN SỰ</h4>
+                    <p class="text-muted small m-0">Thông tin định danh và vị trí công tác hiện tại</p>
+                </div>
+            </div>
 
-<div>
-    <h4>Employee</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MaNV)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MaNV)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HoTen)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HoTen)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ChucVu)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ChucVu)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Luong)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Luong)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PhongBan)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PhongBan)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+            <div class="card-body p-4 p-md-5">
+                <div class="row g-4 align-items-center">
+                    
+                    <div class="col-md-5 text-center border-end pe-md-4">
+                        @if (!string.IsNullOrEmpty(Model.AvatarUrl))
+                        {
+                            <img src="@Model.AvatarUrl" class="rounded-circle border border-4 border-gold shadow-sm mb-3" style="width: 180px; height: 180px; object-fit: cover;" alt="Avatar" />
+                        }
+                        else
+                        {
+                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-3 shadow-sm border border-4 border-light" style="width: 180px; height: 180px; font-size: 5rem;">
+                                @Model.HoTen.Substring(0, 1).ToUpper()
+                            </div>
+                        }
+                        <h4 class="fw-bold text-dark mb-2">@Model.HoTen</h4>
+                        <span class="badge bg-gold text-dark px-4 py-2 rounded-pill shadow-sm fs-6">@Model.MaNV</span>
+                    </div>
+
+                    <div class="col-md-7 ps-md-4">
+                        <table class="table table-borderless mb-0">
+                            <tbody>
+                                <tr>
+                                    <td class="text-muted fw-bold small align-middle w-35" style="width: 120px;"><i class="bi bi-diagram-3-fill me-1"></i> BỘ PHẬN</td>
+                                    <td><span class="badge bg-light text-dark border px-3 py-2 fs-6">@Model.PhongBan</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted fw-bold small align-middle"><i class="bi bi-briefcase-fill me-1"></i> CHỨC VỤ</td>
+                                    <td class="fw-semibold text-dark fs-5">@Model.ChucVu</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted fw-bold small align-middle"><i class="bi bi-cash-stack me-1"></i> MỨC LƯƠNG</td>
+                                    <td class="fw-bold text-gold-dark fs-4">@Model.Luong.ToString("N0") <span class="fs-6 text-muted">VNĐ</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr class="my-4 border-secondary opacity-25" />
+
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary px-4 fw-bold rounded-3 shadow-sm">
+                        <i class="bi bi-arrow-left me-1"></i> Quay lại danh sách
+                    </a>
+                    
+                    @* Chỉ hiện nút sửa nếu là Admin hoặc chính là chủ nhân của hồ sơ này *@
+                    @if (canEdit)
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-luxury px-4 fw-bold rounded-3 shadow-sm">
+                            <i class="bi bi-pencil-square me-1"></i> Chỉnh sửa hồ sơ
+                        </a>
+                    }
+                </div>
+            </div>
+            
+        </div>
+    </div>
 </div>

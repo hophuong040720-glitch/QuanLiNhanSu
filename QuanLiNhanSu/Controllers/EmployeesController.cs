@@ -13,7 +13,8 @@ using QuanLiNhanSu.Models;
 
 namespace QuanLiNhanSu.Controllers
 {
-    [Authorize(Roles = "Admin,Employee,Guest")]
+    // 1. ĐÃ XÓA QUYỀN GUEST, CHỈ CÒN ADMIN VÀ EMPLOYEE
+    [Authorize(Roles = "Admin,Employee")]
     public class EmployeesController : Controller
     {
         private readonly AppDbContext _context;
@@ -52,17 +53,23 @@ namespace QuanLiNhanSu.Controllers
             return View(await employees.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync());
         }
 
-        // ================= 2. HỒ SƠ CÁ NHÂN (EMPLOYEE TỰ KHAI BÁO) =================
-        [Authorize(Roles = "Admin,Employee")]
+        // ================= 2. XEM CHI TIẾT (ĐÃ FIX LỖI "KO VO DC DETAILS") =================
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null) return NotFound();
+            var employee = await _context.Employees.FirstOrDefaultAsync(m => m.Id == id);
+            if (employee == null) return NotFound();
+            return View(employee);
+        }
+
+        // ================= 3. HỒ SƠ CÁ NHÂN (EMPLOYEE TỰ KHAI BÁO) =================
         public async Task<IActionResult> MyProfile()
         {
             var currentUser = User.Identity!.Name;
-            // Tìm theo Mã NV hoặc Họ tên trùng với Username đăng ký
             var employee = await _context.Employees.FirstOrDefaultAsync(e => e.MaNV == currentUser || e.HoTen == currentUser);
 
             if (employee == null)
             {
-                // Nếu chưa có trong bảng Employee, khởi tạo mẫu để họ tự điền
                 return View(new Employee { MaNV = currentUser, HoTen = currentUser, PhongBan = "", ChucVu = "", Luong = 0 });
             }
             return View(employee);
@@ -77,19 +84,17 @@ namespace QuanLiNhanSu.Controllers
 
             if (dbEntry == null)
             {
-                // TẠO MỚI (Dữ liệu chạy thẳng vào bảng database)
                 if (avatarFile != null) model.AvatarUrl = await SaveFile(avatarFile);
                 _context.Employees.Add(model);
                 TempData["Success"] = "Chào mừng! Hồ sơ nhân sự của bạn đã được khởi tạo.";
             }
             else
             {
-                // CẬP NHẬT
                 dbEntry.MaNV = model.MaNV;
                 dbEntry.HoTen = model.HoTen;
                 dbEntry.PhongBan = model.PhongBan;
                 dbEntry.ChucVu = model.ChucVu;
-                if (User.IsInRole("Admin")) dbEntry.Luong = model.Luong; // Chỉ Admin mới ghi đè lương ở đây
+                if (User.IsInRole("Admin")) dbEntry.Luong = model.Luong;
 
                 if (avatarFile != null) dbEntry.AvatarUrl = await SaveFile(avatarFile);
                 _context.Employees.Update(dbEntry);
@@ -100,7 +105,7 @@ namespace QuanLiNhanSu.Controllers
             return RedirectToAction("MyProfile");
         }
 
-        // ================= 3. CẬP NHẬT (ADMIN HOẶC CHỦ SỞ HỮU) =================
+        // ================= 4. CẬP NHẬT (ADMIN HOẶC CHỦ SỞ HỮU) =================
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -125,7 +130,7 @@ namespace QuanLiNhanSu.Controllers
             if (User.IsInRole("Employee"))
             {
                 var original = await _context.Employees.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
-                employee.Luong = original.Luong; // Không cho Employee tự nâng lương
+                employee.Luong = original.Luong;
             }
 
             if (ModelState.IsValid)
@@ -133,18 +138,108 @@ namespace QuanLiNhanSu.Controllers
                 if (avatarFile != null) employee.AvatarUrl = await SaveFile(avatarFile);
                 _context.Update(employee);
                 await _context.SaveChangesAsync();
+                TempData["Success"] = "Cập nhật hồ sơ thành công!";
                 return RedirectToAction(nameof(Index));
             }
             return View(employee);
         }
 
-        // ================= 4. CÁC QUYỀN CỦA ADMIN =================
+        // ================= 5. THÊM MỚI NHÂN VIÊN (CHỈ ADMIN) =================
         [Authorize(Roles = "Admin")]
         public IActionResult Create() => View();
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int? id) => View(await _context.Employees.FindAsync(id));
+        public async Task<IActionResult> Create(Employee employee, IFormFile? avatarFile)
+        {
+            if (ModelState.IsValid)
+            {
+                if (_context.Employees.Any(e => e.MaNV == employee.MaNV))
+                {
+                    ModelState.AddModelError("MaNV", "Mã nhân viên đã tồn tại.");
+                    return View(employee);
+                }
 
+                if (avatarFile != null && avatarFile.Length > 0)
+                {
+                    employee.AvatarUrl = await SaveFile(avatarFile);
+                }
+
+                _context.Add(employee);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Thêm nhân viên thành công!";
+                return RedirectToAction(nameof(Index));
+            }
+            return View(employee);
+        }
+
+        // ================= 6. XÓA NHÂN VIÊN (CHỈ ADMIN) =================
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null) return NotFound();
+            var employee = await _context.Employees.FirstOrDefaultAsync(m => m.Id == id);
+            if (employee == null) return NotFound();
+            return View(employee);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var employee = await _context.Employees.FindAsync(id);
+            if (employee != null)
+            {
+                _context.Employees.Remove(employee);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Đã xóa nhân viên thành công!";
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        // ================= 7. XUẤT EXCEL (ĐÃ FIX LỖI "KO XUẤT ĐƯỢC") =================
+        public async Task<IActionResult> ExportExcel()
+        {
+            var employees = await _context.Employees.ToListAsync();
+
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("NhanSu");
+                var currentRow = 1;
+
+                worksheet.Cell(currentRow, 1).Value = "Mã NV";
+                worksheet.Cell(currentRow, 2).Value = "Họ và Tên";
+                worksheet.Cell(currentRow, 3).Value = "Phòng Ban";
+                worksheet.Cell(currentRow, 4).Value = "Chức Vụ";
+                worksheet.Cell(currentRow, 5).Value = "Mức Lương (VNĐ)";
+
+                worksheet.Range("A1:E1").Style.Font.Bold = true;
+                worksheet.Range("A1:E1").Style.Fill.BackgroundColor = XLColor.FromHtml("#fde68a");
+
+                foreach (var emp in employees)
+                {
+                    currentRow++;
+                    worksheet.Cell(currentRow, 1).Value = emp.MaNV;
+                    worksheet.Cell(currentRow, 2).Value = emp.HoTen;
+                    worksheet.Cell(currentRow, 3).Value = emp.PhongBan;
+                    worksheet.Cell(currentRow, 4).Value = emp.ChucVu;
+                    worksheet.Cell(currentRow, 5).Value = emp.Luong;
+                }
+
+                worksheet.Columns().AdjustToContents();
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "DanhSachNhanSu.xlsx");
+                }
+            }
+        }
+
+        // ================= HÀM HỖ TRỢ LƯU FILE =================
         private async Task<string> SaveFile(IFormFile file)
         {
             string folder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
