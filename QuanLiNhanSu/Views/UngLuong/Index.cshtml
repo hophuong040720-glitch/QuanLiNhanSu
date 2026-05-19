@@ -1,0 +1,127 @@
+﻿@model IEnumerable<QuanLiNhanSu.Models.UngLuong>
+@{
+    ViewData["Title"] = "Quản lý Ứng lương";
+    Layout = "_Layout";
+    bool isAdminOrAccountant = User.IsInRole("Admin") || User.IsInRole("KeToan");
+}
+
+<div class="row g-4 mt-2 mb-5">
+    <div class="col-md-4">
+        <div class="card luxury-card border-0 shadow-lg rounded-4">
+            <div class="p-4 bg-light border-bottom text-center">
+                <i class="bi bi-cash-coin text-gold fs-1 d-block mb-2"></i>
+                <h5 class="fw-bold text-gradient-gold m-0">ĐĂNG KÝ ỨNG LƯƠNG</h5>
+                <p class="text-muted small m-0">Gửi phiếu đề xuất ứng trước lương tháng</p>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="CreateRequest" method="post">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">SỐ TIỀN MUỐN ỨNG (VNĐ)</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light fw-bold text-gold-dark">₫</span>
+                            <input type="number" name="soTien" class="form-control luxury-input" placeholder="Ví dụ: 2000000" required />
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-muted">LÝ DO ỨNG LƯƠNG</label>
+                        <textarea name="lyDo" class="form-control luxury-input" rows="4" placeholder="Giải trình lý do cụ thể..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-luxury w-100 py-2.5 fw-bold rounded-3 shadow">
+                        <i class="bi bi-send-check me-1"></i> GỬI PHIẾU ĐỀ XUẤT
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card luxury-card border-0 shadow-lg rounded-4">
+            <div class="p-4 bg-light border-bottom">
+                <h5 class="fw-bold text-dark m-0">
+                    <i class="bi bi-journal-text text-gold-dark me-2"></i>
+                    @(isAdminOrAccountant ? "DANH SÁCH PHIẾU ĐỀ XUẤT TOÀN CÔNG TY" : "LỊCH SỬ ĐỀ XUẤT CỦA BẠN")
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="table-responsive rounded-3 border">
+                    <table class="table table-hover align-middle mb-0 custom-luxury-table bg-white">
+                        <thead class="table-light">
+                            <tr class="text-secondary small fw-bold">
+                                @if (isAdminOrAccountant)
+                                {
+                                    <th class="ps-3">MÃ NV</th>
+                                }
+                                <th class="@(!isAdminOrAccountant ? "ps-3" : "")">NGÀY YÊU CẦU</th>
+                                <th class="text-end">SỐ TIỀNỨNG</th>
+                                <th>TRẠNG THÁI</th>
+                                @if (isAdminOrAccountant)
+                                {
+                                    <th class="text-center pe-3" style="width: 160px;">DUYỆT PHIẾU</th>
+                                }
+                                else
+                                {
+                                    <th class="pe-3">LÝ DO</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.Any())
+                            {
+                                <tr><td colspan="@(isAdminOrAccountant ? 5 : 4)" class="text-center py-4 text-muted">Chưa có phiếu ứng lương nào được khởi tạo.</td></tr>
+                            }
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    @if (isAdminOrAccountant)
+                                    {
+                                        <td class="ps-3 fw-bold text-gold-dark">@item.MaNV</td>
+                                    }
+                                    <td class="@(!isAdminOrAccountant ? "ps-3" : "") fw-medium">@item.NgayYeuCau.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td class="text-end fw-bold text-success">@item.SoTien.ToString("N0") đ</td>
+                                    <td>
+                                        @if (item.TrangThai == "Chờ duyệt")
+                                        {
+                                            <span class="badge bg-warning text-dark px-2 py-1">Chờ duyệt</span>
+                                        }
+                                        else if (item.TrangThai == "Đã duyệt")
+                                        {
+
+                                            <span class="badge bg-success px-2 py-1">Đã duyệt</span>
+                                        }
+                                        else
+                                        {
+
+                                            <span class="badge bg-danger px-2 py-1">Từ chối</span>
+                                        }
+                                    </td>
+                                    
+                                    @if (isAdminOrAccountant)
+                                    {
+                                        <td class="text-center pe-3">
+                                            @if (item.TrangThai == "Chờ duyệt")
+                                            {
+                                                <form asp-action="Approve" method="post" class="d-inline-flex gap-1">
+                                                    <input type="hidden" name="id" value="@item.Id" />
+                                                    <button type="submit" name="actionType" value="Approve" class="btn btn-sm btn-success px-2" title="Duyệt"><i class="bi bi-check-lg"></i></button>
+                                                    <button type="submit" name="actionType" value="Reject" class="btn btn-sm btn-danger px-2" title="Từ chối"><i class="bi bi-x-lg"></i></button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted small fst-italic">Đã xử lý</span>
+                                            }
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-muted small pe-3 text-truncate" style="max-width: 150px;" title="@item.LyDo">@item.LyDo</td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

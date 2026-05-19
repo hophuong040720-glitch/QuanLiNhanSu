@@ -5,6 +5,9 @@
     var currentUserName = User.Identity!.Name ?? "";
     bool hasProfile = Model.Any(e => e.HoTen.ToLower().Contains(currentUserName.ToLower()) ||
                                      e.MaNV.ToLower() == currentUserName.ToLower());
+    
+    // Kiểm tra quyền xem toàn bộ bảng lương (Chỉ dành cho Admin và Kế toán)
+    bool canViewAllSalary = User.IsInRole("Admin") || User.IsInRole("KeToan");
 }
 
 <div class="card luxury-card border-0 shadow-lg my-4 rounded-4">
@@ -108,20 +111,33 @@
                             <td class="fw-semibold text-dark">@item.HoTen @(isMyRow ? " (Bạn)" : "")</td>
                             <td><span class="badge bg-gold text-dark px-2 py-1">@item.PhongBan</span></td>
                             <td class="text-secondary small">@item.ChucVu</td>
-                            <td class="text-end fw-bold text-dark">@item.Luong.ToString("N0") đ</td>
+                            
+                            @* ĐÃ CẬP NHẬT: LOGIC BẢO MẬT ẨN BẢNG LƯƠNG *@
+                            <td class="text-end fw-bold text-dark">
+                                @if (canViewAllSalary || isMyRow)
+                                {
+                                    <span class="text-success">@item.Luong.ToString("N0") đ</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small fst-italic" title="Chỉ Kế toán hoặc Quản trị viên được xem">
+                                        <i class="bi bi-lock-fill text-warning me-1"></i>*** đ
+                                    </span>
+                                }
+                            </td>
+
                             <td class="text-center pe-3">
                                 <div class="btn-group shadow-sm">
-                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary px-2"><i class="bi bi-eye-fill"></i></a>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary px-2" title="Xem chi tiết"><i class="bi bi-eye-fill"></i></a>
                                     
-                                    @* GUEST KHÔNG THẤY NÚT EDIT VÀ DELETE *@
                                     @if (User.IsInRole("Admin") || (User.IsInRole("Employee") && isMyRow))
                                     {
-                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-gold px-2"><i class="bi bi-pencil-square"></i></a>
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-gold px-2" title="Chỉnh sửa"><i class="bi bi-pencil-square"></i></a>
                                     }
 
                                     @if (User.IsInRole("Admin"))
                                     {
-                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger px-2"><i class="bi bi-trash3-fill"></i></a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger px-2" title="Xóa"><i class="bi bi-trash3-fill"></i></a>
                                     }
                                 </div>
                             </td>

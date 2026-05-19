@@ -32,12 +32,32 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link fw-bold text-gold-dark" asp-area="" asp-controller="Employees" asp-action="Index">
-                                    <i class="bi bi-people-fill me-1"></i> Quản lý Nhân viên
+                                    <i class="bi bi-people-fill me-1"></i> Nhân sự
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link fw-bold text-success" asp-area="" asp-controller="ChamCong" asp-action="Index">
+                                    <i class="bi bi-fingerprint me-1"></i> Chấm công
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link fw-bold text-warning" asp-area="" asp-controller="UngLuong" asp-action="Index">
+                                    <i class="bi bi-cash-coin me-1"></i> Ứng lương
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link fw-bold text-info" asp-area="" asp-controller="PhanCong" asp-action="Index">
+                                    <i class="bi bi-card-checklist me-1"></i> Phân công
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link fw-bold text-danger" asp-area="" asp-controller="BangLuong" asp-action="Index">
+                                    <i class="bi bi-wallet2 me-1"></i> Bảng lương
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link fw-bold text-primary" asp-area="" asp-controller="Employees" asp-action="MyProfile">
-                                    <i class="bi bi-person-badge-fill me-1"></i> Hồ sơ của tôi
+                                    <i class="bi bi-person-badge-fill me-1"></i> Profile
                                 </a>
                             </li>
                         }
@@ -52,7 +72,7 @@
                         {
                             <li class="nav-item d-flex align-items-center me-3 mb-2 mb-sm-0">
                                 <span class="text-dark fw-medium small">
-                                    Xin chào, <b class="text-gold-dark">@User.Identity.Name</b>
+                                    Chào, <b class="text-gold-dark">@User.Identity.Name</b>
                                     <span class="badge bg-gold text-dark ms-1">@User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value</span>
                                 </span>
                             </li>

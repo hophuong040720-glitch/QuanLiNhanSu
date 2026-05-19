@@ -91,9 +91,35 @@
                                     }
                                 </div>
 
+                                @* ĐÃ CẬP NHẬT: THAY THẾ CHỨC VỤ THÀNH DROPDOWN PHÂN NHÓM DÀNH CHO ADMIN *@
                                 <div class="col-md-6">
                                     <label class="form-label small fw-bold text-muted">CHỨC VỤ ĐẢM NHIỆM</label>
-                                    <input asp-for="ChucVu" class="form-control luxury-input @(!isAdmin ? "bg-light" : "")" readonly="@(!isAdmin)" />
+                                    @if (isAdmin)
+                                    {
+                                        <select asp-for="ChucVu" class="form-select luxury-input" required>
+                                            <option value="">-- Lựa chọn chức vụ --</option>
+                                            <optgroup label="Ban Giám Đốc">
+                                                <option value="Giám đốc (CEO)">Giám đốc (CEO)</option>
+                                                <option value="Phó Giám đốc">Phó Giám đốc</option>
+                                            </optgroup>
+                                            <optgroup label="Cấp Quản Lý (Trưởng/Phó Bộ Phận)">
+                                                <option value="Trưởng phòng">Trưởng phòng</option>
+                                                <option value="Phó phòng">Phó phòng</option>
+                                                <option value="Kế toán trưởng">Kế toán trưởng</option>
+                                            </optgroup>
+                                            <optgroup label="Cấp Nhân Viên Thực Thi">
+                                                <option value="Chuyên viên chính">Chuyên viên chính</option>
+                                                <option value="Chuyên viên">Chuyên viên</option>
+                                                <option value="Nhân viên">Nhân viên</option>
+                                                <option value="Thực tập sinh">Thực tập sinh</option>
+                                            </optgroup>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="ChucVu" class="form-control luxury-input bg-light" readonly />
+                                    }
+                                    <span asp-validation-for="ChucVu" class="text-danger small"></span>
                                 </div>
 
                                 <div class="col-md-12">
@@ -131,5 +157,4 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
 }

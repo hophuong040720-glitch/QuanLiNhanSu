@@ -1,0 +1,98 @@
+﻿@model IEnumerable<QuanLiNhanSu.Models.ChamCong>
+@{
+    ViewData["Title"] = "Chấm công nhân sự";
+    Layout = "_Layout";
+    bool isAdminOrAccountant = User.IsInRole("Admin") || User.IsInRole("KeToan");
+}
+
+<div class="row g-4 mt-2 mb-5">
+    <div class="col-md-4">
+        <div class="card luxury-card border-0 shadow-lg rounded-4">
+            <div class="p-4 bg-light border-bottom text-center">
+                <i class="bi bi-clock-history text-gold fs-1 d-block mb-2"></i>
+                <h5 class="fw-bold text-gradient-gold m-0">ĐIỂM DANH HẰNG NGÀY</h5>
+                <p class="text-muted small m-0">Hệ thống ghi nhận thời gian chấm công tự động</p>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="CheckIn" method="post">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">TRẠNG THÁI HÔM NAY</label>
+                        <select name="trangThai" class="form-select luxury-input" required>
+                            <option value="Đi làm">🟢 Đi làm (Toàn thời gian)</option>
+                            <option value="Nửa ngày">🟡 Đi làm nửa ngày (Công 0.5)</option>
+                            <option value="Nghỉ phép">🔵 Nghỉ có phép</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-muted">GHI CHÚ / LÝ DO NGHỈ</label>
+                        <textarea name="ghiChu" class="form-control luxury-input" rows="3" placeholder="Điền lý do nếu có nghỉ phép hoặc đi trễ..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-luxury w-100 py-2.5 fw-bold rounded-3 shadow">
+                        <i class="bi bi-fingerprint me-1"></i> BẤM CHẤM CÔNG NGAY
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card luxury-card border-0 shadow-lg rounded-4">
+            <div class="p-4 bg-light border-bottom">
+                <h5 class="fw-bold text-dark m-0">
+                    <i class="bi bi-calendar-check text-gold-dark me-2"></i>
+                    @(isAdminOrAccountant ? "NHẬT KÝ CHẤM CÔNG TOÀN CÔNG TY" : "NHẬT KÝ CHẤM CÔNG CỦA BẠN")
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="table-responsive rounded-3 border">
+                    <table class="table table-hover align-middle mb-0 custom-luxury-table bg-white">
+                        <thead class="table-light">
+                            <tr class="text-secondary small fw-bold">
+                                @if (isAdminOrAccountant)
+                                {
+                                    <th class="ps-3">MÃ NV</th>
+                                }
+                                <th class="@(!isAdminOrAccountant ? "ps-3" : "")">THỜI GIAN ĐIỂM DANH</th>
+                                <th>TRẠNG THÁI</th>
+                                <th class="pe-3">GHI CHÚ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.Any())
+                            {
+                                <tr><td colspan="@(isAdminOrAccountant ? 4 : 3)" class="text-center py-4 text-muted">Chưa có dữ liệu chấm công nào được ghi nhận.</td></tr>
+                            }
+                            @foreach (var log in Model)
+                            {
+                                <tr>
+                                    @if (isAdminOrAccountant)
+                                    {
+                                        <td class="ps-3 fw-bold text-gold-dark">@log.MaNV</td>
+                                    }
+                                    <td class="@(!isAdminOrAccountant ? "ps-3" : "") fw-medium">@log.NgayChamCong.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                    <td>
+                                        @if (log.TrangThai == "Đi làm")
+                                        {
+                                            <span class="badge bg-success px-2 py-1">Đi làm</span>
+                                        }
+                                        else if (log.TrangThai == "Nửa ngày")
+                                        {
+
+                                            <span class="badge bg-warning text-dark px-2 py-1">Nửa ngày</span>
+                                        }
+                                        else
+                                        {
+
+                                            <span class="badge bg-info px-2 py-1">Nghỉ phép</span>
+                                        }
+                                    </td>
+                                    <td class="text-muted small pe-3 text-truncate" style="max-width: 200px;">@log.GhiChu</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

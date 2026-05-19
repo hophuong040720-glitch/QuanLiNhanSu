@@ -1,0 +1,14 @@
+﻿@model IEnumerable<QuanLiNhanSu.Models.PhanCong>
+@{
+    Layout = "_Layout"; bool isAdmin = User.IsInRole("Admin");
+}
+<div class="row g-4 mt-2">
+    @if (isAdmin)
+    {
+        <div class="col-md-4"><div class="card p-4 shadow-sm"><h5>Giao việc</h5><form asp-action="GiaoViec" method="post"><input name="MaNV" class="form-control mb-2" placeholder="Mã NV" required /><input name="TenCongViec" class="form-control mb-2" placeholder="Tên việc" required /><input type="date" name="HanChot" class="form-control mb-3" required /><button class="btn btn-primary w-100">Giao</button></form></div></div>
+    }
+    <div class="@(isAdmin ? "col-md-8" : "col-md-12")"><table class="table border"><thead><tr><th>Việc</th><th>Hạn</th><th>Trạng thái</th><th>Action</th></tr></thead><tbody>@foreach(var i in Model){
+        <tr><td>@i.TenCongViec</td><td>@i.HanChot.ToString("dd/MM")</td><td>@i.TrangThai</td><td><form asp-action="CapNhatTienDo" method="post"><input type="hidden" name="id" value="@i.Id" /><button name="trangThai" value="Hoàn thành" class="btn btn-sm btn-success">Xong</button></form></td></tr>
+    }
+</tbody></table></div>
+</div>

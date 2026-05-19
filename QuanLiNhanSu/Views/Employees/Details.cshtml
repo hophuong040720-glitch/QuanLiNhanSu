@@ -4,11 +4,13 @@
     ViewData["Title"] = "Chi tiết Nhân sự";
     Layout = "_Layout";
     
-    // Kiểm tra quyền: Chỉ Admin hoặc chủ sở hữu hồ sơ mới thấy nút "Chỉnh sửa" ở trang này
     var currentUserName = User.Identity!.Name ?? "";
     bool isMyProfile = Model.HoTen.ToLower().Contains(currentUserName.ToLower()) ||
                        Model.MaNV.ToLower() == currentUserName.ToLower();
     bool canEdit = User.IsInRole("Admin") || (User.IsInRole("Employee") && isMyProfile);
+
+    // CHỐT CHẶN BẢO MẬT: Chỉ Admin, Kế toán hoặc chính chủ mới được thấy số tiền thật
+    bool canViewSalary = User.IsInRole("Admin") || User.IsInRole("KeToan") || isMyProfile;
 }
 
 <div class="row justify-content-center mt-4 mb-5">
@@ -31,11 +33,11 @@
                     <div class="col-md-5 text-center border-end pe-md-4">
                         @if (!string.IsNullOrEmpty(Model.AvatarUrl))
                         {
-                            <img src="@Model.AvatarUrl" class="rounded-circle border border-4 border-gold shadow-sm mb-3" style="width: 180px; height: 180px; object-fit: cover;" alt="Avatar" />
+                            <img src="@Model.AvatarUrl" class="rounded-circle border border-4 border-gold shadow-sm mb-3" style="width: 180px; height: 180px; object-fit: cover;" />
                         }
                         else
                         {
-                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-3 shadow-sm border border-4 border-light" style="width: 180px; height: 180px; font-size: 5rem;">
+                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-3 shadow-sm" style="width: 180px; height: 180px; font-size: 5rem;">
                                 @Model.HoTen.Substring(0, 1).ToUpper()
                             </div>
                         }
@@ -56,7 +58,17 @@
                                 </tr>
                                 <tr>
                                     <td class="text-muted fw-bold small align-middle"><i class="bi bi-cash-stack me-1"></i> MỨC LƯƠNG</td>
-                                    <td class="fw-bold text-gold-dark fs-4">@Model.Luong.ToString("N0") <span class="fs-6 text-muted">VNĐ</span></td>
+                                    @* VÁ BẢO MẬT TẠI ĐÂY *@
+                                    <td class="fw-bold fs-4">
+                                        @if (canViewSalary)
+                                        {
+                                            <span class="text-gold-dark">@Model.Luong.ToString("N0") <span class="fs-6 text-muted">VNĐ</span></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fs-5 fst-italic"><i class="bi bi-lock-fill text-warning me-1"></i>*** *** đ</span>
+                                        }
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -67,10 +79,8 @@
 
                 <div class="d-flex justify-content-end gap-2">
                     <a asp-action="Index" class="btn btn-outline-secondary px-4 fw-bold rounded-3 shadow-sm">
-                        <i class="bi bi-arrow-left me-1"></i> Quay lại danh sách
+                        <i class="bi bi-arrow-left me-1"></i> Quay lại
                     </a>
-                    
-                    @* Chỉ hiện nút sửa nếu là Admin hoặc chính là chủ nhân của hồ sơ này *@
                     @if (canEdit)
                     {
                         <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-luxury px-4 fw-bold rounded-3 shadow-sm">

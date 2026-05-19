@@ -1,0 +1,63 @@
+﻿@model IEnumerable<QuanLiNhanSu.Models.BangLuong>
+@{
+    ViewData["Title"] = "Quản lý Bảng lương";
+    Layout = "_Layout";
+    bool isAdmin = User.IsInRole("Admin") || User.IsInRole("KeToan");
+}
+
+<div class="row mt-3">
+    @if (isAdmin)
+    {
+        <div class="col-md-4">
+            <div class="card luxury-card border-0 shadow-lg rounded-4 p-4">
+                <h5 class="fw-bold text-gradient-gold mb-3"><i class="bi bi-calculator me-2"></i>Chốt Lương Tháng</h5>
+                <form asp-action="ChotLuongThang" method="post">
+                    <div class="mb-3">
+                        <label class="small fw-bold text-muted">THÁNG</label>
+                        <input type="number" name="thang" value="@DateTime.Now.Month" class="form-control luxury-input" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="small fw-bold text-muted">NĂM</label>
+                        <input type="number" name="nam" value="@DateTime.Now.Year" class="form-control luxury-input" required />
+                    </div>
+                    <button type="submit" class="btn btn-luxury w-100 fw-bold">CHỐT LƯƠNG TỰ ĐỘNG</button>
+                </form>
+            </div>
+        </div>
+    }
+
+    <div class="@(isAdmin ? "col-md-8" : "col-md-12")">
+        <div class="card luxury-card border-0 shadow-lg rounded-4">
+            <div class="p-4 bg-light border-bottom">
+                <h5 class="fw-bold text-dark m-0"><i class="bi bi-wallet2 me-2"></i>Bảng lương tổng hợp</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle custom-luxury-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Mã NV</th>
+                                <th>Tháng/Năm</th>
+                                <th class="text-end">Lương Căn Bản</th>
+                                <th class="text-end">Tạm ứng</th>
+                                <th class="text-end text-success fw-bold">Thực Lãnh</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="fw-bold text-gold-dark">@item.MaNV</td>
+                                    <td>@item.Thang/@item.Nam</td>
+                                    <td class="text-end text-muted">@item.LuongCoBan.ToString("N0") đ</td>
+                                    <td class="text-end text-danger">@item.TienUng.ToString("N0") đ</td>
+                                    <td class="text-end fw-bold text-success fs-6">@item.ThucLanh.ToString("N0") đ</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
