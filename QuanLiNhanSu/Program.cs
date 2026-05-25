@@ -90,5 +90,6 @@ using (var scope = app.Services.CreateScope())
     }
 }
 // ===================================================================================
+app.MapControllers();
 
 app.Run();

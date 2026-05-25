@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuanLiNhanSu.Models;
 
@@ -11,9 +12,11 @@ using QuanLiNhanSu.Models;
 namespace QuanLiNhanSu.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260525170701_SyncFinalDatabase")]
+    partial class SyncFinalDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,21 +74,12 @@ namespace QuanLiNhanSu.Migrations
                     b.Property<string>("GhiChu")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("GioRa")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("GioVao")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("MaNV")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("NgayChamCong")
                         .HasColumnType("datetime2");
-
-                    b.Property<double>("SoGioLam")
-                        .HasColumnType("float");
 
                     b.Property<string>("TrangThai")
                         .IsRequired()
@@ -302,37 +296,6 @@ namespace QuanLiNhanSu.Migrations
                     b.HasKey("MaPB");
 
                     b.ToTable("PhongBans");
-                });
-
-            modelBuilder.Entity("QuanLiNhanSu.Models.SystemLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Details")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Target")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SystemLogs");
                 });
 
             modelBuilder.Entity("QuanLiNhanSu.Models.UngLuong", b =>

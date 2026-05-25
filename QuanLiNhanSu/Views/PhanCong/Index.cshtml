@@ -1,14 +1,134 @@
 ﻿@model IEnumerable<QuanLiNhanSu.Models.PhanCong>
 @{
-    Layout = "_Layout"; bool isAdmin = User.IsInRole("Admin");
+    Layout = "_Layout";
+    bool isAdmin = User.IsInRole("Admin");
 }
-<div class="row g-4 mt-2">
+
+<div class="row g-4 mt-2 mb-5">
     @if (isAdmin)
     {
-        <div class="col-md-4"><div class="card p-4 shadow-sm"><h5>Giao việc</h5><form asp-action="GiaoViec" method="post"><input name="MaNV" class="form-control mb-2" placeholder="Mã NV" required /><input name="TenCongViec" class="form-control mb-2" placeholder="Tên việc" required /><input type="date" name="HanChot" class="form-control mb-3" required /><button class="btn btn-primary w-100">Giao</button></form></div></div>
+        <div class="col-md-4">
+            <div class="card luxury-card border-0 shadow-lg rounded-4">
+                <div class="p-4 bg-light border-bottom text-center">
+                    <i class="bi bi-person-workspace text-gold fs-1 d-block mb-2"></i>
+                    <h5 class="fw-bold text-gradient-gold m-0">GIAO VIỆC CHO NHÂN VIÊN</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="GiaoViec" method="post">
+                        <div class="mb-3">
+                            <label class="small fw-bold text-muted">MÃ NHÂN VIÊN NHẬN</label>
+                            <input name="MaNV" class="form-control luxury-input" placeholder="VD: NV001" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="small fw-bold text-muted">TÊN CÔNG VIỆC</label>
+                            <input name="TenCongViec" class="form-control luxury-input" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="small fw-bold text-muted">MÔ TẢ CHI TIẾT</label>
+                            <textarea name="MoTa" class="form-control luxury-input" rows="2"></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label class="small fw-bold text-muted">HẠN CHÓT (DEADLINE)</label>
+                            <input type="date" name="HanChot" class="form-control luxury-input" required />
+                        </div>
+                        <button type="submit" class="btn btn-luxury w-100 py-2 fw-bold rounded-3 shadow-sm">
+                            <i class="bi bi-send-fill me-1"></i> PHÂN CÔNG NHIỆM VỤ
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     }
-    <div class="@(isAdmin ? "col-md-8" : "col-md-12")"><table class="table border"><thead><tr><th>Việc</th><th>Hạn</th><th>Trạng thái</th><th>Action</th></tr></thead><tbody>@foreach(var i in Model){
-        <tr><td>@i.TenCongViec</td><td>@i.HanChot.ToString("dd/MM")</td><td>@i.TrangThai</td><td><form asp-action="CapNhatTienDo" method="post"><input type="hidden" name="id" value="@i.Id" /><button name="trangThai" value="Hoàn thành" class="btn btn-sm btn-success">Xong</button></form></td></tr>
-    }
-</tbody></table></div>
+    
+    <div class="@(isAdmin ? "col-md-8" : "col-md-12")">
+        <div class="card luxury-card border-0 shadow-lg rounded-4">
+            <div class="p-4 bg-light border-bottom">
+                <h5 class="fw-bold text-dark m-0"><i class="bi bi-card-checklist text-gold-dark me-2"></i>DANH SÁCH CHỈ TIÊU CÔNG VIỆC</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="table-responsive rounded-3 border">
+                    <table class="table table-hover align-middle mb-0 custom-luxury-table">
+                        <thead class="table-light">
+                            <tr class="small fw-bold text-secondary">
+                                @if (isAdmin)
+                                {
+                                    <th class="ps-3">NHÂN VIÊN</th>
+                                }
+                                <th class="@(!isAdmin ? "ps-3" : "")">TÊN CÔNG VIỆC</th>
+                                <th>HẠN CHÓT</th>
+                                <th>TRẠNG THÁI</th>
+                                <th class="text-center pe-3">HÀNH ĐỘNG</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.Any())
+                            {
+                                <tr><td colspan="@(isAdmin ? 5 : 4)" class="text-center py-4 text-muted">Chưa có nhiệm vụ nào được phân công.</td></tr>
+                            }
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    @if (isAdmin)
+                                    {
+                                        <td class="ps-3 fw-bold text-gold-dark">@item.MaNV</td>
+                                    }
+                                    <td class="@(!isAdmin ? "ps-3" : "") fw-medium">@item.TenCongViec</td>
+                                    <td>@item.HanChot.ToString("dd/MM/yyyy")</td>
+                                
+                                    @* LOGIC MÀU SẮC TRẠNG THÁI (ĐỘNG) *@
+                                    <td>
+                                        @if (item.TrangThai == "Mới giao")
+                                        {
+                                            <span class="badge bg-warning text-dark px-2 py-1 shadow-sm"><i class="bi bi-hourglass-split me-1"></i>Chờ xác nhận</span>
+                                        }
+                                        else if (item.TrangThai == "Đã nhận")
+                                        {
+                                            <span class="badge bg-success px-2 py-1 shadow-sm"><i class="bi bi-check-circle-fill me-1"></i>Đã tiếp nhận</span>
+                                        }
+                                        else if (item.TrangThai == "Hoàn thành")
+                                        {
+                                            <span class="badge bg-primary px-2 py-1 shadow-sm"><i class="bi bi-award-fill me-1"></i>Hoàn thành</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary px-2 py-1">@item.TrangThai</span>
+                                        }
+                                    </td>
+                                
+                                    <td class="text-center pe-3">
+                                        <form asp-action="CapNhatTienDo" method="post" class="d-inline-flex gap-1">
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                        
+                                            @* Nếu nhân viên chưa nhận việc -> Hiện nút màu Vàng/Cam *@
+                                            @if (item.TrangThai == "Mới giao" && !isAdmin)
+                                            {
+                                                <button type="submit" name="trangThai" value="Đã nhận" class="btn btn-sm btn-warning fw-bold shadow-sm">
+                                                    Đồng ý nhận
+                                                </button>
+                                            }
+                                            @* Nếu đã nhận -> Hiện nút Báo cáo Hoàn thành *@
+                                            else if (item.TrangThai == "Đã nhận" && !isAdmin)
+                                            {
+                                                <button type="submit" name="trangThai" value="Hoàn thành" class="btn btn-sm btn-success fw-bold shadow-sm">
+                                                    Báo cáo Xong
+                                                </button>
+                                            }
+                                            else if (item.TrangThai == "Hoàn thành")
+                                            {
+                                                <span class="text-success small fw-bold"><i class="bi bi-check2-all"></i> Đã đóng</span>
+                                            }
+                                            else if (isAdmin)
+                                            {
+                                                <span class="text-muted small fst-italic">Chờ NV xử lý</span>
+                                            }
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

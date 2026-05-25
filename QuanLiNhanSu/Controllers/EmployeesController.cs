@@ -53,7 +53,7 @@ namespace QuanLiNhanSu.Controllers
             return View(await employees.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync());
         }
 
-        // ================= 2. XEM CHI TIẾT (ĐÃ FIX LỖI "KO VO DC DETAILS") =================
+        // ================= 2. XEM CHI TIẾT =================
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -105,7 +105,7 @@ namespace QuanLiNhanSu.Controllers
             return RedirectToAction("MyProfile");
         }
 
-        // ================= 4. CẬP NHẬT (ADMIN HOẶC CHỦ SỞ HỮU) =================
+        // ================= 4. CẬP NHẬT =================
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -144,7 +144,7 @@ namespace QuanLiNhanSu.Controllers
             return View(employee);
         }
 
-        // ================= 5. THÊM MỚI NHÂN VIÊN (CHỈ ADMIN) =================
+        // ================= 5. THÊM MỚI NHÂN VIÊN & TẠO TÀI KHOẢN TỰ ĐỘNG =================
         [Authorize(Roles = "Admin")]
         public IActionResult Create() => View();
 
@@ -166,15 +166,29 @@ namespace QuanLiNhanSu.Controllers
                     employee.AvatarUrl = await SaveFile(avatarFile);
                 }
 
+                // 1. Lưu thông tin hồ sơ nhân viên
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
-                TempData["Success"] = "Thêm nhân viên thành công!";
+
+                // 2. Tự động tạo tài khoản đăng nhập cho nhân viên này
+                // (Tên đăng nhập = Mã NV, Mật khẩu = 123)
+                var newAccount = new User
+                {
+                    Username = employee.MaNV,
+                    Password = "123", // Mật khẩu mặc định chuẩn doanh nghiệp
+                    Role = "Employee", // Ép cứng quyền nhân viên thường
+                };
+
+                _context.Users.Add(newAccount);
+                await _context.SaveChangesAsync();
+
+                TempData["Success"] = $"Thêm thành công! Tài khoản: {employee.MaNV} | Mật khẩu: 123";
                 return RedirectToAction(nameof(Index));
             }
             return View(employee);
         }
 
-        // ================= 6. XÓA NHÂN VIÊN (CHỈ ADMIN) =================
+        // ================= 6. XÓA NHÂN VIÊN =================
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -192,14 +206,21 @@ namespace QuanLiNhanSu.Controllers
             var employee = await _context.Employees.FindAsync(id);
             if (employee != null)
             {
+                // Xóa luôn tài khoản đăng nhập gắn với nhân viên này (Nếu có)
+                var linkedAccount = await _context.Users.FirstOrDefaultAsync(u => u.Username == employee.MaNV);
+                if (linkedAccount != null)
+                {
+                    _context.Users.Remove(linkedAccount);
+                }
+
                 _context.Employees.Remove(employee);
                 await _context.SaveChangesAsync();
-                TempData["Success"] = "Đã xóa nhân viên thành công!";
+                TempData["Success"] = "Đã xóa nhân viên và tài khoản liên kết thành công!";
             }
             return RedirectToAction(nameof(Index));
         }
 
-        // ================= 7. XUẤT EXCEL (ĐÃ FIX LỖI "KO XUẤT ĐƯỢC") =================
+        // ================= 7. XUẤT EXCEL =================
         public async Task<IActionResult> ExportExcel()
         {
             var employees = await _context.Employees.ToListAsync();

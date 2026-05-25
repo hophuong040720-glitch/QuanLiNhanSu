@@ -1,0 +1,25 @@
+﻿@model IEnumerable<QuanLiNhanSu.Models.SystemLog>
+@{
+    Layout = "_Layout";
+}
+<div class="card bg-dark text-light border-0 shadow-lg rounded-4 p-4 mt-3">
+    <h4 class="text-success fw-bold"><i class="bi bi-terminal me-2"></i>HỆ THỐNG LƯU VẾT (AUDIT LOGS)</h4>
+    <p class="text-muted small">Mọi hành vi can thiệp vào CSDL đều được hệ thống giám sát và mã hóa.</p>
+    <table class="table table-dark table-hover mt-3">
+        <thead>
+            <tr class="text-warning"><th>THỜI GIAN</th><th>TÀI KHOẢN</th><th>HÀNH ĐỘNG</th><th>ĐỐI TƯỢNG</th><th>CHI TIẾT</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var log in Model)
+            {
+                <tr>
+                    <td class="text-info">@log.Timestamp.ToString("dd/MM/yy HH:mm:ss")</td>
+                    <td class="fw-bold text-danger">@log.Username</td>
+                    <td><span class="badge bg-secondary">@log.Action</span></td>
+                    <td>@log.Target</td>
+                    <td class="small">@log.Details</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
