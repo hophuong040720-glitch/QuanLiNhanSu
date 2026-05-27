@@ -41,9 +41,16 @@
                                 <th class="text-end">Lương Căn Bản</th>
                                 <th class="text-end">Tạm ứng</th>
                                 <th class="text-end text-success fw-bold">Thực Lãnh</th>
+                                <th class="text-center">Phiếu Lương</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @if (!Model.Any())
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-4">Chưa có dữ liệu bảng lương nào.</td>
+                                </tr>
+                            }
                             @foreach (var item in Model)
                             {
                                 <tr>
@@ -52,6 +59,11 @@
                                     <td class="text-end text-muted">@item.LuongCoBan.ToString("N0") đ</td>
                                     <td class="text-end text-danger">@item.TienUng.ToString("N0") đ</td>
                                     <td class="text-end fw-bold text-success fs-6">@item.ThucLanh.ToString("N0") đ</td>
+                                    <td class="text-center">
+                                        <button onclick="inPhieuLuong('@item.MaNV', '@item.Thang', '@item.Nam', @item.LuongCoBan, @item.TienUng, @item.ThucLanh)" class="btn btn-sm btn-outline-dark rounded-pill fw-bold shadow-sm">
+                                            <i class="bi bi-printer me-1"></i> In
+                                        </button>
+                                    </td>
                                 </tr>
                             }
                         </tbody>
@@ -61,3 +73,80 @@
         </div>
     </div>
 </div>
+
+<div id="print-template" style="display:none;">
+    <html>
+    <head>
+        <title>Phiếu Lương Tháng {thang}/{nam}</title>
+        <style>
+            body { font-family: Arial, sans-serif; padding: 40px; color: #333; }
+            .header { text-align: center; border-bottom: 2px solid #d4af37; padding-bottom: 20px; margin-bottom: 30px; }
+            .company { font-size: 24px; font-weight: bold; color: #d4af37; }
+            .title { font-size: 20px; margin-top: 10px; text-transform: uppercase; }
+            .details { margin-bottom: 30px; font-size: 16px; line-height: 1.8; }
+            .table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            .table th, .table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+            .table th { background-color: #f8f9fa; }
+            .total { font-size: 18px; font-weight: bold; color: #198754; text-align: right; margin-top: 20px; }
+            .footer { margin-top: 50px; display: flex; justify-content: space-between; text-align: center; }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <div class="company">CÔNG TY CP TM & DV CÔNG NGHỆ HT</div>
+            <div class="title">PHIẾU BÁO LƯƠNG NHÂN VIÊN</div>
+        </div>
+        <div class="details">
+            <b>Mã Nhân viên:</b> {maNV} <br/>
+            <b>Kỳ trả lương:</b> Tháng {thang} Năm {nam} <br/>
+            <b>Ngày in phiếu:</b> {ngayIn}
+        </div>
+        <table class="table">
+            <tr><th>Khoản mục</th><th>Số tiền</th></tr>
+            <tr><td>1. Mức lương cơ bản</td><td>{luongCB}</td></tr>
+            <tr><td>2. Tạm ứng đã chi</td><td>- {tienUng}</td></tr>
+            <tr><td><b>3. THỰC LÃNH CHUYỂN KHOẢN</b></td><td><b style="color: #198754">{thucLanh}</b></td></tr>
+        </table>
+        <div class="footer">
+            <div><b>NGƯỜI LẬP PHIẾU</b><br/><br/><br/><i>(Ký, ghi rõ họ tên)</i></div>
+            <div><b>GIÁM ĐỐC DUYỆT</b><br/><br/><br/><i>(Ký, đóng dấu)</i></div>
+        </div>
+    </body>
+    </html>
+</div>
+
+@section Scripts {
+    <script>
+        function inPhieuLuong(maNV, thang, nam, luongCB, tienUng, thucLanh) {
+            // Hàm định dạng tiền tệ
+            var formatVND = function(num) { 
+                return num.toLocaleString('vi-VN') + ' đ'; 
+            };
+
+            // Lấy bộ khung HTML từ thẻ div ẩn ra
+            var template = document.getElementById('print-template').innerHTML;
+            
+            // Đắp dữ liệu thật vào các biến {ngoặc_nhọn}
+            var htmlToPrint = template
+                .replace(/{maNV}/g, maNV)
+                .replace(/{thang}/g, thang)
+                .replace(/{nam}/g, nam)
+                .replace('{ngayIn}', new Date().toLocaleDateString('vi-VN'))
+                .replace('{luongCB}', formatVND(luongCB))
+                .replace('{tienUng}', formatVND(tienUng))
+                .replace('{thucLanh}', formatVND(thucLanh));
+
+            // Bật cửa sổ popup lên và ghi đè nội dung vào
+            var printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write(htmlToPrint);
+            printWindow.document.close();
+            printWindow.focus();
+            
+            // Đợi CSS load xong 0.5s rồi kích hoạt lệnh in
+            setTimeout(function() {
+                printWindow.print();
+                printWindow.close();
+            }, 500);
+        }
+    </script>
+}

@@ -126,7 +126,7 @@
             Swal.fire({
             icon: 'success',
             title: 'Thành công',
-            text: '@TempData["Success"]',
+            text: @Html.Raw(Json.Serialize(TempData["Success"])),
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
@@ -140,9 +140,9 @@
     {
         <script>
             Swal.fire({
-            icon: 'error',
-            title: 'Lỗi hệ thống!',
-            text: '@TempData["Error"]',
+            icon: 'warning',
+            title: 'Hệ thống cảnh báo',
+            text: @Html.Raw(Json.Serialize(TempData["Error"])),
             toast: true,
             position: 'top-end',
             showConfirmButton: false,

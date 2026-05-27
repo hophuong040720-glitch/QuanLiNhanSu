@@ -1,80 +1,133 @@
 ﻿@{
-    ViewData["Title"] = "Dashboard Tổng quan";
+    ViewData["Title"] = "Trang chủ Quản trị";
 }
 
-<div class="row g-4 mb-4 mt-2">
-    <div class="col-md-6">
-        <div class="card luxury-card p-4 border-0 shadow-sm d-flex flex-row align-items-center">
-            <div class="rounded-circle bg-gold p-3 me-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
-                <i class="bi bi-people-fill text-dark" style="font-size: 1.8rem;"></i>
-            </div>
-            <div>
-                <p class="text-muted small m-0 fw-semibold">TỔNG NHÂN SỰ</p>
-                <h2 class="fw-bold text-dark m-0">@ViewBag.TotalEmployees <span class="fs-6 fw-normal text-secondary">người</span></h2>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="card luxury-card p-4 border-0 shadow-sm d-flex flex-row align-items-center">
-            <div class="rounded-circle bg-gold p-3 me-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
-                <i class="bi bi-cash-stack text-dark" style="font-size: 1.8rem;"></i>
-            </div>
-            <div>
-                <p class="text-muted small m-0 fw-semibold">TỔNG QUỸ LƯƠNG</p>
-                <h2 class="fw-bold text-gold-dark m-0">@string.Format("{0:N0}", ViewBag.TotalSalary) <span class="fs-6 fw-normal text-secondary">VNĐ</span></h2>
-            </div>
-        </div>
-    </div>
+<div class="text-center mt-4 mb-5">
+    <h1 class="display-5 fw-bold text-gradient-gold">HỆ THỐNG QUẢN TRỊ NHÂN SỰ TOÀN DIỆN</h1>
+    <p class="lead text-muted">Công ty Cổ phần Thương mại và Dịch vụ Công nghệ HT</p>
 </div>
 
-<div class="row g-4 mb-5">
-    <div class="col-lg-6">
-        <div class="card luxury-card p-4 border-0 shadow-sm h-100">
-            <h5 class="fw-bold text-gradient-gold mb-4 text-center">TỶ LỆ NHÂN SỰ THEO PHÒNG BAN</h5>
-            <div style="position: relative; height: 300px; width: 100%;">
-                <canvas id="deptPieChart"></canvas>
+@if (User.Identity!.IsAuthenticated)
+{
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="card luxury-card border-0 shadow-lg rounded-4 bg-light p-4 h-100 d-flex flex-row align-items-center">
+                <div class="me-4">
+                    <i class="bi bi-people-fill text-gold" style="font-size: 4rem;"></i>
+                </div>
+                <div>
+                    <h5 class="text-dark mb-1">Tổng Nhân Sự</h5>
+                    <h1 class="display-4 fw-bold text-dark mb-0">@ViewBag.TotalEmployees</h1>
+                    <p class="text-muted small mb-0">Nhân sự đang hoạt động</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card luxury-card border-0 shadow-lg rounded-4 bg-light p-4 h-100 d-flex flex-row align-items-center">
+                <div class="me-4">
+                    <i class="bi bi-wallet2 text-success" style="font-size: 4rem;"></i>
+                </div>
+                <div>
+                    <h5 class="text-dark mb-1">Tổng Quỹ Lương Cơ Bản</h5>
+                    <h1 class="display-5 fw-bold text-success mb-0">@Convert.ToDecimal(ViewBag.TotalSalary).ToString("N0") <span class="fs-4">VNĐ</span></h1>
+                    <p class="text-muted small mb-0">Ngân sách chi trả hằng tháng</p>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-lg-6">
-        <div class="card luxury-card p-4 border-0 shadow-sm h-100">
-            <h5 class="fw-bold text-gradient-gold mb-4 text-center">QUỸ LƯƠNG THEO BỘ PHẬN</h5>
-            <div style="position: relative; height: 300px; width: 100%;">
-                <canvas id="salaryBarChart"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
 
-@section Scripts {
+    <div class="row g-4 mb-5">
+        <div class="col-md-5">
+            <div class="card luxury-card border-0 shadow-lg rounded-4 p-4 h-100">
+                <h6 class="fw-bold text-center text-muted mb-4">CƠ CẤU NHÂN SỰ THEO PHÒNG BAN</h6>
+                <canvas id="employeeCountChart"></canvas>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <div class="card luxury-card border-0 shadow-lg rounded-4 p-4 h-100">
+                <h6 class="fw-bold text-center text-muted mb-4">PHÂN BỔ QUỸ LƯƠNG THEO PHÒNG BAN</h6>
+                <canvas id="salaryFundChart"></canvas>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Lấy dữ liệu từ Backend truyền sang
+        // Nhận dữ liệu từ Controller
         const labels = @Html.Raw(Json.Serialize(ViewBag.Labels));
-        const counts = @Html.Raw(Json.Serialize(ViewBag.Counts));
-        const salaries = @Html.Raw(Json.Serialize(ViewBag.Salaries));
-        
-        // Bảng màu sang trọng Vàng - Bạc - Xám hoàng gia
-        const colors = ['#b45309', '#d97706', '#fde68a', '#94a3b8', '#334155'];
+        const countData = @Html.Raw(Json.Serialize(ViewBag.Counts));
+        const salaryData = @Html.Raw(Json.Serialize(ViewBag.Salaries));
 
-        // 1. Vẽ Biểu đồ Tròn (Pie Chart)
-        new Chart(document.getElementById('deptPieChart'), {
+        // Bảng màu chung cho biểu đồ
+        const bgColors = ['#d4af37', '#198754', '#0d6efd', '#dc3545', '#6f42c1', '#fd7e14'];
+
+        // 1. Vẽ biểu đồ Cơ cấu nhân sự (Doughnut Chart)
+        const ctxCount = document.getElementById('employeeCountChart').getContext('2d');
+        new Chart(ctxCount, {
         type: 'doughnut',
         data: {
         labels: labels,
-        datasets: [{ data: counts, backgroundColor: colors, borderWidth: 0 }]
+        datasets: [{
+        data: countData,
+        backgroundColor: bgColors,
+        borderWidth: 2,
+        borderColor: '#ffffff'
+        }]
         },
-        options: { responsive: true, maintainAspectRatio: false }
+        options: {
+        responsive: true,
+        plugins: {
+        legend: { position: 'bottom' }
+        }
+        }
         });
 
-        // 2. Vẽ Biểu đồ Cột (Bar Chart)
-        new Chart(document.getElementById('salaryBarChart'), {
+        // 2. Vẽ biểu đồ Quỹ lương (Bar Chart)
+        const ctxSalary = document.getElementById('salaryFundChart').getContext('2d');
+        new Chart(ctxSalary, {
         type: 'bar',
         data: {
         labels: labels,
-        datasets: [{ label: 'Quỹ lương (VNĐ)', data: salaries, backgroundColor: '#d97706', borderRadius: 8 }]
+        datasets: [{
+        label: 'Quỹ lương (VNĐ)',
+        data: salaryData,
+        backgroundColor: bgColors,
+        borderRadius: 5
+        }]
         },
-        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+        options: {
+        responsive: true,
+        plugins: {
+        legend: { display: false },
+        tooltip: {
+        callbacks: {
+        label: function(context) {
+        let value = context.raw;
+        return value.toLocaleString('vi-VN') + ' VNĐ';
+        }
+        }
+        }
+        },
+        scales: {
+        y: {
+        beginAtZero: true,
+        ticks: {
+        callback: function(value) {
+        return value.toLocaleString('vi-VN');
+        }
+        }
+        }
+        }
+        }
         });
     </script>
+}
+else
+{
+    <div class="alert alert-warning text-center rounded-4 shadow-sm py-5 mt-5">
+        <i class="bi bi-shield-lock-fill text-warning d-block mb-3" style="font-size: 4rem;"></i>
+        <h4 class="fw-bold">Vùng Dữ Liệu Nội Bộ</h4>
+        <p>Vui lòng <a asp-controller="Account" asp-action="Login" class="fw-bold text-decoration-none">Đăng nhập</a> để truy cập vào Dashboard quản trị trung tâm.</p>
+    </div>
 }
