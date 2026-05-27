@@ -16,7 +16,7 @@ namespace QuanLiNhanSu.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var sheets = await _context.BangLuongs.OrderByDescending(b => b.Nam).ThenByDescending(b => b.Thang).ToListAsync();
+            var sheets = await _context.BangLuongs.OrderByDescending(b => b.Nam).ThenByDescending(b => b.Thang).ThenBy(b => b.MaNV).ToListAsync();
             return View(sheets);
         }
 

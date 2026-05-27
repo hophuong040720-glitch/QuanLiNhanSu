@@ -30,7 +30,7 @@ namespace QuanLiNhanSu.Controllers
         public async Task<IActionResult> Index(string searchString, string phongBan, int page = 1)
         {
             int pageSize = 5;
-            var employees = _context.Employees.AsQueryable();
+            var employees = _context.Employees.OrderBy(e => e.MaNV).AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
                 employees = employees.Where(e => e.HoTen.Contains(searchString) || e.MaNV.Contains(searchString));
