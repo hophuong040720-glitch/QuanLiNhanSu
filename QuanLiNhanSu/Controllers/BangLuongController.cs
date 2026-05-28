@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -39,8 +39,16 @@ namespace QuanLiNhanSu.Controllers
                     .Where(u => u.MaNV == emp.MaNV && u.NgayYeuCau.Month == thang && u.NgayYeuCau.Year == nam && u.TrangThai == "Đã duyệt")
                     .SumAsync(u => u.SoTien);
 
+                // 2.1. Lấy tổng tiền Thưởng và tiền Phạt trong tháng
+                decimal tienThuong = await _context.KhenThuongKyLuats
+                    .Where(k => k.MaNV == emp.MaNV && k.Loai == "Khen thưởng" && k.NgayQuyetDinh.Month == thang && k.NgayQuyetDinh.Year == nam)
+                    .SumAsync(k => k.SoTien);
+                decimal tienPhat = await _context.KhenThuongKyLuats
+                    .Where(k => k.MaNV == emp.MaNV && k.Loai == "Kỷ luật" && k.NgayQuyetDinh.Month == thang && k.NgayQuyetDinh.Year == nam)
+                    .SumAsync(k => k.SoTien);
+
                 // 3. Tính toán tiền lương phát sinh của lượt chốt này
-                decimal calculatedSalary = currentWorkDays > 0 ? (emp.Luong / 26m * (decimal)currentWorkDays) - advancedAmount : 0;
+                decimal calculatedSalary = currentWorkDays > 0 ? (emp.Luong / 26m * (decimal)currentWorkDays) + tienThuong - tienPhat - advancedAmount : 0;
                 decimal roundedSalary = Math.Round(calculatedSalary, 0);
                 if (roundedSalary < 0) roundedSalary = 0;
 
@@ -70,6 +78,8 @@ namespace QuanLiNhanSu.Controllers
                     LuongCoBan = emp.Luong,
                     SoNgayDiLam = finalWorkDays,
                     TienUng = advancedAmount,
+                    TienThuong = tienThuong,
+                    TienPhat = tienPhat,
                     ThucLanh = finalThucLanh
                 });
 

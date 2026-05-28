@@ -1,0 +1,85 @@
+@model IEnumerable<QuanLiNhanSu.Models.KhenThuongKyLuat>
+@{
+    ViewData["Title"] = "Khen Thưởng & Kỷ Luật";
+    Layout = "_Layout";
+    bool canManage = User.IsInRole("Admin") || User.IsInRole("Nhân sự");
+}
+
+<div class="card luxury-card border-0 shadow-lg my-4 rounded-4">
+    <div class="card-body p-4 p-md-5">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+            <div>
+                <h3 class="fw-bold text-gradient-gold m-0"><i class="bi bi-award-fill me-2"></i>KHEN THƯỞNG & KỶ LUẬT</h3>
+                <p class="text-muted small m-0">Quản lý các quyết định tài chính và kỷ luật nhân sự</p>
+            </div>
+            @if (canManage)
+            {
+                <a asp-action="Create" class="btn btn-luxury px-4 py-2 fw-bold rounded-pill shadow-sm d-flex align-items-center">
+                    <i class="bi bi-plus-lg me-1"></i> Tạo Quyết Định
+                </a>
+            }
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success border-0 shadow-sm rounded-3 mb-4">
+                <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+            </div>
+        }
+
+        <div class="table-responsive overflow-hidden rounded-3 border">
+            <table class="table table-hover align-middle mb-0 custom-luxury-table bg-white">
+                <thead class="table-light border-bottom border-2">
+                    <tr class="text-secondary small fw-semibold">
+                        <th class="ps-3">MÃ QĐ</th>
+                        <th>MÃ NV</th>
+                        <th>LOẠI</th>
+                        <th>HÌNH THỨC</th>
+                        <th>SỐ TIỀN</th>
+                        <th>NGÀY QĐ</th>
+                        <th>NỘI DUNG</th>
+                        @if (canManage)
+                        {
+                            <th class="text-center pe-3">THAO TÁC</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody class="border-top-0">
+                    @if (!Model.Any())
+                    {
+                        <tr><td colspan="8" class="text-center py-4 text-muted">Chưa có quyết định nào.</td></tr>
+                    }
+                    @foreach (var item in Model)
+                    {
+                        bool isKhenThuong = item.Loai == "Khen thưởng";
+                        <tr>
+                            <td class="ps-3 fw-bold text-dark">#@item.MaKTKL</td>
+                            <td><span class="badge bg-gold text-dark border">@item.MaNV</span></td>
+                            <td>
+                                <span class="badge @(isKhenThuong ? "bg-success" : "bg-danger") px-2 py-1">
+                                    <i class="bi @(isKhenThuong ? "bi-graph-up-arrow" : "bi-graph-down-arrow") me-1"></i>
+                                    @item.Loai
+                                </span>
+                            </td>
+                            <td class="fw-semibold">@item.HinhThuc</td>
+                            <td class="fw-bold @(isKhenThuong ? "text-success" : "text-danger")">
+                                @(isKhenThuong ? "+" : "-")@item.SoTien.ToString("N0") đ
+                            </td>
+                            <td>@item.NgayQuyetDinh.ToString("dd/MM/yyyy")</td>
+                            <td class="text-muted small text-truncate" style="max-width: 200px;" title="@item.NoiDung">@item.NoiDung</td>
+                            
+                            @if (canManage)
+                            {
+                                <td class="text-center pe-3">
+                                    <form asp-action="Delete" asp-route-id="@item.MaKTKL" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa quyết định này? Nó sẽ ảnh hưởng tới bảng lương.');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger px-2" title="Xóa"><i class="bi bi-trash3-fill"></i></button>
+                                    </form>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

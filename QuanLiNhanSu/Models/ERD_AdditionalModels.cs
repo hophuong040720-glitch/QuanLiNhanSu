@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace QuanLiNhanSu.Models
@@ -56,6 +56,8 @@ namespace QuanLiNhanSu.Models
         public decimal LuongCoBan { get; set; }
         public int SoNgayDiLam { get; set; }
         public decimal TienUng { get; set; }
+        public decimal TienThuong { get; set; }
+        public decimal TienPhat { get; set; }
         public decimal ThucLanh { get; set; }
     }
 

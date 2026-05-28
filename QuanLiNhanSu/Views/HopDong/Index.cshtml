@@ -1,0 +1,98 @@
+@model IEnumerable<QuanLiNhanSu.Models.HopDong>
+@{
+    ViewData["Title"] = "Quản lý Hợp Đồng";
+    Layout = "_Layout";
+    bool canManage = User.IsInRole("Admin") || User.IsInRole("Nhân sự");
+}
+
+<div class="card luxury-card border-0 shadow-lg my-4 rounded-4">
+    <div class="card-body p-4 p-md-5">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+            <div>
+                <h3 class="fw-bold text-gradient-gold m-0"><i class="bi bi-file-earmark-text-fill me-2"></i>QUẢN LÝ HỢP ĐỒNG</h3>
+                <p class="text-muted small m-0">Lưu trữ và theo dõi thời hạn hợp đồng lao động</p>
+            </div>
+            @if (canManage)
+            {
+                <a asp-action="Create" class="btn btn-luxury px-4 py-2 fw-bold rounded-pill shadow-sm d-flex align-items-center">
+                    <i class="bi bi-plus-lg me-1"></i> Soạn hợp đồng mới
+                </a>
+            }
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success border-0 shadow-sm rounded-3 mb-4">
+                <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+            </div>
+        }
+
+        <div class="table-responsive overflow-hidden rounded-3 border">
+            <table class="table table-hover align-middle mb-0 custom-luxury-table bg-white">
+                <thead class="table-light border-bottom border-2">
+                    <tr class="text-secondary small fw-semibold">
+                        <th class="ps-3">MÃ HĐ</th>
+                        <th>MÃ NV</th>
+                        <th>LOẠI HỢP ĐỒNG</th>
+                        <th>NGÀY KÝ</th>
+                        <th>NGÀY HẾT HẠN</th>
+                        <th>TRẠNG THÁI</th>
+                        @if (canManage)
+                        {
+                            <th class="text-center pe-3">THAO TÁC</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody class="border-top-0">
+                    @if (!Model.Any())
+                    {
+                        <tr><td colspan="7" class="text-center py-4 text-muted">Chưa có dữ liệu hợp đồng.</td></tr>
+                    }
+                    @foreach (var item in Model)
+                    {
+                        var status = "";
+                        var badgeClass = "";
+                        
+                        if (item.NgayHetHan == null) {
+                            status = "Vô thời hạn";
+                            badgeClass = "bg-success";
+                        }
+                        else if (item.NgayHetHan.Value < DateTime.Now) {
+                            status = "Đã hết hạn";
+                            badgeClass = "bg-danger";
+                        }
+                        else if ((item.NgayHetHan.Value - DateTime.Now).TotalDays <= 30) {
+                            status = "Sắp hết hạn";
+                            badgeClass = "bg-warning text-dark";
+                        }
+                        else {
+                            status = "Còn hiệu lực";
+                            badgeClass = "bg-primary";
+                        }
+
+                        <tr>
+                            <td class="ps-3 fw-bold text-dark">#@item.MaHD</td>
+                            <td><span class="badge bg-gold text-dark border">@item.MaNV</span></td>
+                            <td class="fw-semibold">@item.LoaiHD</td>
+                            <td>@item.NgayKy.ToString("dd/MM/yyyy")</td>
+                            <td>@(item.NgayHetHan?.ToString("dd/MM/yyyy") ?? "-")</td>
+                            <td><span class="badge @badgeClass px-2 py-1">@status</span></td>
+                            
+                            @if (canManage)
+                            {
+                                <td class="text-center pe-3">
+                                    <div class="btn-group shadow-sm">
+                                        <a asp-action="Edit" asp-route-id="@item.MaHD" class="btn btn-sm btn-outline-gold px-2" title="Sửa"><i class="bi bi-pencil-square"></i></a>
+                                        <form asp-action="Delete" asp-route-id="@item.MaHD" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa hợp đồng này?');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger px-2" title="Xóa"><i class="bi bi-trash3-fill"></i></button>
+                                        </form>
+                                    </div>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

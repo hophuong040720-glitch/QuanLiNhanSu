@@ -1,4 +1,4 @@
-﻿@model IEnumerable<QuanLiNhanSu.Models.Employee>
+@model IEnumerable<QuanLiNhanSu.Models.Employee>
 @{
     ViewData["Title"] = "Quản lý Nhân sự";
     // Check xem user hiện tại đã có tên trong danh sách chưa
@@ -47,13 +47,13 @@
                 <input type="text" name="searchString" value="@ViewBag.CurrentSearch" class="form-control luxury-input" placeholder="Nhập tên hoặc Mã NV..." />
             </div>
             <div class="col-md-4">
-                <select name="phongBan" class="form-select luxury-input">
+                <select name="phongBanId" class="form-select luxury-input">
                     <option value="">-- Tất cả phòng ban --</option>
                     @if (ViewBag.PhongBans != null)
                     {
-                        foreach (var pb in ViewBag.PhongBans)
+                        foreach (var pb in (List<QuanLiNhanSu.Models.PhongBan>)ViewBag.PhongBans)
                         {
-                            <option value="@pb" selected="@(pb == ViewBag.CurrentPhongBan)">@pb</option>
+                            <option value="@pb.MaPB" selected="@(pb.MaPB == ViewBag.CurrentPhongBanId)">@pb.TenPB</option>
                         }
                     }
                 </select>
@@ -109,8 +109,8 @@
                             </td>
                             <td class="fw-bold text-gold-dark">@item.MaNV</td>
                             <td class="fw-semibold text-dark">@item.HoTen @(isMyRow ? " (Bạn)" : "")</td>
-                            <td><span class="badge bg-gold text-dark px-2 py-1">@item.PhongBan</span></td>
-                            <td class="text-secondary small">@item.ChucVu</td>
+                            <td><span class="badge bg-gold text-dark px-2 py-1">@item.TenPhongBan</span></td>
+                            <td class="text-secondary small">@item.TenChucVu</td>
                             
                             @* ĐÃ CẬP NHẬT: LOGIC BẢO MẬT ẨN BẢNG LƯƠNG *@
                             <td class="text-end fw-bold text-dark">
@@ -155,7 +155,7 @@
                     {
                         <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
                             <a class="page-link @(i == ViewBag.CurrentPage ? "bg-gold text-dark border-gold fw-bold" : "text-secondary")"
-                                   asp-action="Index" asp-route-page="@i" asp-route-searchString="@ViewBag.CurrentSearch" asp-route-phongBan="@ViewBag.CurrentPhongBan">
+                                   asp-action="Index" asp-route-page="@i" asp-route-searchString="@ViewBag.CurrentSearch" asp-route-phongBanId="@ViewBag.CurrentPhongBanId">
                                 @i
                             </a>
                         </li>

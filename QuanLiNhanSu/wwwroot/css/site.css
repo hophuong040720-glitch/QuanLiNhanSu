@@ -1,145 +1,268 @@
-/* ================= 1. CẤU HÌNH GỐC CỦA ASP.NET CORE ================= */
-html {
-    font-size: 14px;
-    position: relative;
-    min-height: 100%;
+/* ================= 1. VARIABLES (DESIGN SYSTEM) ================= */
+:root {
+    /* MÀU SẮC LIGHT MODE (Mặc định) */
+    --bg-main: #f8fafc;
+    --bg-secondary: #e2e8f0;
+    --bg-card: rgba(255, 255, 255, 0.85);
+    --bg-glass: rgba(255, 255, 255, 0.7);
+    --bg-sidebar: #ffffff;
+    
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    
+    --border-color: rgba(203, 213, 225, 0.5);
+    
+    --gold-primary: #d97706;
+    --gold-dark: #b45309;
+    --gold-light: #fde68a;
+    
+    --sidebar-width: 260px;
+    --sidebar-collapsed-width: 80px;
+    --transition-speed: 0.3s;
 }
 
-@media (min-width: 768px) {
-    html {
-        font-size: 16px;
-    }
+/* MÀU SẮC DARK MODE */
+[data-theme="dark"] {
+    --bg-main: #0f172a;
+    --bg-secondary: #020617;
+    --bg-card: rgba(30, 41, 59, 0.85);
+    --bg-glass: rgba(15, 23, 42, 0.8);
+    --bg-sidebar: #1e293b;
+    
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    
+    --border-color: rgba(51, 65, 85, 0.8);
+    
+    --gold-primary: #fbbf24;
+    --gold-dark: #d97706;
+    --gold-light: rgba(251, 191, 36, 0.2);
 }
 
-/* ================= 2. TÔNG MÀU SANG TRỌNG: VÀNG - TRẮNG - BẠCH KIM ================= */
-body.luxury-theme {
-    margin-bottom: 60px;
-    /* Nền kết hợp dải màu trắng bạch kim (Platinum White), xám bạc sáng (Brushed Silver) và ánh vàng kim (Champagne Gold) */
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #fef3c7 100%);
-    background-attachment: fixed;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    color: #1e293b;
+/* ================= 2. GLOBAL STYLES ================= */
+body {
+    background-color: var(--bg-secondary);
+    background-image: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-secondary) 100%);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    overflow-x: hidden;
+    transition: background-color var(--transition-speed), color var(--transition-speed);
 }
 
-/* Màu vàng ánh kim chuyên dụng */
-.text-gold {
-    color: #d97706 !important;
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+    font-family: 'Outfit', sans-serif;
 }
 
-.text-gold-dark {
-    color: #b45309 !important;
+/* Tùy chỉnh Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-main); }
+::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ================= 3. SIDEBAR LAYOUT ================= */
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
 }
 
-/* Hiệu ứng chữ chuyển màu vàng hoàng gia */
+/* SIDEBAR */
+#sidebar {
+    min-width: var(--sidebar-width);
+    max-width: var(--sidebar-width);
+    background: var(--bg-sidebar);
+    color: var(--text-primary);
+    transition: all var(--transition-speed);
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+    position: fixed;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+[data-theme="dark"] #sidebar {
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.5);
+}
+
+/* HEADER SIDEBAR (Logo) */
+.sidebar-header {
+    padding: 20px;
+    background: transparent;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* MENU ITEMS */
+.sidebar-menu {
+    padding: 15px 10px;
+    list-style: none;
+    margin: 0;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.sidebar-menu li {
+    margin-bottom: 5px;
+}
+
+.sidebar-menu a {
+    padding: 12px 15px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    color: var(--text-secondary);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.sidebar-menu a i {
+    font-size: 1.2rem;
+    margin-right: 15px;
+    color: var(--text-muted);
+    transition: all 0.2s;
+}
+
+.sidebar-menu a:hover, .sidebar-menu a.active {
+    background: var(--bg-secondary);
+    color: var(--gold-primary);
+}
+
+.sidebar-menu a:hover i, .sidebar-menu a.active i {
+    color: var(--gold-primary);
+}
+
+/* SIDEBAR FOOTER (User & Theme) */
+.sidebar-footer {
+    padding: 15px 20px;
+    border-top: 1px solid var(--border-color);
+    background: transparent;
+}
+
+/* KHI SIDEBAR THU GỌN */
+#sidebar.collapsed {
+    min-width: var(--sidebar-collapsed-width);
+    max-width: var(--sidebar-collapsed-width);
+}
+
+#sidebar.collapsed .sidebar-header h4,
+#sidebar.collapsed .sidebar-menu a span,
+#sidebar.collapsed .user-info {
+    display: none;
+}
+
+#sidebar.collapsed .sidebar-menu a i {
+    margin-right: 0;
+    margin-left: 5px;
+}
+
+/* ================= 4. MAIN CONTENT AREA ================= */
+#content {
+    width: calc(100% - var(--sidebar-width));
+    min-height: 100vh;
+    transition: all var(--transition-speed);
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#content.sidebar-collapsed {
+    width: calc(100% - var(--sidebar-collapsed-width));
+}
+
+/* TOP NAVBAR (TRONG MAIN CONTENT) */
+.top-navbar {
+    background: var(--bg-glass) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px 25px;
+}
+
+/* ================= 5. LUXURY COMPONENTS ================= */
+
+/* Màu chữ Gradient */
 .text-gradient-gold {
-    background: linear-gradient(90deg, #b45309 0%, #d97706 50%, #9a3412 100%);
+    background: linear-gradient(90deg, var(--gold-dark) 0%, var(--gold-primary) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0px 1px 2px rgba(0,0,0,0.05);
 }
 
-/* Badge vàng */
-.bg-gold {
-    background-color: #fde68a !important;
-    color: #78350f !important;
-    font-weight: 600;
-}
-
-/* ================= 3. KHUNG CARD BẠCH KIM (GLASSMORPHISM CAO CẤP) ================= */
+/* Thẻ Glassmorphism */
 .luxury-card {
-    /* Tấm kính mờ bạch kim, trong suốt nhẹ cực kỳ cao cấp */
-    background: rgba(255, 255, 255, 0.85) !important;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.8) !important;
-    box-shadow: 0 25px 50px -12px rgba(100, 116, 139, 0.25) !important;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-    .luxury-card:hover {
-        box-shadow: 0 30px 60px -10px rgba(100, 116, 139, 0.3) !important;
-    }
-
-/* ================= 4. NÚT BẤM HOÀNG GIA (BUTTONS) ================= */
-.btn-luxury {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    color: #f8fafc !important;
-    border: 1px solid #334155;
-    transition: all 0.3s ease;
-}
-
-    .btn-luxury:hover {
-        background: linear-gradient(135deg, #b45309 0%, #d97706 100%);
-        color: #ffffff !important;
-        border-color: #fde68a;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(180, 83, 9, 0.3);
-    }
-
-.btn-outline-gold {
-    color: #b45309 !important;
-    background-color: rgba(255, 255, 255, 0.9);
-    border: 2px solid #d97706 !important;
-    transition: all 0.3s ease;
-}
-
-    .btn-outline-gold:hover {
-        background-color: #d97706 !important;
-        color: #ffffff !important;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(217, 119, 6, 0.2);
-    }
-
-/* ================= 5. Ô NHẬP LIỆU BẠCH KIM & FIX LỖI ĐÈ CHỮ ================= */
-.luxury-input {
-    background-color: #ffffff !important;
-    border: 1px solid #cbd5e1 !important;
-    color: #0f172a !important;
-    font-weight: 600; /* Tăng độ đậm nhẹ cho chữ gõ vào */
-    border-radius: 10px;
-    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
-    transition: all 0.2s ease;
-}
-
-    .luxury-input:focus {
-        border-color: #d97706 !important;
-        box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.15) !important;
-        background-color: #ffffff !important;
-    }
-
-/* FIX ĐÈ CHỮ: Khi input chưa focus -> Ẩn hoàn toàn placeholder */
-.form-floating > .form-control::placeholder {
-    color: transparent !important;
-    transition: color 0.2s ease;
-}
-
-/* FIX ĐÈ CHỮ: Khi click vào (focus) -> Label bay lên, lúc này mới hiện placeholder */
-.form-floating > .form-control:focus::placeholder {
-    color: #94a3b8 !important;
-    text-align: start;
-}
-
-/* Tinh chỉnh Label nằm êm ái, không sát lề */
-.form-floating > label {
-    color: #64748b !important;
-    font-weight: 500;
-    padding-left: 1.25rem;
-}
-
-/* ================= 6. NAVBAR BẠCH KIM ================= */
-.luxury-navbar {
-    background: rgba(255, 255, 255, 0.75) !important;
+    background: var(--bg-card) !important;
     backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.6) !important;
-    box-shadow: 0 4px 20px rgba(100, 116, 139, 0.08) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary);
+    border-radius: 16px;
 }
 
-    .luxury-navbar .nav-link {
-        color: #334155 !important;
-        transition: color 0.2s ease;
-    }
+.luxury-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important;
+}
 
-        .luxury-navbar .nav-link:hover {
-            color: #d97706 !important;
-        }
+[data-theme="dark"] .luxury-card:hover {
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4) !important;
+}
+
+/* Bảng */
+.custom-luxury-table {
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+.custom-luxury-table th {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-secondary);
+    border-bottom: 2px solid var(--border-color);
+}
+.custom-luxury-table td {
+    background-color: transparent !important;
+    color: var(--text-primary);
+}
+.custom-luxury-table tbody tr:hover {
+    background-color: var(--bg-main) !important;
+}
+
+/* Nút bấm */
+.btn-luxury {
+    background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-primary) 100%);
+    color: #fff !important;
+    border: none;
+}
+.btn-luxury:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(217, 119, 6, 0.4);
+}
+
+.bg-gold { background-color: var(--gold-primary) !important; color: #fff !important; }
+.bg-gold-light { background-color: var(--gold-light) !important; }
+
+/* Input field */
+.luxury-input {
+    background-color: var(--bg-main) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+.luxury-input:focus {
+    border-color: var(--gold-primary) !important;
+    box-shadow: 0 0 0 3px var(--gold-light) !important;
+}
+
+/* ================= 6. ANIMATIONS ================= */
+.fade-in-up {
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

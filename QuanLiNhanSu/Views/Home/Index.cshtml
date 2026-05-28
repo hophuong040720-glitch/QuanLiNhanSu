@@ -1,125 +1,179 @@
-﻿@{
+@{
     ViewData["Title"] = "Trang chủ Quản trị";
 }
 
-<div class="text-center mt-4 mb-5">
-    <h1 class="display-5 fw-bold text-gradient-gold">HỆ THỐNG QUẢN TRỊ NHÂN SỰ TOÀN DIỆN</h1>
-    <p class="lead text-muted">Công ty Cổ phần Thương mại và Dịch vụ Công nghệ HT</p>
+<div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+    <div>
+        <h2 class="fw-bold text-gradient-gold m-0">DASHBOARD QUẢN TRỊ</h2>
+        <p class="text-muted small m-0">Công ty Cổ phần Thương mại và Dịch vụ Công nghệ HT</p>
+    </div>
+    <div class="text-end">
+        <span class="badge bg-light text-dark border px-3 py-2 fs-6 shadow-sm"><i class="bi bi-calendar-event me-2"></i>@DateTime.Now.ToString("dd/MM/yyyy")</span>
+    </div>
 </div>
 
 @if (User.Identity!.IsAuthenticated)
 {
     <div class="row g-4 mb-5">
-        <div class="col-md-6">
-            <div class="card luxury-card border-0 shadow-lg rounded-4 bg-light p-4 h-100 d-flex flex-row align-items-center">
-                <div class="me-4">
-                    <i class="bi bi-people-fill text-gold" style="font-size: 4rem;"></i>
+        <!-- CỘT TRÁI (Biểu đồ & Thống kê chính) -->
+        <div class="col-lg-8">
+            
+            <!-- 4 Stat Cards -->
+            <div class="row g-3 mb-4">
+                <!-- Card 1: Tổng NV -->
+                <div class="col-md-3 col-6">
+                    <div class="card luxury-card border-0 shadow-sm rounded-4 p-3 h-100 text-center">
+                        <div class="rounded-circle bg-gold-light mx-auto mb-2 d-flex align-items-center justify-content-center" style="width:50px; height:50px;">
+                            <i class="bi bi-people-fill text-gold fs-4"></i>
+                        </div>
+                        <h3 class="fw-bold text-dark m-0">@ViewBag.TotalEmployees</h3>
+                        <p class="text-muted small m-0">Tổng Nhân Sự</p>
+                    </div>
                 </div>
-                <div>
-                    <h5 class="text-dark mb-1">Tổng Nhân Sự</h5>
-                    <h1 class="display-4 fw-bold text-dark mb-0">@ViewBag.TotalEmployees</h1>
-                    <p class="text-muted small mb-0">Nhân sự đang hoạt động</p>
+                <!-- Card 2: Chấm công hôm nay -->
+                <div class="col-md-3 col-6">
+                    <div class="card luxury-card border-0 shadow-sm rounded-4 p-3 h-100 text-center">
+                        <div class="rounded-circle bg-success bg-opacity-10 mx-auto mb-2 d-flex align-items-center justify-content-center" style="width:50px; height:50px;">
+                            <i class="bi bi-fingerprint text-success fs-4"></i>
+                        </div>
+                        <h3 class="fw-bold text-success m-0">@ViewBag.PresentToday</h3>
+                        <p class="text-muted small m-0">Đi làm hôm nay</p>
+                    </div>
+                </div>
+                <!-- Card 3: Nghỉ phép chờ duyệt -->
+                <div class="col-md-3 col-6">
+                    <div class="card luxury-card border-0 shadow-sm rounded-4 p-3 h-100 text-center">
+                        <div class="rounded-circle bg-warning bg-opacity-10 mx-auto mb-2 d-flex align-items-center justify-content-center" style="width:50px; height:50px;">
+                            <i class="bi bi-calendar-minus text-warning fs-4"></i>
+                        </div>
+                        <h3 class="fw-bold text-warning m-0">@ViewBag.PendingLeaves</h3>
+                        <p class="text-muted small m-0">Phép chờ duyệt</p>
+                    </div>
+                </div>
+                <!-- Card 4: Ứng lương chờ duyệt -->
+                <div class="col-md-3 col-6">
+                    <div class="card luxury-card border-0 shadow-sm rounded-4 p-3 h-100 text-center">
+                        <div class="rounded-circle bg-danger bg-opacity-10 mx-auto mb-2 d-flex align-items-center justify-content-center" style="width:50px; height:50px;">
+                            <i class="bi bi-cash-coin text-danger fs-4"></i>
+                        </div>
+                        <h3 class="fw-bold text-danger m-0">@ViewBag.PendingAdvances</h3>
+                        <p class="text-muted small m-0">Ứng lương chờ</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card luxury-card border-0 shadow-lg rounded-4 bg-light p-4 h-100 d-flex flex-row align-items-center">
-                <div class="me-4">
-                    <i class="bi bi-wallet2 text-success" style="font-size: 4rem;"></i>
-                </div>
-                <div>
-                    <h5 class="text-dark mb-1">Tổng Quỹ Lương Cơ Bản</h5>
-                    <h1 class="display-5 fw-bold text-success mb-0">@Convert.ToDecimal(ViewBag.TotalSalary).ToString("N0") <span class="fs-4">VNĐ</span></h1>
-                    <p class="text-muted small mb-0">Ngân sách chi trả hằng tháng</p>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="row g-4 mb-5">
-        <div class="col-md-5">
-            <div class="card luxury-card border-0 shadow-lg rounded-4 p-4 h-100">
-                <h6 class="fw-bold text-center text-muted mb-4">CƠ CẤU NHÂN SỰ THEO PHÒNG BAN</h6>
-                <canvas id="employeeCountChart"></canvas>
+            <!-- Charts -->
+            <div class="row g-4">
+                <div class="col-md-5">
+                    <div class="card luxury-card border-0 shadow-sm rounded-4 p-4 h-100">
+                        <h6 class="fw-bold text-center text-muted mb-4">CƠ CẤU NHÂN SỰ</h6>
+                        <canvas id="employeeCountChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="col-md-7">
+                    <div class="card luxury-card border-0 shadow-sm rounded-4 p-4 h-100">
+                        <h6 class="fw-bold text-center text-muted mb-2">QUỸ LƯƠNG THEO PHÒNG BAN</h6>
+                        <h4 class="text-center text-success fw-bold mb-4">@Convert.ToDecimal(ViewBag.TotalSalary).ToString("N0") <span class="fs-6">VNĐ</span></h4>
+                        <canvas id="salaryFundChart"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="col-md-7">
-            <div class="card luxury-card border-0 shadow-lg rounded-4 p-4 h-100">
-                <h6 class="fw-bold text-center text-muted mb-4">PHÂN BỔ QUỸ LƯƠNG THEO PHÒNG BAN</h6>
-                <canvas id="salaryFundChart"></canvas>
+        <!-- CỘT PHẢI (Cảnh báo & Hoạt động) -->
+        <div class="col-lg-4">
+            
+            <!-- Cảnh báo Hợp đồng -->
+            <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
+                <div class="card-header bg-danger text-white border-0 py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 fw-bold"><i class="bi bi-exclamation-triangle-fill me-2"></i>Hợp Đồng Sắp Hết Hạn</h6>
+                    <span class="badge bg-white text-danger rounded-pill">@ViewBag.ExpiringContracts</span>
+                </div>
+                <div class="card-body p-0">
+                    @if (ViewBag.ExpiringContracts == 0)
+                    {
+                        <div class="p-4 text-center text-muted small">
+                            <i class="bi bi-shield-check text-success fs-1 d-block mb-2"></i>
+                            Không có hợp đồng nào sắp hết hạn trong 30 ngày tới.
+                        </div>
+                    }
+                    else
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var hd in ViewBag.ExpiringContractList)
+                            {
+                                var daysLeft = (hd.NgayHetHan - DateTime.Today).TotalDays;
+                                <li class="list-group-item px-4 py-3">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="fw-bold text-dark m-0">NV: @hd.MaNV</h6>
+                                            <p class="text-muted small m-0">Hết hạn: @hd.NgayHetHan.ToString("dd/MM/yyyy")</p>
+                                        </div>
+                                        <span class="badge bg-warning text-dark">Còn @daysLeft ngày</span>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
             </div>
+
+            <!-- Hoạt động gần đây -->
+            <div class="card luxury-card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-light border-bottom py-3">
+                    <h6 class="m-0 fw-bold text-dark"><i class="bi bi-activity text-primary me-2"></i>Hoạt Động Gần Đây</h6>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        @foreach (var log in ViewBag.RecentLogs)
+                        {
+                            <li class="list-group-item px-4 py-3">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1 fw-bold text-dark fs-6">@log.Action</h6>
+                                    <small class="text-muted" style="font-size:0.75rem">@log.Timestamp.ToString("HH:mm dd/MM")</small>
+                                </div>
+                                <p class="mb-1 small text-secondary">@log.Details</p>
+                                <small class="text-primary fw-semibold"><i class="bi bi-person-fill"></i> @log.Username</small>
+                            </li>
+                        }
+                        @if (((IEnumerable<dynamic>)ViewBag.RecentLogs).Count() == 0)
+                        {
+                            <li class="list-group-item text-center text-muted p-4 small">Chưa có hoạt động nào.</li>
+                        }
+                    </ul>
+                </div>
+                <div class="card-footer bg-white text-center py-2 border-top">
+                    <a asp-controller="SystemLog" asp-action="Index" class="text-decoration-none small fw-bold text-primary">Xem tất cả <i class="bi bi-arrow-right"></i></a>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Nhận dữ liệu từ Controller
         const labels = @Html.Raw(Json.Serialize(ViewBag.Labels));
         const countData = @Html.Raw(Json.Serialize(ViewBag.Counts));
         const salaryData = @Html.Raw(Json.Serialize(ViewBag.Salaries));
-
-        // Bảng màu chung cho biểu đồ
         const bgColors = ['#d4af37', '#198754', '#0d6efd', '#dc3545', '#6f42c1', '#fd7e14'];
 
-        // 1. Vẽ biểu đồ Cơ cấu nhân sự (Doughnut Chart)
         const ctxCount = document.getElementById('employeeCountChart').getContext('2d');
         new Chart(ctxCount, {
-        type: 'doughnut',
-        data: {
-        labels: labels,
-        datasets: [{
-        data: countData,
-        backgroundColor: bgColors,
-        borderWidth: 2,
-        borderColor: '#ffffff'
-        }]
-        },
-        options: {
-        responsive: true,
-        plugins: {
-        legend: { position: 'bottom' }
-        }
-        }
+            type: 'doughnut',
+            data: { labels: labels, datasets: [{ data: countData, backgroundColor: bgColors, borderWidth: 2, borderColor: '#ffffff' }] },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
         });
 
-        // 2. Vẽ biểu đồ Quỹ lương (Bar Chart)
         const ctxSalary = document.getElementById('salaryFundChart').getContext('2d');
         new Chart(ctxSalary, {
-        type: 'bar',
-        data: {
-        labels: labels,
-        datasets: [{
-        label: 'Quỹ lương (VNĐ)',
-        data: salaryData,
-        backgroundColor: bgColors,
-        borderRadius: 5
-        }]
-        },
-        options: {
-        responsive: true,
-        plugins: {
-        legend: { display: false },
-        tooltip: {
-        callbacks: {
-        label: function(context) {
-        let value = context.raw;
-        return value.toLocaleString('vi-VN') + ' VNĐ';
-        }
-        }
-        }
-        },
-        scales: {
-        y: {
-        beginAtZero: true,
-        ticks: {
-        callback: function(value) {
-        return value.toLocaleString('vi-VN');
-        }
-        }
-        }
-        }
-        }
+            type: 'bar',
+            data: { labels: labels, datasets: [{ label: 'Quỹ lương', data: salaryData, backgroundColor: bgColors, borderRadius: 5 }] },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(ctx) { return ctx.raw.toLocaleString('vi-VN') + ' VNĐ'; } } } },
+                scales: { y: { beginAtZero: true, ticks: { callback: function(val) { return val.toLocaleString('vi-VN'); } } } }
+            }
         });
     </script>
 }

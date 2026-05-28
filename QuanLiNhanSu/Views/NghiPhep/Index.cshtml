@@ -1,0 +1,98 @@
+@model IEnumerable<QuanLiNhanSu.Models.PhieuNghiPhep>
+@{
+    ViewData["Title"] = "Quản lý Nghỉ Phép";
+    Layout = "_Layout";
+    bool canManage = User.IsInRole("Admin") || User.IsInRole("Nhân sự");
+}
+
+<div class="card luxury-card border-0 shadow-lg my-4 rounded-4">
+    <div class="card-body p-4 p-md-5">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+            <div>
+                <h3 class="fw-bold text-gradient-gold m-0"><i class="bi bi-calendar-event me-2"></i>ĐƠN XIN NGHỈ PHÉP</h3>
+                <p class="text-muted small m-0">Quản lý và phê duyệt ngày nghỉ phép của nhân sự</p>
+            </div>
+            <a asp-action="Create" class="btn btn-luxury px-4 py-2 fw-bold rounded-pill shadow-sm d-flex align-items-center">
+                <i class="bi bi-pencil-square me-1"></i> Tạo Đơn Xin Nghỉ
+            </a>
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success border-0 shadow-sm rounded-3 mb-4">
+                <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+            </div>
+        }
+
+        <div class="table-responsive overflow-hidden rounded-3 border">
+            <table class="table table-hover align-middle mb-0 custom-luxury-table bg-white">
+                <thead class="table-light border-bottom border-2">
+                    <tr class="text-secondary small fw-semibold">
+                        <th class="ps-3">MÃ PHIẾU</th>
+                        <th>MÃ NV</th>
+                        <th>TỪ NGÀY</th>
+                        <th>ĐẾN NGÀY</th>
+                        <th>SỐ NGÀY</th>
+                        <th>LÝ DO</th>
+                        <th>TRẠNG THÁI</th>
+                        @if (canManage)
+                        {
+                            <th class="text-center pe-3">DUYỆT</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody class="border-top-0">
+                    @if (!Model.Any())
+                    {
+                        <tr><td colspan="8" class="text-center py-4 text-muted">Chưa có đơn nghỉ phép nào.</td></tr>
+                    }
+                    @foreach (var item in Model)
+                    {
+                        var days = (item.NgayKetThuc - item.NgayBatDau).TotalDays + 1;
+                        var badgeClass = item.TrangThai switch {
+                            "Đã duyệt" => "bg-success",
+                            "Từ chối" => "bg-danger",
+                            _ => "bg-warning text-dark"
+                        };
+
+                        <tr>
+                            <td class="ps-3 fw-bold text-dark">#@item.MaPhieu</td>
+                            <td><span class="badge bg-gold text-dark border">@item.MaNV</span></td>
+                            <td class="fw-semibold">@item.NgayBatDau.ToString("dd/MM/yyyy")</td>
+                            <td class="fw-semibold">@item.NgayKetThuc.ToString("dd/MM/yyyy")</td>
+                            <td><strong>@days</strong> ngày</td>
+                            <td class="text-muted small text-truncate" style="max-width: 150px;" title="@item.LyDo">@item.LyDo</td>
+                            <td>
+                                <span class="badge @badgeClass px-2 py-1">
+                                    @if(item.TrangThai == "Chờ duyệt"){ <span class="spinner-grow spinner-grow-sm me-1" style="width: 10px; height: 10px;"></span> }
+                                    @item.TrangThai
+                                </span>
+                            </td>
+                            
+                            @if (canManage)
+                            {
+                                <td class="text-center pe-3">
+                                    @if (item.TrangThai == "Chờ duyệt")
+                                    {
+                                        <div class="btn-group shadow-sm">
+                                            <form asp-action="Approve" method="post" class="d-inline">
+                                                <input type="hidden" name="id" value="@item.MaPhieu" />
+                                                <input type="hidden" name="actionType" value="Approve" />
+                                                <button type="submit" class="btn btn-sm btn-success px-2" title="Phê duyệt"><i class="bi bi-check-lg"></i></button>
+                                            </form>
+                                            <form asp-action="Approve" method="post" class="d-inline">
+                                                <input type="hidden" name="id" value="@item.MaPhieu" />
+                                                <input type="hidden" name="actionType" value="Reject" />
+                                                <button type="submit" class="btn btn-sm btn-danger px-2" title="Từ chối"><i class="bi bi-x-lg"></i></button>
+                                            </form>
+                                        </div>
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

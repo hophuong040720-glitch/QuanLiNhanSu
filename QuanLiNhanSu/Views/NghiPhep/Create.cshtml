@@ -1,0 +1,74 @@
+@model QuanLiNhanSu.Models.PhieuNghiPhep
+@{
+    ViewData["Title"] = "Xin Nghỉ Phép";
+    Layout = "_Layout";
+    bool isAdmin = User.IsInRole("Admin") || User.IsInRole("Nhân sự");
+}
+
+<div class="row justify-content-center mt-4 mb-5">
+    <div class="col-lg-8">
+        <div class="card luxury-card border-0 shadow-lg overflow-hidden rounded-4">
+            
+            <div class="p-4 bg-light border-bottom d-flex align-items-center gap-3">
+                <div class="rounded-circle bg-gold p-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 55px; height: 55px;">
+                    <i class="bi bi-send-check text-dark fs-3"></i>
+                </div>
+                <div>
+                    <h4 class="fw-bold text-gradient-gold m-0">GỬI ĐƠN XIN NGHỈ PHÉP</h4>
+                    <p class="text-muted small m-0">Vui lòng điền đầy đủ thông tin để quản lý xem xét phê duyệt</p>
+                </div>
+            </div>
+
+            <div class="card-body p-4 p-md-5">
+                <form asp-action="Create" method="post">
+                    <div class="row g-4">
+                        @if (isAdmin)
+                        {
+                            <div class="col-md-12">
+                                <label class="form-label small fw-bold text-muted">MÃ NHÂN VIÊN</label>
+                                <input asp-for="MaNV" class="form-control luxury-input" placeholder="Nhập mã nhân viên xin nghỉ..." required />
+                                <span asp-validation-for="MaNV" class="text-danger small"></span>
+                                <span class="text-secondary small mt-1 d-block"><i class="bi bi-info-circle"></i> Bạn đang tạo đơn thay cho nhân viên khác.</span>
+                            </div>
+                        }
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">TỪ NGÀY</label>
+                            <input asp-for="NgayBatDau" type="date" class="form-control luxury-input" required />
+                            <span asp-validation-for="NgayBatDau" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">ĐẾN HẾT NGÀY</label>
+                            <input asp-for="NgayKetThuc" type="date" class="form-control luxury-input" required />
+                            <span asp-validation-for="NgayKetThuc" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label small fw-bold text-muted">LÝ DO XIN NGHỈ</label>
+                            <textarea asp-for="LyDo" class="form-control luxury-input" rows="4" placeholder="Ví dụ: Nghỉ ốm, Việc gia đình..." required></textarea>
+                            <span asp-validation-for="LyDo" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info py-2 px-3 small rounded-3 mt-4 border-0">
+                        <i class="bi bi-clock-history me-1"></i> Đơn của bạn sẽ được gửi tới bộ phận Nhân Sự. Thời gian duyệt tối đa 24h.
+                    </div>
+
+                    <hr class="my-4 border-secondary opacity-25" />
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4 fw-bold rounded-3">Hủy</a>
+                        <button type="submit" class="btn btn-luxury px-5 fw-bold rounded-3 shadow-sm">
+                            <i class="bi bi-paperclip me-1"></i> Gửi Đơn Xin Nghỉ
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

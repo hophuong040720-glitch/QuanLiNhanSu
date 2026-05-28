@@ -1,4 +1,4 @@
-﻿@model QuanLiNhanSu.Models.Employee
+@model QuanLiNhanSu.Models.Employee
 @{
     ViewData["Title"] = "Cập nhật Hồ sơ";
     Layout = "_Layout";
@@ -78,55 +78,35 @@
                                     <label class="form-label small fw-bold text-muted">PHÒNG BAN HOẠT ĐỘNG</label>
                                     @if (isAdmin)
                                     {
-                                        <select asp-for="PhongBan" class="form-select luxury-input" required>
-                                            <option value="IT">Kỹ thuật (IT)</option>
-                                            <option value="Kế toán">Kế toán</option>
-                                            <option value="Nhân sự">Nhân sự</option>
-                                            <option value="Kinh doanh">Kinh doanh</option>
+                                        <select asp-for="PhongBanId" asp-items="ViewBag.PhongBans" class="form-select luxury-input">
+                                            <option value="">-- Lựa chọn phòng ban --</option>
                                         </select>
                                     }
                                     else
                                     {
-                                        <input asp-for="PhongBan" class="form-control luxury-input bg-light" readonly />
+                                        <input value="@Model.TenPhongBan" class="form-control luxury-input bg-light" readonly />
                                     }
                                 </div>
 
-                                @* ĐÃ CẬP NHẬT: THAY THẾ CHỨC VỤ THÀNH DROPDOWN PHÂN NHÓM DÀNH CHO ADMIN *@
                                 <div class="col-md-6">
                                     <label class="form-label small fw-bold text-muted">CHỨC VỤ ĐẢM NHIỆM</label>
                                     @if (isAdmin)
                                     {
-                                        <select asp-for="ChucVu" class="form-select luxury-input" required>
+                                        <select asp-for="ChucVuId" asp-items="ViewBag.ChucVus" class="form-select luxury-input">
                                             <option value="">-- Lựa chọn chức vụ --</option>
-                                            <optgroup label="Ban Giám Đốc">
-                                                <option value="Giám đốc (CEO)">Giám đốc (CEO)</option>
-                                                <option value="Phó Giám đốc">Phó Giám đốc</option>
-                                            </optgroup>
-                                            <optgroup label="Cấp Quản Lý (Trưởng/Phó Bộ Phận)">
-                                                <option value="Trưởng phòng">Trưởng phòng</option>
-                                                <option value="Phó phòng">Phó phòng</option>
-                                                <option value="Kế toán trưởng">Kế toán trưởng</option>
-                                            </optgroup>
-                                            <optgroup label="Cấp Nhân Viên Thực Thi">
-                                                <option value="Chuyên viên chính">Chuyên viên chính</option>
-                                                <option value="Chuyên viên">Chuyên viên</option>
-                                                <option value="Nhân viên">Nhân viên</option>
-                                                <option value="Thực tập sinh">Thực tập sinh</option>
-                                            </optgroup>
                                         </select>
                                     }
                                     else
                                     {
-                                        <input asp-for="ChucVu" class="form-control luxury-input bg-light" readonly />
+                                        <input value="@Model.TenChucVu" class="form-control luxury-input bg-light" readonly />
                                     }
-                                    <span asp-validation-for="ChucVu" class="text-danger small"></span>
                                 </div>
 
                                 <div class="col-md-12">
                                     <label class="form-label small fw-bold text-muted">MỨC LƯƠNG THỎA THUẬN (VNĐ)</label>
                                     <div class="input-group shadow-sm rounded-3">
                                         <span class="input-group-text bg-light text-gold-dark fw-bold border-end-0">₫</span>
-                                        <input asp-for="Luong" type="text" value="@Model.Luong.ToString("G")" class="form-control luxury-input border-start-0 @(!isAdmin ? "bg-light text-muted" : "")" readonly="@(!isAdmin)" required />
+                                        <input asp-for="Luong" type="number" class="form-control luxury-input border-start-0 @(!isAdmin ? "bg-light text-muted" : "")" readonly="@(!isAdmin)" required />
                                     </div>
                                     @if (!isAdmin)
                                     {

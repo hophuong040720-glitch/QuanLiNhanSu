@@ -1,4 +1,4 @@
-﻿@model QuanLiNhanSu.Models.Employee
+@model QuanLiNhanSu.Models.Employee
 
 @{
     ViewData["Title"] = "Chi tiết Nhân sự";
@@ -50,11 +50,11 @@
                             <tbody>
                                 <tr>
                                     <td class="text-muted fw-bold small align-middle w-35" style="width: 120px;"><i class="bi bi-diagram-3-fill me-1"></i> BỘ PHẬN</td>
-                                    <td><span class="badge bg-light text-dark border px-3 py-2 fs-6">@Model.PhongBan</span></td>
+                                    <td><span class="badge bg-light text-dark border px-3 py-2 fs-6">@Model.TenPhongBan</span></td>
                                 </tr>
                                 <tr>
                                     <td class="text-muted fw-bold small align-middle"><i class="bi bi-briefcase-fill me-1"></i> CHỨC VỤ</td>
-                                    <td class="fw-semibold text-dark fs-5">@Model.ChucVu</td>
+                                    <td class="fw-semibold text-dark fs-5">@Model.TenChucVu</td>
                                 </tr>
                                 <tr>
                                     <td class="text-muted fw-bold small align-middle"><i class="bi bi-cash-stack me-1"></i> MỨC LƯƠNG</td>

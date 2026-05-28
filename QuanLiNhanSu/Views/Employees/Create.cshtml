@@ -1,4 +1,4 @@
-﻿@model QuanLiNhanSu.Models.Employee
+@model QuanLiNhanSu.Models.Employee
 @{
     ViewData["Title"] = "Thêm Nhân viên";
     Layout = "_Layout";
@@ -35,69 +35,56 @@
 
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">PHÒNG BAN CHUYÊN MÔN</label>
-                            <select asp-for="PhongBan" class="form-select luxury-input" required>
+                            <select asp-for="PhongBanId" asp-items="ViewBag.PhongBans" class="form-select luxury-input">
                                 <option value="">-- Lựa chọn phòng ban --</option>
-                                <option value="IT">Kỹ thuật (IT)</option>
-                                <option value="Kế toán">Kế toán</option>
-                                <option value="Nhân sự">Nhân sự</option>
-                                <option value="Kinh doanh">Kinh doanh</option>
                             </select>
                         </div>
 
-                        @* ĐÃ CẬP NHẬT: THAY THẾ CHỨC VỤ THÀNH DROPDOWN CHUẨN DOANH NGHIỆP *@
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">CHỨC VỤ ĐẢM NHIỆM</label>
-                            <select asp-for="ChucVu" class="form-select luxury-input" required>
+                            <select asp-for="ChucVuId" asp-items="ViewBag.ChucVus" class="form-select luxury-input">
                                 <option value="">-- Lựa chọn chức vụ --</option>
-                                <optgroup label="Ban Giám Đốc">
-                                    <option value="Giám đốc (CEO)">Giám đốc (CEO)</option>
-                                    <option value="Phó Giám đốc">Phó Giám đốc</option>
-                                </optgroup>
-                                <optgroup label="Cấp Quản Lý (Trưởng/Phó Bộ Phận)">
-                                    <option value="Trưởng phòng">Trưởng phòng</option>
-                                    <option value="Phó phòng">Phó phòng</option>
-                                    <option value="Kế toán trưởng">Kế toán trưởng</option>
-                                    <optgroup label="Cấp Nhân Viên Thực Thi">
-                                        <option value="Chuyên viên chính">Chuyên viên chính</option>
-                                        <option value="Chuyên viên">Chuyên viên</option>
-                                        <option value="Nhân viên">Nhân viên</option>
-                                        <option value="Thực tập sinh">Thực tập sinh</option>
-                                    </optgroup>
-                                </select>
-                                <span asp-validation-for="ChucVu" class="text-danger small"></span>
-                            </div>
+                            </select>
+                        </div>
 
-                            <div class="col-md-6">
-                                <label class="form-label small fw-bold text-muted">MỨC LƯƠNG KHỞI ĐIỂM (VNĐ)</label>
-                                <div class="input-group shadow-sm rounded-3">
-                                    <span class="input-group-text bg-light text-gold-dark fw-bold border-end-0">₫</span>
-                                    <input asp-for="Luong" type="number" class="form-control luxury-input border-start-0" placeholder="15000000" required />
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label small fw-bold text-muted">TẢI LÊN ẢNH AVATAR</label>
-                                <input type="file" name="avatarFile" class="form-control luxury-input bg-white shadow-sm" accept="image/*" />
-                                <span class="text-muted small mt-1 d-block" style="font-size: 0.75rem;">Có thể bỏ qua và bổ sung sau.</span>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">MỨC LƯƠNG KHỞI ĐIỂM (VNĐ)</label>
+                            <div class="input-group shadow-sm rounded-3">
+                                <span class="input-group-text bg-light text-gold-dark fw-bold border-end-0">₫</span>
+                                <input asp-for="Luong" type="number" class="form-control luxury-input border-start-0" placeholder="15000000" required />
                             </div>
                         </div>
 
-                        <hr class="my-4 border-secondary opacity-25" />
-
-                        <div class="d-flex justify-content-end gap-2">
-                            <a asp-action="Index" class="btn btn-outline-secondary px-4 fw-bold rounded-3">Hủy</a>
-                            <button type="submit" class="btn btn-luxury px-5 fw-bold rounded-3 shadow-sm">
-                                <i class="bi bi-person-check-fill me-1"></i> Khởi Tạo Hồ Sơ
-                            </button>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">TẢI LÊN ẢNH AVATAR</label>
+                            <input type="file" name="avatarFile" class="form-control luxury-input bg-white shadow-sm" accept="image/*" />
+                            <span class="text-muted small mt-1 d-block" style="font-size: 0.75rem;">Có thể bỏ qua và bổ sung sau.</span>
                         </div>
-                    </form>
-                </div>
+
+                        <div class="col-12">
+                            <div class="alert alert-info py-2 px-3 small rounded-3 border-0 bg-opacity-10">
+                                <i class="bi bi-info-circle-fill me-1"></i>
+                                Hệ thống sẽ tự động tạo tài khoản đăng nhập: <strong>Tên TK = Mã NV</strong> | <strong>Mật khẩu = 123456</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4 border-secondary opacity-25" />
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4 fw-bold rounded-3">Hủy</a>
+                        <button type="submit" class="btn btn-luxury px-5 fw-bold rounded-3 shadow-sm">
+                            <i class="bi bi-person-check-fill me-1"></i> Khởi Tạo Hồ Sơ
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
-    @section Scripts {
-        @{
-            await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        }
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+}

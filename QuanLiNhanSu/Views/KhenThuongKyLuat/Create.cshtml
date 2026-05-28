@@ -1,0 +1,86 @@
+@model QuanLiNhanSu.Models.KhenThuongKyLuat
+@{
+    ViewData["Title"] = "Tạo Quyết Định";
+    Layout = "_Layout";
+}
+
+<div class="row justify-content-center mt-4 mb-5">
+    <div class="col-lg-8">
+        <div class="card luxury-card border-0 shadow-lg overflow-hidden rounded-4">
+            
+            <div class="p-4 bg-light border-bottom d-flex align-items-center gap-3">
+                <div class="rounded-circle bg-gold p-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 55px; height: 55px;">
+                    <i class="bi bi-file-earmark-medical text-dark fs-3"></i>
+                </div>
+                <div>
+                    <h4 class="fw-bold text-gradient-gold m-0">TẠO QUYẾT ĐỊNH KHEN THƯỞNG / KỶ LUẬT</h4>
+                    <p class="text-muted small m-0">Ghi nhận các quyết định ảnh hưởng trực tiếp tới lương của nhân viên</p>
+                </div>
+            </div>
+
+            <div class="card-body p-4 p-md-5">
+                <form asp-action="Create" method="post">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">MÃ NHÂN VIÊN</label>
+                            <input asp-for="MaNV" class="form-control luxury-input" placeholder="VD: NV001" required />
+                            <span asp-validation-for="MaNV" class="text-danger small"></span>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">LOẠI QUYẾT ĐỊNH</label>
+                            <select asp-for="Loai" class="form-select luxury-input" required>
+                                <option value="Khen thưởng">Khen thưởng (+)</option>
+                                <option value="Kỷ luật">Kỷ luật (-)</option>
+                            </select>
+                            <span asp-validation-for="Loai" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">HÌNH THỨC</label>
+                            <input asp-for="HinhThuc" class="form-control luxury-input" placeholder="VD: Thưởng nóng, Đi muộn..." required />
+                            <span asp-validation-for="HinhThuc" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">SỐ TIỀN (VNĐ)</label>
+                            <div class="input-group shadow-sm rounded-3">
+                                <span class="input-group-text bg-light text-gold-dark fw-bold border-end-0">₫</span>
+                                <input asp-for="SoTien" type="number" class="form-control luxury-input border-start-0" placeholder="500000" required />
+                            </div>
+                            <span asp-validation-for="SoTien" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label small fw-bold text-muted">NGÀY RA QUYẾT ĐỊNH</label>
+                            <input asp-for="NgayQuyetDinh" type="date" class="form-control luxury-input" required />
+                            <span asp-validation-for="NgayQuyetDinh" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label small fw-bold text-muted">NỘI DUNG CHI TIẾT</label>
+                            <textarea asp-for="NoiDung" class="form-control luxury-input" rows="3" placeholder="Lý do chi tiết..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning py-2 px-3 small rounded-3 mt-4 border-0">
+                        <i class="bi bi-info-circle-fill me-1"></i> Số tiền này sẽ tự động được <strong>cộng/trừ</strong> vào bảng lương tháng tương ứng của nhân viên.
+                    </div>
+
+                    <hr class="my-4 border-secondary opacity-25" />
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4 fw-bold rounded-3">Hủy</a>
+                        <button type="submit" class="btn btn-luxury px-5 fw-bold rounded-3 shadow-sm">
+                            <i class="bi bi-save-fill me-1"></i> Ban Hành Quyết Định
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

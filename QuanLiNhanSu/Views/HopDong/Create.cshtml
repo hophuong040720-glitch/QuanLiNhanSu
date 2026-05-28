@@ -1,0 +1,76 @@
+@model QuanLiNhanSu.Models.HopDong
+@{
+    ViewData["Title"] = "Thêm mới Hợp Đồng";
+    Layout = "_Layout";
+}
+
+<div class="row justify-content-center mt-4 mb-5">
+    <div class="col-lg-8">
+        <div class="card luxury-card border-0 shadow-lg overflow-hidden rounded-4">
+            
+            <div class="p-4 bg-light border-bottom d-flex align-items-center gap-3">
+                <div class="rounded-circle bg-gold p-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 55px; height: 55px;">
+                    <i class="bi bi-file-earmark-plus text-dark fs-3"></i>
+                </div>
+                <div>
+                    <h4 class="fw-bold text-gradient-gold m-0">TẠO HỢP ĐỒNG MỚI</h4>
+                    <p class="text-muted small m-0">Ghi nhận hợp đồng lao động chính thức cho cán bộ nhân viên</p>
+                </div>
+            </div>
+
+            <div class="card-body p-4 p-md-5">
+                <form asp-action="Create" method="post">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">MÃ NHÂN VIÊN</label>
+                            <input asp-for="MaNV" class="form-control luxury-input" placeholder="VD: NV001" required />
+                            <span asp-validation-for="MaNV" class="text-danger small"></span>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">LOẠI HỢP ĐỒNG</label>
+                            <select asp-for="LoaiHD" class="form-select luxury-input" required>
+                                <option value="">-- Lựa chọn --</option>
+                                <option value="Hợp đồng thử việc">Hợp đồng thử việc (2 tháng)</option>
+                                <option value="Hợp đồng có thời hạn (1 năm)">Hợp đồng có thời hạn (1 năm)</option>
+                                <option value="Hợp đồng có thời hạn (3 năm)">Hợp đồng có thời hạn (3 năm)</option>
+                                <option value="Hợp đồng vô thời hạn">Hợp đồng vô thời hạn</option>
+                            </select>
+                            <span asp-validation-for="LoaiHD" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">NGÀY KÝ KẾT</label>
+                            <input asp-for="NgayKy" type="date" class="form-control luxury-input" required />
+                            <span asp-validation-for="NgayKy" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">NGÀY HẾT HẠN (TÙY CHỌN)</label>
+                            <input asp-for="NgayHetHan" type="date" class="form-control luxury-input" />
+                            <span class="text-muted small" style="font-size:0.75rem">Bỏ trống nếu là HĐ vô thời hạn</span>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label small fw-bold text-muted">NỘI DUNG / GHI CHÚ</label>
+                            <textarea asp-for="NoiDung" class="form-control luxury-input" rows="4" placeholder="Nhập các điều khoản bổ sung nếu có..."></textarea>
+                        </div>
+                    </div>
+
+                    <hr class="my-4 border-secondary opacity-25" />
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4 fw-bold rounded-3">Hủy</a>
+                        <button type="submit" class="btn btn-luxury px-5 fw-bold rounded-3 shadow-sm">
+                            <i class="bi bi-save-fill me-1"></i> Lưu Hợp Đồng
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

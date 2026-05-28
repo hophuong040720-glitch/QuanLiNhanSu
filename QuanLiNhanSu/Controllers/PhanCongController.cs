@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QuanLiNhanSu.Models;
+using QuanLiNhanSu.Services;
 
 namespace QuanLiNhanSu.Controllers
 {
@@ -12,7 +13,13 @@ namespace QuanLiNhanSu.Controllers
     public class PhanCongController : Controller
     {
         private readonly AppDbContext _context;
-        public PhanCongController(AppDbContext context) { _context = context; }
+        private readonly AuditService _audit;
+
+        public PhanCongController(AppDbContext context, AuditService audit)
+        {
+            _context = context;
+            _audit = audit;
+        }
 
         public async Task<IActionResult> Index()
         {
@@ -32,6 +39,10 @@ namespace QuanLiNhanSu.Controllers
                 model.TrangThai = "Mới giao";
                 _context.PhanCongs.Add(model);
                 await _context.SaveChangesAsync();
+
+                await _audit.LogAsync(User.Identity!.Name!, "Giao việc", "PhanCongs",
+                    $"Admin giao việc [{model.TenCongViec}] cho NV {model.MaNV}. Hạn chót: {model.HanChot:dd/MM/yyyy}.");
+
                 TempData["Success"] = "Đã giao việc thành công!";
             }
             return RedirectToAction(nameof(Index));
@@ -43,9 +54,15 @@ namespace QuanLiNhanSu.Controllers
         {
             var task = await _context.PhanCongs.FindAsync(id);
             if (task == null) return NotFound();
+
+            var oldStatus = task.TrangThai;
             task.TrangThai = trangThai;
             _context.PhanCongs.Update(task);
             await _context.SaveChangesAsync();
+
+            await _audit.LogAsync(User.Identity!.Name!, "Cập nhật tiến độ", "PhanCongs",
+                $"NV {task.MaNV} cập nhật việc [{task.TenCongViec}]: {oldStatus} → {trangThai}.");
+
             return RedirectToAction(nameof(Index));
         }
     }

@@ -1,4 +1,4 @@
-﻿@model QuanLiNhanSu.Models.Employee
+@model QuanLiNhanSu.Models.Employee
 @{
     ViewData["Title"] = "Hồ sơ của tôi"; Layout = "_Layout";
 }
@@ -22,7 +22,16 @@
                     <input type="hidden" asp-for="Id" />
                     <div class="row g-5">
                         <div class="col-md-4 text-center border-end pe-md-5">
-                            <img src="@(Model.AvatarUrl ?? "/images/default-avatar.png")" class="rounded-circle border border-4 border-gold shadow mb-4" style="width:200px; height:200px; object-fit:cover;" />
+                            @if (!string.IsNullOrEmpty(Model.AvatarUrl))
+                            {
+                                <img src="@Model.AvatarUrl" class="rounded-circle border border-4 border-gold shadow mb-4" style="width:200px; height:200px; object-fit:cover;" />
+                            }
+                            else
+                            {
+                                <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-4 border border-4 border-gold shadow" style="width:200px; height:200px; font-size:5rem;">
+                                    @(string.IsNullOrEmpty(Model.HoTen) ? "?" : Model.HoTen.Substring(0, 1).ToUpper())
+                                </div>
+                            }
                             <label class="btn btn-outline-gold w-100 rounded-pill fw-bold">
                                 <i class="bi bi-camera-fill me-2"></i>Chọn ảnh đại diện
                                 <input type="file" name="avatarFile" class="d-none" accept="image/*" />
@@ -40,17 +49,15 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="fw-bold small text-muted">PHÒNG BAN</label>
-                                    <select asp-for="PhongBan" class="form-select luxury-input" required>
-                                        <option value="">-- Chọn phòng --</option>
-                                        <option value="IT">Kỹ thuật (IT)</option>
-                                        <option value="Kế toán">Kế toán</option>
-                                        <option value="Nhân sự">Nhân sự</option>
-                                        <option value="Kinh doanh">Kinh doanh</option>
+                                    <select asp-for="PhongBanId" asp-items="ViewBag.PhongBans" class="form-select luxury-input">
+                                        <option value="">-- Chọn phòng ban --</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="fw-bold small text-muted">CHỨC VỤ</label>
-                                    <input asp-for="ChucVu" class="form-control luxury-input" required placeholder="VD: Developer" />
+                                    <select asp-for="ChucVuId" asp-items="ViewBag.ChucVus" class="form-select luxury-input">
+                                        <option value="">-- Chọn chức vụ --</option>
+                                    </select>
                                 </div>
                                 @if (User.IsInRole("Admin"))
                                 {

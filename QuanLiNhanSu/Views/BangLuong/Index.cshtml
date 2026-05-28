@@ -1,4 +1,4 @@
-﻿@model IEnumerable<QuanLiNhanSu.Models.BangLuong>
+@model IEnumerable<QuanLiNhanSu.Models.BangLuong>
 @{
     ViewData["Title"] = "Quản lý Bảng lương";
     Layout = "_Layout";
@@ -40,6 +40,8 @@
                                 <th>Tháng/Năm</th>
                                 <th class="text-end">Lương Căn Bản</th>
                                 <th class="text-end">Tạm ứng</th>
+                                <th class="text-end text-success">Thưởng</th>
+                                <th class="text-end text-danger">Phạt</th>
                                 <th class="text-end text-success fw-bold">Thực Lãnh</th>
                                 <th class="text-center">Phiếu Lương</th>
                             </tr>
@@ -58,9 +60,11 @@
                                     <td>@item.Thang/@item.Nam</td>
                                     <td class="text-end text-muted">@item.LuongCoBan.ToString("N0") đ</td>
                                     <td class="text-end text-danger">@item.TienUng.ToString("N0") đ</td>
+                                    <td class="text-end text-success">@item.TienThuong.ToString("N0") đ</td>
+                                    <td class="text-end text-danger">@item.TienPhat.ToString("N0") đ</td>
                                     <td class="text-end fw-bold text-success fs-6">@item.ThucLanh.ToString("N0") đ</td>
                                     <td class="text-center">
-                                        <button onclick="inPhieuLuong('@item.MaNV', '@item.Thang', '@item.Nam', @item.LuongCoBan, @item.TienUng, @item.ThucLanh)" class="btn btn-sm btn-outline-dark rounded-pill fw-bold shadow-sm">
+                                        <button onclick="inPhieuLuong('@item.MaNV', '@item.Thang', '@item.Nam', @item.LuongCoBan, @item.TienUng, @item.TienThuong, @item.TienPhat, @item.ThucLanh)" class="btn btn-sm btn-outline-dark rounded-pill fw-bold shadow-sm">
                                             <i class="bi bi-printer me-1"></i> In
                                         </button>
                                     </td>
@@ -104,8 +108,10 @@
         <table class="table">
             <tr><th>Khoản mục</th><th>Số tiền</th></tr>
             <tr><td>1. Mức lương cơ bản</td><td>{luongCB}</td></tr>
-            <tr><td>2. Tạm ứng đã chi</td><td>- {tienUng}</td></tr>
-            <tr><td><b>3. THỰC LÃNH CHUYỂN KHOẢN</b></td><td><b style="color: #198754">{thucLanh}</b></td></tr>
+            <tr><td>2. Khen thưởng</td><td>+ {tienThuong}</td></tr>
+            <tr><td>3. Kỷ luật / Trừ lương</td><td>- {tienPhat}</td></tr>
+            <tr><td>4. Tạm ứng đã chi</td><td>- {tienUng}</td></tr>
+            <tr><td><b>5. THỰC LÃNH CHUYỂN KHOẢN</b></td><td><b style="color: #198754">{thucLanh}</b></td></tr>
         </table>
         <div class="footer">
             <div><b>NGƯỜI LẬP PHIẾU</b><br/><br/><br/><i>(Ký, ghi rõ họ tên)</i></div>
@@ -117,7 +123,7 @@
 
 @section Scripts {
     <script>
-        function inPhieuLuong(maNV, thang, nam, luongCB, tienUng, thucLanh) {
+        function inPhieuLuong(maNV, thang, nam, luongCB, tienUng, tienThuong, tienPhat, thucLanh) {
             // Hàm định dạng tiền tệ
             var formatVND = function(num) { 
                 return num.toLocaleString('vi-VN') + ' đ'; 
@@ -133,6 +139,8 @@
                 .replace(/{nam}/g, nam)
                 .replace('{ngayIn}', new Date().toLocaleDateString('vi-VN'))
                 .replace('{luongCB}', formatVND(luongCB))
+                .replace('{tienThuong}', formatVND(tienThuong))
+                .replace('{tienPhat}', formatVND(tienPhat))
                 .replace('{tienUng}', formatVND(tienUng))
                 .replace('{thucLanh}', formatVND(thucLanh));
 

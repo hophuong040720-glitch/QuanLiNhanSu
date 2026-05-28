@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
@@ -6,16 +6,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using QuanLiNhanSu.Models;
+using QuanLiNhanSu.Services;
 
 namespace QuanLiNhanSu.Controllers
 {
     public class AccountController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly PasswordService _pwdService;
+        private readonly AuditService _audit;
 
-        public AccountController(AppDbContext context)
+        public AccountController(AppDbContext context, PasswordService pwdService, AuditService audit)
         {
             _context = context;
+            _pwdService = pwdService;
+            _audit = audit;
         }
 
         // ================= 1. ĐĂNG NHẬP =================
@@ -23,19 +28,25 @@ namespace QuanLiNhanSu.Controllers
         public IActionResult Login()
         {
             if (User.Identity!.IsAuthenticated)
-            {
                 return RedirectToAction("Index", "Home");
-            }
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
+            var user = _context.Users.FirstOrDefault(u => u.Username == username);
 
-            if (user != null)
+            if (user != null && _pwdService.VerifyPassword(password, user.Password))
             {
+                // AUTO-MIGRATE: Nếu mật khẩu cũ là plain text, hash lại ngay sau khi login thành công
+                if (!_pwdService.IsHashed(user.Password))
+                {
+                    user.Password = _pwdService.HashPassword(password);
+                    _context.Users.Update(user);
+                    await _context.SaveChangesAsync();
+                }
+
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.Username),
@@ -48,8 +59,16 @@ namespace QuanLiNhanSu.Controllers
                     CookieAuthenticationDefaults.AuthenticationScheme,
                     new ClaimsPrincipal(claimsIdentity));
 
+                // Ghi audit log đăng nhập thành công
+                await _audit.LogAsync(user.Username, "Đăng nhập", "Users",
+                    $"Tài khoản [{user.Username}] đăng nhập thành công. Quyền: {user.Role}.");
+
                 return RedirectToAction("Index", "Home");
             }
+
+            // Ghi log đăng nhập thất bại
+            await _audit.LogAsync(username ?? "Unknown", "Đăng nhập thất bại", "Users",
+                $"Ai đó nhập sai mật khẩu cho tài khoản [{username}].");
 
             ViewBag.Error = "Tài khoản hoặc mật khẩu không đúng!";
             return View();
@@ -58,6 +77,10 @@ namespace QuanLiNhanSu.Controllers
         // ================= 2. ĐĂNG XUẤT =================
         public async Task<IActionResult> Logout()
         {
+            var username = User.Identity?.Name ?? "Unknown";
+            await _audit.LogAsync(username, "Đăng xuất", "Users",
+                $"Tài khoản [{username}] đã đăng xuất khỏi hệ thống.");
+
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Account");
         }
@@ -67,9 +90,7 @@ namespace QuanLiNhanSu.Controllers
         public IActionResult Register()
         {
             if (User.Identity!.IsAuthenticated)
-            {
                 return RedirectToAction("Index", "Home");
-            }
             return View();
         }
 
@@ -78,7 +99,6 @@ namespace QuanLiNhanSu.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Kiểm tra trùng lặp Username
                 var userExists = _context.Users.Any(u => u.Username == model.Username);
                 if (userExists)
                 {
@@ -86,13 +106,13 @@ namespace QuanLiNhanSu.Controllers
                     return View(model);
                 }
 
-                // Chốt kiểm soát phân quyền: Chỉ cho phép nhận quyền Employee hoặc Guest từ giao diện
-                var safeRole = (model.Role == "Employee" || model.Role == "Guest") ? model.Role : "Guest";
+                // Chốt phân quyền: giao diện đăng ký chỉ cho phép Employee
+                var safeRole = (model.Role == "Employee") ? "Employee" : "Employee";
 
                 var newUser = new User
                 {
                     Username = model.Username,
-                    Password = model.Password,
+                    Password = _pwdService.HashPassword(model.Password), // Hash ngay khi tạo
                     Email = model.Email,
                     Role = safeRole
                 };
@@ -100,7 +120,10 @@ namespace QuanLiNhanSu.Controllers
                 _context.Users.Add(newUser);
                 await _context.SaveChangesAsync();
 
-                TempData["Success"] = $"Đăng ký thành công tài khoản với quyền {safeRole}!";
+                await _audit.LogAsync(model.Username, "Đăng ký tài khoản", "Users",
+                    $"Tài khoản mới [{model.Username}] được tạo. Quyền: {safeRole}.");
+
+                TempData["Success"] = $"Đăng ký thành công! Vui lòng đăng nhập.";
                 return RedirectToAction("Login");
             }
             return View(model);
@@ -108,10 +131,7 @@ namespace QuanLiNhanSu.Controllers
 
         // ================= 4. QUÊN MẬT KHẨU =================
         [HttpGet]
-        public IActionResult ForgotPassword()
-        {
-            return View();
-        }
+        public IActionResult ForgotPassword() => View();
 
         [HttpPost]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
@@ -121,9 +141,12 @@ namespace QuanLiNhanSu.Controllers
                 var user = _context.Users.FirstOrDefault(u => u.Username == model.Username && u.Email == model.Email);
                 if (user != null)
                 {
-                    user.Password = model.NewPassword;
+                    user.Password = _pwdService.HashPassword(model.NewPassword); // Hash mật khẩu mới
                     _context.Users.Update(user);
                     await _context.SaveChangesAsync();
+
+                    await _audit.LogAsync(model.Username, "Đổi mật khẩu", "Users",
+                        $"Tài khoản [{model.Username}] đặt lại mật khẩu qua trang Quên mật khẩu.");
 
                     ViewBag.Success = "Đặt lại mật khẩu thành công! Hãy đăng nhập bằng mật khẩu mới.";
                     return View();
@@ -135,10 +158,7 @@ namespace QuanLiNhanSu.Controllers
 
         // ================= 5. LIÊN HỆ ADMIN =================
         [HttpGet]
-        public IActionResult ContactAdmin()
-        {
-            return View();
-        }
+        public IActionResult ContactAdmin() => View();
 
         [HttpPost]
         public IActionResult ContactAdmin(ContactAdminViewModel model)
@@ -150,10 +170,8 @@ namespace QuanLiNhanSu.Controllers
             }
             return View(model);
         }
+
         [HttpGet]
-        public IActionResult AccessDenied()
-        {
-            return View();
-        }
+        public IActionResult AccessDenied() => View();
     }
 }

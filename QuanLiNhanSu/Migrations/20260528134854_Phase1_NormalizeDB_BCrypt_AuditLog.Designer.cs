@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuanLiNhanSu.Models;
 
@@ -11,9 +12,11 @@ using QuanLiNhanSu.Models;
 namespace QuanLiNhanSu.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260528134854_Phase1_NormalizeDB_BCrypt_AuditLog")]
+    partial class Phase1_NormalizeDB_BCrypt_AuditLog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,14 +51,6 @@ namespace QuanLiNhanSu.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("ThucLanh")
-                        .HasPrecision(18)
-                        .HasColumnType("decimal(18,0)");
-
-                    b.Property<decimal>("TienPhat")
-                        .HasPrecision(18)
-                        .HasColumnType("decimal(18,0)");
-
-                    b.Property<decimal>("TienThuong")
                         .HasPrecision(18)
                         .HasColumnType("decimal(18,0)");
 
