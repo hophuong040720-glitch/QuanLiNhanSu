@@ -1,4 +1,4 @@
-﻿@model IEnumerable<QuanLiNhanSu.Models.ChamCong>
+@model IEnumerable<QuanLiNhanSu.Models.ChamCong>
 @{
     ViewData["Title"] = "Chấm công sinh trắc học";
     Layout = "_Layout";
@@ -172,7 +172,12 @@
 </div>
 
 @section Scripts {
+    <!-- SIGNALR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <!-- FACE-API.JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@@vladmandic/face-api/dist/face-api.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         // Cập nhật phương thức vào Ghi chú khi đổi Tab
         document.getElementById('pills-face-tab').addEventListener('click', function () {
@@ -182,39 +187,111 @@
             document.getElementById('hinhThucXacThuc').value = "Chấm công bằng Vân tay (Web)";
         });
 
-        // 1. Kịch bản Face ID
+        // 1. SIGNALR: Lắng nghe sự kiện quét vân tay từ API / máy vật lý
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chamconghub")
+            .build();
+
+        connection.on("ReceiveFingerprintScan", (maNV, action, message) => {
+            // Chỉ hiển thị thông báo nếu mã nhân viên quét trùng với user đang đăng nhập trên màn hình này
+            if (maNV === '@User.Identity!.Name') {
+                Swal.fire({
+                    icon: action === 'Warning' ? 'warning' : 'success',
+                    title: 'Dữ liệu từ máy vân tay',
+                    text: message,
+                    timer: 3000,
+                    showConfirmButton: false
+                }).then(() => {
+                    // Tự động tải lại trang để thấy dữ liệu mới
+                    window.location.reload();
+                });
+            }
+        });
+
+        connection.start().catch(err => console.error("SignalR Connection Error: ", err.toString()));
+
+        // 2. Kịch bản Face ID (Sử dụng face-api.js)
         async function startFaceID() {
             const btn = document.getElementById('btn-start-scan');
             const scannerUI = document.getElementById('scanner-ui');
             const video = document.getElementById('webcam-feed');
 
-            btn.style.display = 'none';
-            scannerUI.style.display = 'block';
+            btn.disabled = true;
+            btn.innerHTML = '<i class="spinner-border spinner-border-sm me-2"></i> ĐANG TẢI AI MODEL...';
 
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                // Tải model AI từ CDN (Dùng của justadudewhohacks)
+                const MODEL_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights';
+                await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL);
+                await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
+                await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
+
+                btn.innerHTML = '<i class="spinner-border spinner-border-sm me-2"></i> ĐANG TẢI ẢNH MẪU...';
+                
+                // Lấy ảnh Avatar của người dùng hiện tại
+                const userAvatarUrl = '@Html.Raw(ViewBag.UserAvatar)';
+                if (userAvatarUrl.includes("default-avatar.png")) {
+                    throw new Error("Bạn chưa có ảnh đại diện cá nhân trên hệ thống. Cần có 1 tấm ảnh chân dung rõ mặt để máy AI có thể đối chiếu với Camera!");
+                }
+
+                const img = await faceapi.fetchImage(userAvatarUrl);
+                const detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor();
+                
+                if (!detections) {
+                    throw new Error("Ảnh đại diện hiện tại của bạn không rõ khuôn mặt. Vui lòng cập nhật ảnh chân dung rõ nét hơn để làm mẫu chuẩn!");
+                }
+                const avatarDescriptor = detections.descriptor;
+
+                // Mở Webcam
+                btn.style.display = 'none';
+                scannerUI.style.display = 'block';
+
+                const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
                 video.srcObject = stream;
 
-                setTimeout(() => {
-                    stream.getTracks().forEach(track => track.stop());
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Face ID Hợp lệ!',
-                        text: 'Nhận diện khuôn mặt thành công.',
-                        timer: 1500,
-                        showConfirmButton: false
-                    }).then(() => {
-                        document.getElementById('checkInForm').submit();
-                    });
-                }, 3000);
+                // Quét luồng video liên tục để tìm khuôn mặt khớp
+                video.addEventListener('play', () => {
+                    const canvas = faceapi.createCanvasFromMedia(video);
+                    scannerUI.append(canvas);
+                    const displaySize = { width: video.width || 320, height: video.height || 240 };
+                    faceapi.matchDimensions(canvas, displaySize);
+
+                    const interval = setInterval(async () => {
+                        const videoDetections = await faceapi.detectSingleFace(video).withFaceLandmarks().withFaceDescriptor();
+                        
+                        if (videoDetections) {
+                            // Tính khoảng cách giữa khuôn mặt trên cam và khuôn mặt mẫu (càng nhỏ càng giống)
+                            const distance = faceapi.euclideanDistance(avatarDescriptor, videoDetections.descriptor);
+                            console.log("Độ sai lệch: " + distance);
+                            
+                            // Ngưỡng 0.55 là độ chính xác an toàn
+                            if (distance < 0.55) {
+                                clearInterval(interval);
+                                stream.getTracks().forEach(track => track.stop());
+                                
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Face ID Hợp lệ!',
+                                    text: 'Đã xác thực chính xác danh tính của bạn.',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    document.getElementById('checkInForm').submit();
+                                });
+                            }
+                        }
+                    }, 500); // Quét mỗi 0.5 giây
+                });
+
             } catch (err) {
-                Swal.fire('Lỗi Camera', 'Vui lòng cấp quyền Webcam!', 'error');
-                btn.style.display = 'block';
+                Swal.fire('Cảnh báo từ hệ thống', err.message || 'Vui lòng cấp quyền Webcam và thử lại!', 'warning');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-camera-video-fill me-1"></i> BẬT CAMERA QUÉT';
                 scannerUI.style.display = 'none';
             }
         }
 
-        // 2. Kịch bản Vân Tay Giả Lập trên UI
+        // 3. Kịch bản Vân Tay Giả Lập trên UI (Dự phòng)
         function triggerFingerprintScan() {
             Swal.fire({
                 title: 'Đang đọc vân tay...',

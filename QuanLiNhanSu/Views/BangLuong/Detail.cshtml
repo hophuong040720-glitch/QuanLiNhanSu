@@ -1,0 +1,307 @@
+@model QuanLiNhanSu.Models.BangLuong
+@using QuanLiNhanSu.Models
+@{
+    ViewData["Title"] = $"Phiếu lương {Model.Thang}/{Model.Nam}";
+    var emp = ViewBag.Employee as Employee;
+    var chamCongs = ViewBag.ChamCongs as List<ChamCong> ?? new List<ChamCong>();
+    var ktkls = ViewBag.KTKLs as List<KhenThuongKyLuat> ?? new List<KhenThuongKyLuat>();
+    var ungLuongs = ViewBag.UngLuongs as List<UngLuong> ?? new List<UngLuong>();
+    decimal tongThuNhap = Model.LuongCoBan + Model.TienThuong;
+    decimal tongKhauTru = Model.TienPhat + Model.TienUng;
+    int soNgayDi = chamCongs.Count(c => c.TrangThai == "Đi làm");
+    int soNgayNghi = chamCongs.Count(c => c.TrangThai != "Đi làm");
+}
+
+<!-- Breadcrumb -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-1">
+                <li class="breadcrumb-item"><a asp-controller="BangLuong" asp-action="Index" class="text-decoration-none text-muted">Bảng lương</a></li>
+                <li class="breadcrumb-item active fw-bold">Chi tiết phiếu lương</li>
+            </ol>
+        </nav>
+        <h4 class="fw-bold mb-0">Phiếu Lương Tháng @Model.Thang/@Model.Nam</h4>
+    </div>
+    <div class="d-flex gap-2">
+        <button onclick="printPayslip()" class="btn btn-luxury fw-bold px-4">
+            <i class="bi bi-printer me-2"></i>Xuất PDF
+        </button>
+        <a asp-action="Index" class="btn btn-outline-secondary fw-bold px-4">
+            <i class="bi bi-arrow-left me-2"></i>Quay lại
+        </a>
+    </div>
+</div>
+
+<!-- ===== KHỐI 1: THÔNG TIN CƠ BẢN ===== -->
+<div class="luxury-card shadow-lg rounded-4 p-4 mb-4 fade-in-up">
+    <div class="row align-items-center">
+        <div class="col-auto">
+            <div class="d-flex align-items-center justify-content-center rounded-4 bg-gold-light text-gold" style="width:72px;height:72px;font-size:2rem;">
+                <i class="bi bi-person-fill"></i>
+            </div>
+        </div>
+        <div class="col">
+            <h5 class="fw-bold mb-1">@(emp?.HoTen ?? Model.MaNV)</h5>
+            <div class="d-flex flex-wrap gap-3 text-muted" style="font-size:0.875rem;">
+                <span><i class="bi bi-badge-id me-1 text-gold"></i><b>@Model.MaNV</b></span>
+                <span><i class="bi bi-building me-1 text-gold"></i>@(emp?.TenPhongBan ?? "—")</span>
+                <span><i class="bi bi-star me-1 text-gold"></i>@(emp?.TenChucVu ?? "—")</span>
+                <span><i class="bi bi-calendar3 me-1 text-gold"></i>Kỳ lương: Tháng @Model.Thang / @Model.Nam</span>
+            </div>
+        </div>
+        <div class="col-auto">
+            <select id="monthSelector" class="form-select luxury-input fw-bold" onchange="switchMonth(this.value)">
+                @for (int m = 12; m >= 1; m--)
+                {
+                    <option value="@m/@Model.Nam" selected="@(m == Model.Thang)">Tháng @m / @Model.Nam</option>
+                }
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- ===== KHỐI 2: CHỈ SỐ CHÍNH ===== -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="payslip-metric-card fade-in-up">
+            <div class="payslip-metric-value text-primary">@soNgayDi <span style="font-size:1rem;">/26</span></div>
+            <div class="payslip-metric-label">Ngày công thực tế</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="payslip-metric-card fade-in-up">
+            <div class="payslip-metric-value text-gold-dark">@tongThuNhap.ToString("N0") <span style="font-size:0.85rem;">đ</span></div>
+            <div class="payslip-metric-label">Tổng thu nhập</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="payslip-metric-card fade-in-up">
+            <div class="payslip-metric-value text-danger">@tongKhauTru.ToString("N0") <span style="font-size:0.85rem;">đ</span></div>
+            <div class="payslip-metric-label">Tổng khấu trừ</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="payslip-metric-card fade-in-up" style="border: 2px solid #22c55e; background: rgba(34,197,94,0.06);">
+            <div class="payslip-metric-value text-success">@Model.ThucLanh.ToString("N0") <span style="font-size:0.85rem;">đ</span></div>
+            <div class="payslip-metric-label" style="color:#16a34a;">💰 Thực lĩnh</div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== KHỐI 3: TABS CHI TIẾT ===== -->
+<div class="luxury-card shadow-lg rounded-4 fade-in-up">
+    <ul class="nav nav-tabs px-4 pt-3 border-0 gap-2" id="payslipTab">
+        <li class="nav-item">
+            <button class="nav-link active fw-bold px-4" data-bs-toggle="tab" data-bs-target="#tab-chamcong">
+                <i class="bi bi-fingerprint me-2"></i>Chấm công
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link fw-bold px-4" data-bs-toggle="tab" data-bs-target="#tab-luong">
+                <i class="bi bi-receipt me-2"></i>Chi tiết lương
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content p-4">
+        <!-- TAB 1: CHẤM CÔNG -->
+        <div class="tab-pane fade show active" id="tab-chamcong">
+            <div class="row mb-3 g-3">
+                <div class="col-auto">
+                    <span class="badge bg-success px-3 py-2 rounded-pill">✅ Đi làm: @soNgayDi ngày</span>
+                </div>
+                <div class="col-auto">
+                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">⏰ Nửa ngày: @chamCongs.Count(c => c.TrangThai == "Nửa ngày")</span>
+                </div>
+                <div class="col-auto">
+                    <span class="badge bg-danger px-3 py-2 rounded-pill">❌ Vắng: @soNgayNghi</span>
+                </div>
+            </div>
+
+            @if (!chamCongs.Any())
+            {
+                <div class="text-center text-muted py-5">
+                    <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
+                    Không có dữ liệu chấm công trong tháng này.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle custom-luxury-table">
+                        <thead>
+                            <tr>
+                                <th>Ngày</th>
+                                <th class="text-center">Giờ vào</th>
+                                <th class="text-center">Giờ ra</th>
+                                <th class="text-center">Số giờ làm</th>
+                                <th class="text-center">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var cc in chamCongs)
+                            {
+                                <tr>
+                                    <td class="fw-bold">@cc.NgayChamCong.ToString("dd/MM/yyyy") <small class="text-muted">(Thứ @((int)cc.NgayChamCong.DayOfWeek == 0 ? 8 : (int)cc.NgayChamCong.DayOfWeek + 1))</small></td>
+                                    <td class="text-center">@cc.GioVao?.ToString(@"hh\:mm")</td>
+                                    <td class="text-center">@cc.GioRa?.ToString(@"hh\:mm")</td>
+                                    <td class="text-center fw-bold">@(((cc.GioRa - cc.GioVao)?.TotalHours ?? 0).ToString("0.0"))h</td>
+                                    <td class="text-center">
+                                        @if (cc.TrangThai == "Đi làm")
+                                        {
+                                            <span class="badge bg-success rounded-pill px-3">✅ Đi làm</span>
+                                        }
+                                        else if (cc.TrangThai == "Nửa ngày")
+                                        {
+                                            <span class="badge bg-warning text-dark rounded-pill px-3">⏰ Nửa ngày</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger rounded-pill px-3">❌ @cc.TrangThai</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+
+        <!-- TAB 2: CHI TIẾT LƯƠNG -->
+        <div class="tab-pane fade" id="tab-luong">
+            <div class="row g-4">
+                <!-- Cột Thu nhập -->
+                <div class="col-md-6">
+                    <div class="p-3 rounded-3" style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2);">
+                        <h6 class="fw-bold text-success mb-3"><i class="bi bi-plus-circle-fill me-2"></i>Các khoản THU NHẬP</h6>
+                        <table class="table table-sm mb-0">
+                            <tr>
+                                <td class="text-muted">Lương hành chính (@soNgayDi ngày)</td>
+                                <td class="text-end fw-bold">@Model.LuongCoBan.ToString("N0") đ</td>
+                            </tr>
+                            @foreach (var kt in ktkls.Where(k => k.Loai == "Khen thưởng"))
+                            {
+                                <tr>
+                                    <td class="text-muted">Thưởng: @kt.NoiDung</td>
+                                    <td class="text-end fw-bold text-success">+ @kt.SoTien.ToString("N0") đ</td>
+                                </tr>
+                            }
+                            <tr class="border-top">
+                                <td class="fw-bold text-success">TỔNG THU NHẬP</td>
+                                <td class="text-end fw-bold text-success fs-6">@tongThuNhap.ToString("N0") đ</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Cột Khấu trừ -->
+                <div class="col-md-6">
+                    <div class="p-3 rounded-3" style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2);">
+                        <h6 class="fw-bold text-danger mb-3"><i class="bi bi-dash-circle-fill me-2"></i>Các khoản KHẤU TRỪ</h6>
+                        <table class="table table-sm mb-0">
+                            @foreach (var kl in ktkls.Where(k => k.Loai == "Kỷ luật"))
+                            {
+                                <tr>
+                                    <td class="text-muted">Phạt: @kl.NoiDung</td>
+                                    <td class="text-end fw-bold text-danger">- @kl.SoTien.ToString("N0") đ</td>
+                                </tr>
+                            }
+                            @foreach (var ul in ungLuongs)
+                            {
+                                <tr>
+                                    <td class="text-muted">Tạm ứng (@ul.NgayYeuCau.ToString("dd/MM"))</td>
+                                    <td class="text-end fw-bold text-danger">- @ul.SoTien.ToString("N0") đ</td>
+                                </tr>
+                            }
+                            @if (!ktkls.Any(k => k.Loai == "Kỷ luật") && !ungLuongs.Any())
+                            {
+                                <tr><td colspan="2" class="text-muted text-center py-2">Không có khoản khấu trừ</td></tr>
+                            }
+                            <tr class="border-top">
+                                <td class="fw-bold text-danger">TỔNG KHẤU TRỪ</td>
+                                <td class="text-end fw-bold text-danger fs-6">@tongKhauTru.ToString("N0") đ</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Thực lĩnh -->
+                <div class="col-12">
+                    <div class="p-4 rounded-3 text-center" style="background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(16,185,129,0.15)); border: 2px solid #22c55e;">
+                        <div class="text-muted mb-1" style="font-size:0.85rem; text-transform:uppercase; letter-spacing:1px;">💰 THỰC LĨNH (Net Salary)</div>
+                        <div class="fw-bold text-success" style="font-size:2.2rem;">@Model.ThucLanh.ToString("N0") VNĐ</div>
+                        <div class="text-muted mt-1" style="font-size:0.8rem;">= Tổng thu nhập − Tổng khấu trừ</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    function switchMonth(val) {
+        var parts = val.split('/');
+        window.location.href = '/BangLuong/Detail?maNV=@Model.MaNV&thang=' + parts[0] + '&nam=' + parts[1];
+    }
+
+    function printPayslip() {
+        var empName = "@(emp?.HoTen ?? Model.MaNV)";
+        var empMa = "@Model.MaNV";
+        var phongBan = "@(emp?.TenPhongBan ?? "—")";
+        var chucVu = "@(emp?.TenChucVu ?? "—")";
+
+        var html = `<!DOCTYPE html><html><head><meta charset="utf-8">
+        <title>Phiếu lương - ${empName}</title>
+        <style>
+            body { font-family: Arial, sans-serif; padding: 40px; color: #222; }
+            .header { text-align: center; border-bottom: 2px solid #d97706; padding-bottom: 20px; margin-bottom: 24px; }
+            .company { font-size: 20px; font-weight: bold; color: #d97706; }
+            .emp-info { display: flex; justify-content: space-between; margin-bottom: 24px; font-size: 14px; line-height: 2; }
+            table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+            th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 14px; }
+            th { background: #f8f9fa; }
+            .total-row { font-weight: bold; font-size: 16px; color: #16a34a; }
+            .footer { margin-top: 50px; display: flex; justify-content: space-between; text-align: center; font-size: 13px; }
+        </style></head><body>
+        <div class="header">
+            <div class="company">CÔNG TY CP TM & DV CÔNG NGHỆ HT</div>
+            <div style="font-size:18px; margin-top:8px; text-transform:uppercase; font-weight:bold;">PHIẾU BÁO LƯƠNG NHÂN VIÊN</div>
+            <div style="font-size:14px; color:#666;">Kỳ lương: Tháng @Model.Thang / @Model.Nam</div>
+        </div>
+        <div class="emp-info">
+            <div>
+                <b>Họ và tên:</b> ${empName}<br>
+                <b>Mã nhân viên:</b> ${empMa}<br>
+                <b>Phòng ban:</b> ${phongBan}
+            </div>
+            <div>
+                <b>Chức vụ:</b> ${chucVu}<br>
+                <b>Số ngày công:</b> @soNgayDi / 26 ngày<br>
+                <b>Ngày in phiếu:</b> ${new Date().toLocaleDateString('vi-VN')}
+            </div>
+        </div>
+        <table>
+            <tr><th>Khoản mục</th><th style="text-align:right;">Số tiền</th></tr>
+            <tr><td>1. Lương hành chính (@soNgayDi ngày)</td><td style="text-align:right;">@Model.LuongCoBan.ToString("N0") đ</td></tr>
+            <tr><td>2. Khen thưởng</td><td style="text-align:right;">+ @Model.TienThuong.ToString("N0") đ</td></tr>
+            <tr><td>3. Kỷ luật / Trừ lương</td><td style="text-align:right;">- @Model.TienPhat.ToString("N0") đ</td></tr>
+            <tr><td>4. Tạm ứng đã chi</td><td style="text-align:right;">- @Model.TienUng.ToString("N0") đ</td></tr>
+            <tr class="total-row"><td>💰 THỰC LĨNH CHUYỂN KHOẢN</td><td style="text-align:right; color:#16a34a;">@Model.ThucLanh.ToString("N0") VNĐ</td></tr>
+        </table>
+        <div class="footer">
+            <div><b>NGƯỜI LAO ĐỘNG</b><br><br><br><i>(Ký, ghi rõ họ tên)</i></div>
+            <div><b>PHÒNG NHÂN SỰ</b><br><br><br><i>(Ký, ghi rõ họ tên)</i></div>
+            <div><b>GIÁM ĐỐC</b><br><br><br><i>(Ký, đóng dấu)</i></div>
+        </div>
+        </body></html>`;
+
+        var win = window.open('', '', 'height=700,width=900');
+        win.document.write(html);
+        win.document.close();
+        setTimeout(() => { win.print(); win.close(); }, 500);
+    }
+</script>
+}

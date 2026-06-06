@@ -20,6 +20,42 @@ namespace QuanLiNhanSu.Controllers
             return View(sheets);
         }
 
+        public async Task<IActionResult> Detail(string maNV, int thang, int nam)
+        {
+            // Lấy thông tin phiếu lương
+            var bangLuong = await _context.BangLuongs
+                .FirstOrDefaultAsync(b => b.MaNV == maNV && b.Thang == thang && b.Nam == nam);
+            if (bangLuong == null) return NotFound();
+
+            // Lấy thông tin nhân viên
+            var emp = await _context.Employees
+                .Include(e => e.PhongBanNav)
+                .Include(e => e.ChucVuNav)
+                .FirstOrDefaultAsync(e => e.MaNV == maNV);
+
+            // Lấy chi tiết chấm công trong tháng
+            var chamCongs = await _context.ChamCongs
+                .Where(c => c.MaNV == maNV && c.NgayChamCong.Month == thang && c.NgayChamCong.Year == nam)
+                .OrderBy(c => c.NgayChamCong)
+                .ToListAsync();
+
+            // Lấy các khoản khen thưởng/kỷ luật trong tháng
+            var ktkls = await _context.KhenThuongKyLuats
+                .Where(k => k.MaNV == maNV && k.NgayQuyetDinh.Month == thang && k.NgayQuyetDinh.Year == nam)
+                .ToListAsync();
+
+            // Lấy các khoản ứng lương đã duyệt trong tháng
+            var ungLuongs = await _context.UngLuongs
+                .Where(u => u.MaNV == maNV && u.NgayYeuCau.Month == thang && u.NgayYeuCau.Year == nam && u.TrangThai == "Đã duyệt")
+                .ToListAsync();
+
+            ViewBag.Employee = emp;
+            ViewBag.ChamCongs = chamCongs;
+            ViewBag.KTKLs = ktkls;
+            ViewBag.UngLuongs = ungLuongs;
+            return View(bangLuong);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken] // Đảm bảo khớp cấu trúc bảo mật Token từ Form gửi lên
         public async Task<IActionResult> ChotLuongThang(int thang, int nam)

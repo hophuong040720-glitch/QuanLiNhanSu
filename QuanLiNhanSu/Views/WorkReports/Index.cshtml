@@ -1,0 +1,40 @@
+@model IEnumerable<QuanLiNhanSu.Models.WorkReport>
+@{
+    ViewData["Title"] = "Báo cáo công việc";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold m-0"><i class="bi bi-journal-text me-2"></i>Danh sách Báo cáo công việc</h4>
+    <a asp-action="Create" class="btn btn-success fw-bold px-4 rounded-pill shadow-sm"><i class="bi bi-plus-lg me-1"></i> Báo cáo mới</a>
+</div>
+
+<div class="luxury-card border-0 shadow-lg rounded-4 p-4 fade-in-up">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle custom-luxury-table">
+            <thead>
+                <tr>
+                    <th>Ngày báo cáo</th>
+                    <th>Người báo cáo</th>
+                    <th>Khách hàng</th>
+                    <th>Nội dung công việc</th>
+                    <th class="text-center">Số giờ</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any()) {
+                    <tr><td colspan="5" class="text-center py-4 text-muted">Chưa có báo cáo nào.</td></tr>
+                }
+                @foreach (var item in Model) {
+                <tr>
+                    <td>@item.NgayBaoCao.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td class="fw-bold text-primary">@item.Username</td>
+                    <td class="fw-bold">@item.TenKhachHang</td>
+                    <td>@item.NoiDungCongViec</td>
+                    <td class="text-center"><span class="badge bg-dark rounded-pill px-3 py-2">@item.SoGioLam h</span></td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

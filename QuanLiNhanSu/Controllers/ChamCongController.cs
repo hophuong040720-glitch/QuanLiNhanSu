@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -29,6 +29,10 @@ namespace QuanLiNhanSu.Controllers
             {
                 logs = logs.Where(c => c.MaNV == currentUser);
             }
+
+            // Lấy Avatar của nhân viên đang đăng nhập để dùng cho Face ID
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => e.MaNV == currentUser);
+            ViewBag.UserAvatar = employee?.AvatarUrl ?? "/images/default-avatar.png";
 
             return View(await logs.OrderByDescending(c => c.NgayChamCong).ToListAsync());
         }

@@ -1,0 +1,733 @@
+﻿               BỘ GIÁO DỤC VÀ ĐÀO TẠO
+                               			TRƯỜNG ĐẠI HỌC CÔNG NGHỆ TP. HCM
+
+
+ĐỒ ÁN CƠ SỞ
+
+
+
+HỆ THỐNG QUẢN TRỊ NGUỒN LỰC CÔNG TY
+
+
+
+      Ngành:    	   CÔNG NGHỆ THÔNG TIN 
+      Chuyên Ngành:  HỆ THỐNG THÔNG TIN 
+      
+      
+      Sinh viên thực hiện:   1 -  HỒ THUÝ PHƯỢNG  (2380601796)
+      			2 - NGÔ GIA HUY            (2380600836)
+      
+      
+      Lớp: 23DTHE4
+      
+      
+      Giảng viên hướng dẫn: TS. Cao Tùng Anh 
+      
+      
+      
+      				TP.Hồ Chí Minh, 2026
+TRƯỜNG ĐH CÔNG NGHỆ TP.HCM       CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+  KHOA CÔNG NGHỆ THÔNG TIN           		Độc lập – Tự do – Hạnh phúc
+        	 _________________                                           __________________
+
+                                             ĐĂNG KÝ ĐỀ CƯƠNG
+                                                  ĐỒ ÁN CƠ CỞ
+I.THÔNG TIN CHUNG:
+Tên Đề Tài: Thiết kế và xây dựng cơ sở dữ liệu quản lí nhân sự của một công ty 
+Tác giả/ Nhóm tác giả:
+STTHỌ TÊN SV MSVVNgày Sinh Ký tên1Hồ Thuý Phượng238060179626/07/20052Ngô Gia Huy 238060083617/11/2005
+Giảng viên hướng dẫn: TS. Cao Tùng Anh
+II.THÔNG TIN VỀ ĐỀ TÀI:
+1. Lý do chọn đề tài :
+Trong bối cảnh xã hội ngày càng hiện đại hoá và đô thị hoá, các nền kinh tế thị trường đang chuyển dịch mạnh mẽ sang thời kì kỉ nguyên số thì con người vẫn luôn là yếu tố quyết định sự thành công hay thất bại của một doanh nghiệp. Tuy nhiên vấn đề quản lý nhân sự đang phải đối mặt với nhiều thử thách lớn.
+Sự gia tăng về quy mô nhân sự và nhân sự cùng với sự phát triển của doanh nghiệp, số lượng về các hợp đồng hồ sơ của nhân viên cũng như biến động về nhân sự ngày một nhiều hơn, gây áp lực cực lớn cho cả bộ phân quản lí.
+Hạn chế của các phương pháp quản lí nhân sự truyền thống, hiện nay vẫn còn nhiều công ty vận hành theo các phương pháp thủ công thông qua các sổ sách hoặc các bản tính rời rạc, dẫn đến quy trình quản lý hồ sơ, chấm công cũng như tính lương nhân viên rất khó khăn.
+Việc quản lí thủ công dễ dẫn đến các tình trạng sai sót trong quá trình sử lí dữ liệu lương, chậm trễ trong việc cập nhật các chế độ bảo hiểm hoặc gây ra những ảnh hưởng liên quan trực tiếp đến người lao động.
+Đứng từ góc nhìn của công nghệ thông tin thì đây là 1 cơ hội tốt để chúng ta có thể ứng dụng các kỹ thuật phân tích hệ thống cũng như cơ sở dữ liệu để giải quyết một bài toán quản trị có tính thực tiễn cao, giúp doanh nghiệp hoạt động chuyên nghiệp và hiện đại hơn, giảm thiểu rủi ro và tăng tính minh bạch trong việc thực hiện các chính sách đãi ngộ.
+Việc nghiên cứu và xây dựng hệ thống quản lí nhân sự không chỉ giúp chúng ta giảm tải công việc cho các bộ phận nhân sự mà còn tăng trải nghiệm tốt cho nhân viên công ty, hỗ trợ ban lãnh đạo công ty có cái nhìn tổng quát hơn để đưa ra các chính sách chiến lược ngày một tốt hơn cho công ty
+
+2. Mục tiêu đề tài: 
+Xây dựng hệ thống thông tin hỗ trợ quản lý toàn bộ vòng đời nhân viên và các nghiệp vụ nhân sự trong công ty, với các mục tiêu cụ thể:
+• Quản lý hồ sơ và thông tin nhân viên: Lưu trữ khoa học thông tin cá nhân, bằng cấp, chứng chỉ và lịch sử công tác của từng nhân sự.
+• Quản lý hợp đồng lao động: Theo dõi chi tiết các loại hợp đồng, ngày ký kết, thời hạn hiệu lực và tự động cảnh báo các hợp đồng sắp hết hạn.
+• Tự động hóa chấm công và tính lương: Xây dựng quy trình ghi nhận ngày công, giờ tăng ca, nghỉ phép để tính toán lương thực lĩnh một cách chính xác, giảm thiểu sai sót thủ công.
+• Quản lý biến động nhân sự: Theo dõi và thực hiện các nghiệp vụ bổ nhiệm, điều chuyển phòng ban, khen thưởng hoặc kỷ luật nhân viên.
+• Phân quyền và bảo mật: Thiết lập hệ thống tài khoản với các vai trò khác nhau (Admin, Nhân sự, Trưởng phòng, Nhân viên) để đảm bảo an toàn dữ liệu và tính riêng tư của hồ sơ.
+• Hỗ trợ báo cáo chiến lược: Cung cấp các báo cáo thống kê về tình hình nhân sự, chi phí lương và biến động lao động giúp Ban giám đốc đưa ra quyết định kịp thời.
+3. Nội dung thực hiện :
+Gồm 3 phần: Khảo sát và thu thập thông tin, phân tích và thiết kế CSDL, thiết kế giao diện 
+4. Phương pháp thực hiện:
+• Phần 1: Phân tích từng yêu cầu một cách chi tiết, xác định các chức năng cần thiết mà một hệ thốn cần có dựa trên nghiệp vụ thực tế tại một công ty quản lí nhân sự. Tham khảo các mô hình cơ sở dữ liệu có liên quân và xây dựng các biểu mẫu nghiệp vụ cụ thể cho từng quy định như: tuyển dụng, ký kết hợp đồng, quy trình chấm công và tính lương.
+• Phần 2: Sử dụng POWER DESIGNER để thiết kế mô hình cơ sở dữ liệu (ERD) một cách trực quan và logic. Đảm bảo mô hình thể hiện đầy đủ các thực thể, khoá chính – khoá ngoại và mối quan hệ giữa các bảng. Tham khảo thêm các phần mềm tương tự nhằm để tối ưu hoá thiết kế cơ sở dữ liệu.
+• Phần 3: Dùng SQL Server để hiện thực hoá cơ sở dữ liệu đã thiết kế: tạo bảng khai báo ràng buộc và dữ liệu mẫu. Sử dụng công cụ Figman để thiết kế giao diện người dùng, đảm bảo thân thiện, rõ ràng, dễ sử dụng và phù hợp với từng đối tượng như danh sách nhân viên, bảng tính lương và Dashboard quản trị. Giao diện được xây dựng bám sát yêu cầu đã phân tích phục vụ hiệu quả cho viêhc tương tác với hệ thống
+
+5. Dự kiến kết quả thu được:
+• Xây dựng được một hệ thống quản lí nhân sự chuyên nghiệp của một công ty đáp ứng được các yêu cầu cũng như quy trình thực tế tại doanh nghiệp như tiếp nhận thêm nhân viên mới, theo dõi lịch sử công tác của tất cả các nhân viên, quản lí hợp đồng và tính lương.
+• Thiết kế được sơ đồ thực thể kết hợp (ERD) chặt chẽ bằng công cụ POWER DESIGNER, giúp quản lí thông tin nhân viên, phòng ban, chức vụ, chấm công và tính lương một cách chính xác.
+6. Thời gian thực hiện:
+Từ ngày …………………………đến…………………………………………..
+_______________________________________________________________
+
+GIẢNG VIÊN HƯỚNG DẪN              TP.HCM, Ngày…. Tháng….Năm 2026
+						NHÓM SINH VIÊN THỰC HIỆN
+
+
+
+
+Khoa: Công Nghệ Thông Tin 
+
+
+
+
+
+
+
+
+
+
+		BẢN NHẬN XÉT CỦA GIẢNG VIÊN HƯỚNG DẪN
+                                           		ĐỒ ÁN CƠ SỞ 
+1. Họ và tên sinh viên/ nhóm sinh viện được giao đề tài (sỉ số trong nhóm: 2)
+(1) Hồ Thuý Phượng 	MSSV: 2380601796 		Lớp: 23DTHE4        
+(2) Ngô Gia Huy 		MSSV: 2380600836		Lớp: 23DTHE4
+Ngành: Công Nghệ Thông Tin
+Chuyên Ngành: Hệ Thống Thông Tin 
+2. Tên đề tài:  Quản lí nhân sự của một công ty 
+3. Tổng quát về ĐA/KLTN:
+Số trang:		…………………..		Số chương:  	……………….
+Số bảng số liệu:	…………..............                  Số hình vẽ: 	……………….
+Số tài liệu tham khảo: …………………..
+Phần mềm tính toán:  …………………...
+Số bản vẽ kèm theo:  ……………………
+Hình thức bản vẽ:      ……………………
+Hiện vật (sản phẩm) kèm theo:
+4. Nhận xét: 
+I. Về tinh thần, thái độ làm việc của sinh viên :
+II. Những kết quả thu được của ĐA/KLTN:
+III. Những hạn chế của ĐA/KLTN:
+5. Đề nghị:
+Được bảo vệ (hoặc nộp ĐA/KLTN để chấm)                            Không được bảo vệ 
+	
+					TP.HCM, ngày…..tháng…..năm 2026
+							Giảng viên hướng dẫn
+							 (Ký và ghi rõ họ tên)
+
+
+
+
+					LỜI CẢM ƠN
+Trước tiên, em xin bày tỏ lòng biết ơn chân thành và sâu sắc đến thầy Cao Tùng Anh - giảng viên hướng dẫn đồ án cơ sở. Mặc dù công việc giảng dạy và nghiên cứu rất bận rộn, thầy vẫn luôn nhiệt tình hỗ trợ, tận tâm chỉ dẫn và dành thời gian quý báu để góp ý, định hướng cho chúng em trong suốt quá trình thực hiện đồ án. Sự kiên nhẫn, tinh thần trách nhiệm và kiến thức sâu rộng của thầy là nguồn động lực lớn giúp em hoàn thiện đề tài một cách nghiêm túc và đúng hướng.
+Em cũng xin gửi lời cảm ơn chân thành đến khoa Công nghệ Thông tin - chuyên ngành Hệ thống Thông tin, nơi đã tạo điều kiện học tập, nghiên cứu và rèn luyện kỹ năng một cách bài bản, là nền tảng vững chắc để em có thể triển khai và hoàn thành đồ án này. Bên cạnh đó, em xin cảm ơn quý thầy cô trong khoa đã tận tình giảng dạy, chia sẻ kiến thức quý báu trong suốt thời gian học tập vừa qua, đặc biệt là những kiến thức liên quan đến phân tích hệ thống, cơ sở dữ liệu và phát triển phần mềm – các yếu tố đóng vai trò then chốt trong việc xây dựng đề tài “Hệ thống quản nhân sự của một công ty”. Cuối cùng, em xin gửi lời tri ân đến gia đình và bạn bè đã luôn bên cạnh động viên, khích lệ tinh thần, tạo động lực giúp em vượt qua những khó khăn trong quá trình thực hiện đồ án. Mặc dù đã rất nỗ lực, nhưng do thời gian và kinh nghiệm còn hạn chế, đồ án không thể tránh khỏi những thiếu sót. Em rất mong nhận được những góp ý từ quý thầy cô và các bạn để có thể hoàn thiện hơn trong những nghiên cứu và dự án tiếp theo.
+Em xin trân trọng cảm ơn!
+
+
+
+
+
+
+
+
+
+
+
+
+				
+MỤC LỤC
+CHƯƠNG 1: TỔNG QUAN	9
+1.1	Giới thiệu đề tài:	9
+1.2	Lý do chọn đề tài:	10
+1.2.1. Tính cấp thiết của đề tài:	10
+1.3	Mục tiêu đề tài:	11
+1.3.1. Mục tiêu tổng quát	11
+1.3.2. Mục tiêu cụ thể	11
+1.4	Đối tượng và phạm vi nghiên cứu:	12
+1.4.1. Đối tượng nghiên cứu	12
+1.4.2. Phạm vi nghiên cứu	12
+CHƯƠNG 2: KHẢO SÁT VÀ PHÂN TÍCH YÊU CẦU HỆ THỐNG	13
+2.1 Khảo sát thực trạng	13
+2.1.1 Mô tả hệ thống	13
+2.2 Yêu cầu chức năng	17
+2.3 Yêu cầu phi chức năng	21
+2.4	Biểu mẫu:	22
+2.5	Điểm mạnh so với các hệ thống khác:	26
+CHƯƠNG 3 : THIẾT KẾ VÀ XÂY DỰNG CƠ SỞ DỮ LIỆU	28
+3.1. Sơ đồ chức năng của chương trình (BFD):	28
+3.1.1. Sơ đồ hệ thống quản lý nhân sự:	28
+3.1.2. Sơ đồ quản lý danh mục:	28
+3.1.3. Sơ đồ quản lý phòng ban:	28
+3.1.4. Sơ đồ quản lý chức vụ:	29
+3.1.5. Sơ đồ quản lý nhân viên:	29
+3.1.6.  Sơ đồ quản lý chấm công:	29
+3.1.7. Sơ đồ quản lý lương:	30
+3.1.8. Sơ đồ lập bảng lương:	30
+3.1.9. Sơ đồ quản lý hợp đồng:	30
+3.1.10. Sơ đồ lập hợp đồng:	31
+3.1.11.  Sơ đồ thống kê và báo cáo:	31
+3.1.12. Sơ đồ báo cáo nhân sự:	31
+3.3. Mô hình thực thể kết hợp (ERD):	32
+3.4 Sơ đồ mô hình quan hệ:	33
+3.5 Lược đồ cơ sở dữ liệu	33
+3.5.1. Cơ sở dữ liệu:	33
+3.5.2. Mô tả chi tiết:	34
+3.6. Ràng buộc toàn vẹn	42
+3.6.1. Ràng buộc miền giá trị	42
+3.6.2. Ràng buộc liên thuộc tính	43
+3.6.3. Ràng buộc liên bộ	43
+3.6.4. Ràng buộc tham chiếu / Khóa ngoại	44
+3.6.5. Ràng buộc liên thuộc tính - nhiều quan hệ	44
+3.6.6. Ràng buộc do thuộc tính tổng hợp	45
+3.7 Đánh giá và chuẩn hóa sơ cở dữ liệu	45
+CHƯƠNG 4 : TRIỂN KHAI HỆ THỐNG	48
+4.1. Kiến trúc hệ thống tổng thể và Môi trường phát triển	48
+4.2. Cấu trúc mô hình MVC và cơ chế Dependency Injection (DI)	49
+4.3. Hệ thống Dashboard Thống kê và Phân tích Trực quan	50
+4.4. Tích hợp API Điểm danh Vân tay Tự động	51
+4.5. Phân hệ Tính Lương Tự động & Xuất Phiếu Lương (Payroll)	52
+4.6. Cơ chế Bảo mật Đa lớp & Ghi vết Hệ thống (Audit Log)	53
+CHƯƠNG 5: KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN	54
+5.1. Tổng kết và Đánh giá Kết quả đạt được	54
+5.2. Những khó khăn và Hạn chế còn tồn tại	55
+5.3. Định hướng nghiên cứu và Phát triển trong tương lai (Tầm nhìn dài hạn)	56
+5.3.1. Tích hợp Trí tuệ nhân tạo tạo sinh (Generative AI) và Học máy (Machine Learning)	56
+5.3.2. Mở rộng Hệ sinh thái nền tảng	57
+
+
+
+
+CHƯƠNG 1: TỔNG QUAN
+1.1 Giới thiệu đề tài:
+Trong bối cảnh xã hội ngày càng hiện đại hóa và quá trình chuyển đổi số đang diễn ra mạnh mẽ, nguồn nhân lực vẫn luôn là yếu tố quan trọng quyết định sự thành công hay thất bại của một doanh nghiệp. Vì vậy, công tác quản lý nhân sự đóng vai trò đặc biệt quan trọng trong việc duy trì hoạt động ổn định và nâng cao hiệu quả phát triển của doanh nghiệp.
+Tuy nhiên, cùng với sự mở rộng quy mô hoạt động, số lượng nhân viên, hồ sơ nhân sự, hợp đồng lao động và các thông tin liên quan ngày càng gia tăng, tạo ra áp lực lớn cho bộ phận quản lý nhân sự. Việc quản lý bằng các phương pháp thủ công như lưu trữ hồ sơ giấy, sử dụng sổ sách hoặc bảng tính rời rạc không còn đáp ứng tốt nhu cầu quản lý hiện nay. Những phương pháp này dễ dẫn đến sai sót trong quá trình xử lý dữ liệu, mất nhiều thời gian trong việc tìm kiếm, cập nhật thông tin, chấm công và tính lương cho nhân viên.
+Bên cạnh đó, các hình thức chấm công truyền thống cũng tồn tại nhiều hạn chế như thiếu tính chính xác, khó kiểm soát thời gian làm việc thực tế và dễ xảy ra tình trạng chấm công hộ. Điều này ảnh hưởng trực tiếp đến tính minh bạch và công bằng trong công tác quản lý nhân sự cũng như chế độ đãi ngộ đối với người lao động.
+Trước thực tế đó, việc xây dựng hệ thống quản lý nhân sự kết hợp ứng dụng chấm công bằng vân tay là hết sức cần thiết. Hệ thống giúp tự động hóa quy trình quản lý nhân sự, hỗ trợ lưu trữ và xử lý dữ liệu một cách nhanh chóng, chính xác và hiệu quả. Đồng thời, công nghệ nhận diện vân tay giúp nâng cao tính bảo mật, hạn chế gian lận trong chấm công và hỗ trợ quá trình tính lương được thực hiện minh bạch hơn.
+Dưới góc độ công nghệ thông tin, đây là một bài toán mang tính thực tiễn cao, tạo điều kiện để áp dụng các kiến thức về phân tích thiết kế hệ thống, cơ sở dữ liệu và lập trình ứng dụng vào thực tế. Việc nghiên cứu và xây dựng hệ thống không chỉ giúp giảm tải công việc cho bộ phận nhân sự mà còn nâng cao trải nghiệm cho nhân viên, đồng thời hỗ trợ ban lãnh đạo có cái nhìn tổng quan hơn trong việc đưa ra các chiến lược quản lý và phát triển doanh nghiệp.
+1.2 Lý do chọn đề tài: 
+Trong thời đại chuyển đổi số hiện nay, các doanh nghiệp ngày càng chú trọng đến việc hiện đại hóa công tác quản lý nhân sự nhằm nâng cao hiệu quả hoạt động và tiết kiệm thời gian quản lý. Tuy nhiên, nhiều công ty vẫn sử dụng phương pháp chấm công thủ công như ký tên, ghi sổ hoặc nhập liệu bằng tay, dẫn đến nhiều hạn chế như sai sót dữ liệu, mất nhiều thời gian tổng hợp, khó kiểm soát giờ làm việc và dễ xảy ra tình trạng chấm công hộ.
+Bên cạnh đó, số lượng nhân viên trong doanh nghiệp ngày càng tăng khiến việc quản lý thông tin nhân sự, theo dõi thời gian làm việc, tính lương và đánh giá hiệu suất trở nên phức tạp hơn. Điều này đòi hỏi cần có một hệ thống quản lý nhân sự hiện đại, chính xác và tự động hóa cao.
+Xuất phát từ những thực tế trên, đề tài “Quản lý nhân sự và ứng dụng chấm công bằng vân tay” được lựa chọn nhằm xây dựng một hệ thống hỗ trợ doanh nghiệp quản lý thông tin nhân viên, phòng ban, chức vụ, chấm công và tính lương một cách hiệu quả. Việc tích hợp công nghệ nhận diện vân tay giúp tăng tính bảo mật, đảm bảo tính chính xác trong quá trình chấm công và hạn chế tối đa các hành vi gian lận.
+Ngoài ra, đề tài còn giúp áp dụng các kiến thức về phân tích thiết kế hệ thống, cơ sở dữ liệu và lập trình ứng dụng vào thực tế, góp phần nâng cao kỹ năng chuyên môn và khả năng xây dựng phần mềm quản lý cho sinh viên.
+1.2.1. Tính cấp thiết của đề tài: 
+Hiện nay, việc quản lý nhân sự là một trong những yếu tố quan trọng quyết định hiệu quả hoạt động của doanh nghiệp. Nếu công tác quản lý nhân sự không được thực hiện tốt sẽ gây ảnh hưởng đến năng suất lao động, quá trình điều hành và sự phát triển của doanh nghiệp.
+Trong thực tế, nhiều doanh nghiệp vẫn còn gặp các vấn đề như:
+• Quản lý hồ sơ nhân viên thủ công gây khó khăn trong tra cứu và cập nhật. 
+• Chấm công bằng giấy hoặc thẻ từ dễ xảy ra gian lận, chấm công hộ. 
+• Mất nhiều thời gian trong việc tổng hợp công, tính lương và lập báo cáo. 
+• Dữ liệu phân tán, khó thống kê và theo dõi tình hình nhân sự. 
+• Khó kiểm soát giờ vào ra của nhân viên một cách chính xác.
+Trong khi đó, công nghệ nhận diện vân tay đang được sử dụng rộng rãi nhờ khả năng xác thực nhanh, chính xác và có tính bảo mật cao. Việc ứng dụng chấm công bằng vân tay kết hợp với hệ thống quản lý nhân sự giúp doanh nghiệp:
+• Tự động hóa quy trình quản lý nhân sự. 
+• Nâng cao tính chính xác và minh bạch trong chấm công. 
+• Giảm khối lượng công việc cho bộ phận hành chính – nhân sự. 
+• Tiết kiệm thời gian và chi phí quản lý. 
+• Dễ dàng thống kê, báo cáo và hỗ trợ ra quyết định.
+    Vì vậy, việc xây dựng hệ thống quản lý nhân sự tích hợp chấm công bằng vân tay là rất cần thiết và có ý nghĩa thực tiễn cao trong bối cảnh hiện nay.
+1.3 Mục tiêu đề tài:
+1.3.1. Mục tiêu tổng quát
+Xây dựng hệ thống quản lý nhân sự tích hợp chấm công bằng vân tay nhằm hỗ trợ doanh nghiệp quản lý thông tin nhân viên, theo dõi thời gian làm việc, quản lý chấm công và tính lương một cách nhanh chóng, chính xác và hiệu quả. Hệ thống hướng đến việc tự động hóa quy trình quản lý nhân sự, giảm thiểu sai sót trong quá trình xử lý dữ liệu và nâng cao tính chuyên nghiệp trong công tác quản lý doanh nghiệp.
+1.3.2. Mục tiêu cụ thể
+• Xây dựng chức năng quản lý thông tin nhân viên bao gồm: 
+o Thêm, sửa, xóa và tìm kiếm thông tin nhân viên. 
+o Quản lý hồ sơ cá nhân, chức vụ, phòng ban và hợp đồng lao động. 
+• Xây dựng chức năng quản lý phòng ban và chức vụ: 
+o Theo dõi cơ cấu tổ chức của doanh nghiệp. 
+o Phân công nhân viên theo từng phòng ban và chức vụ cụ thể. 
+• Xây dựng chức năng chấm công bằng vân tay: 
+o Ghi nhận thời gian vào ra của nhân viên. 
+o Hạn chế tình trạng chấm công hộ. 
+o Tự động lưu trữ dữ liệu chấm công. 
+• Xây dựng chức năng tính lương: 
+o Tính lương dựa trên số ngày công, giờ làm việc và các khoản phụ cấp. 
+o Hỗ trợ thống kê và xuất bảng lương nhân viên. 
+• Xây dựng chức năng thống kê và báo cáo: 
+o Thống kê nhân sự theo phòng ban. 
+o Báo cáo tình hình chấm công và bảng lương. 
+o Hỗ trợ tìm kiếm và tra cứu dữ liệu nhanh chóng. 
+• Xây dựng hệ thống phân quyền người dùng: 
+o Phân quyền quản trị viên và nhân viên. 
+o Đảm bảo tính bảo mật và an toàn dữ liệu. 
+• Thiết kế cơ sở dữ liệu phù hợp: 
+o Đảm bảo tính toàn vẹn dữ liệu. 
+o Hỗ trợ lưu trữ và xử lý dữ liệu hiệu quả. 
+• Áp dụng kiến thức phân tích thiết kế hệ thống và lập trình ứng dụng: 
+o Thiết kế sơ đồ chức năng, cơ sở dữ liệu và giao diện hệ thống. 
+o Phát triển kỹ năng xây dựng phần mềm quản lý thực tế.
+1.4 Đối tượng và phạm vi nghiên cứu:
+1.4.1. Đối tượng nghiên cứu
+Đề tài tập trung nghiên cứu các hoạt động quản lý nhân sự trong doanh nghiệp, bao gồm:
+• Quản lý thông tin nhân viên. 
+• Quản lý phòng ban và chức vụ. 
+• Quản lý hợp đồng lao động. 
+• Quản lý chấm công bằng công nghệ nhận diện vân tay. 
+• Quản lý tính lương và thống kê nhân sự. 
+Ngoài ra, đề tài còn nghiên cứu các phương pháp phân tích thiết kế hệ thống, xây dựng cơ sở dữ liệu và phát triển phần mềm quản lý nhằm đáp ứng nhu cầu quản lý nhân sự trong doanh nghiệp hiện nay.
+1.4.2. Phạm vi nghiên cứu
+a. Phạm vi nội dung
+Đề tài tập trung xây dựng hệ thống với các chức năng chính:
+Quản lý hồ sơ nhân viên. 
+Quản lý phòng ban, chức vụ. 
+Quản lý tài khoản và phân quyền người dùng. 
+Chấm công bằng vân tay. 
+Theo dõi thời gian làm việc của nhân viên. 
+Tính lương cơ bản dựa trên dữ liệu chấm công. 
+Thống kê và lập báo cáo nhân sự. 
+Hệ thống không tập trung nghiên cứu chuyên sâu về:
+• Các thuật toán xử lý sinh trắc học phức tạp. 
+• Hệ thống trí tuệ nhân tạo nhận diện vân tay. 
+• Quản lý tài chính hoặc kế toán doanh nghiệp. 
+b. Phạm vi không gian
+Hệ thống được xây dựng và áp dụng cho mô hình doanh nghiệp vừa và nhỏ có nhu cầu quản lý nhân sự và chấm công nhân viên bằng vân tay.
+c. Phạm vi thời gian
+Đề tài được thực hiện trong thời gian nghiên cứu và phát triển môn học/đồ án, tập trung vào giai đoạn phân tích, thiết kế cơ sở dữ liệu, xây dựng chức năng hệ thống và kiểm thử chương trình.
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CHƯƠNG 2: KHẢO SÁT VÀ PHÂN TÍCH YÊU CẦU HỆ THỐNG
+2.1 Khảo sát thực trạng 
+Để có cơ sở thực tế khách quan cho việc thiết kế và xây dựng hệ thống mới, đồ án tiến hành khảo sát thực trạng quy trình vận hành và quản trị nguồn nhân lực tại công ty . Đây là doanh nghiệp hoạt động trong lĩnh vực phân phối thiết bị công nghệ với quy mô nhân sự trung bình, dao động từ 120 đến 150 nhân viên hoạt động tại trụ sở chính và các chi nhánh.
+	2.1.1 Mô tả hệ thống 
+      Trong bối cảnh nền kinh tế hiện đại ngày càng phát triển mạnh mẽ, nguồn nhân lực đóng vai trò vô cùng quan trọng đối với sự tồn tại và phát triển của mỗi doanh nghiệp. Nhân sự không chỉ là lực lượng lao động trực tiếp tạo ra giá trị cho công ty mà còn là yếu tố quyết định đến hiệu quả hoạt động, năng lực cạnh tranh và sự phát triển bền vững của doanh nghiệp trong tương lai. Chính vì vậy, công tác quản lí nhân sự luôn được xem là một trong những nhiệm vụ quan trọng hàng đầu trong hoạt động quản trị doanh nghiệp.
+      Tuy nhiên, trên thực tế hiện nay, nhiều doanh nghiệp vẫn còn áp dụng phương pháp quản lí nhân sự thủ công thông qua hồ sơ giấy tờ và các tệp tin Excel riêng lẻ. Việc quản lí theo phương pháp truyền thống này tuy đơn giản nhưng tồn tại rất nhiều hạn chế như dữ liệu phân tán, khó tra cứu, dễ xảy ra sai sót trong quá trình nhập liệu, mất nhiều thời gian xử lí và tiềm ẩn nguy cơ thất lạc thông tin quan trọng. Đặc biệt khi số lượng nhân viên ngày càng tăng thì khối lượng công việc của phòng nhân sự cũng tăng theo, khiến việc quản lí trở nên phức tạp và thiếu tính đồng bộ.
+      Xuất phát từ những nhu cầu thực tế đó, hệ thống quản lí nhân sự được xây dựng nhằm hỗ trợ doanh nghiệp quản lí toàn bộ thông tin nhân viên, quá trình công tác, chấm công, nghỉ phép, hợp đồng lao động, tính lương và các nghiệp vụ liên quan một cách khoa học, chính xác và hiệu quả hơn. Hệ thống ứng dụng công nghệ thông tin để thay thế cho các quy trình thủ công truyền thống, giúp tự động hóa nhiều nghiệp vụ quan trọng trong công tác quản lí nhân sự, từ đó giảm áp lực cho bộ phận nhân sự, tiết kiệm thời gian xử lí công việc và nâng cao hiệu quả hoạt động của doanh nghiệp.
+      Hệ thống được thiết kế với mục tiêu xây dựng một môi trường quản lí tập trung, nơi tất cả dữ liệu liên quan đến nhân viên đều được lưu trữ trên cùng một hệ thống thống nhất. Điều này giúp doanh nghiệp dễ dàng theo dõi, tra cứu và cập nhật thông tin khi cần thiết. Đồng thời hệ thống còn giúp nâng cao tính minh bạch, tính bảo mật và tính toàn vẹn dữ liệu trong quá trình quản lí.
+      Hệ thống quản lí nhân sự phục vụ cho nhiều nhóm người dùng khác nhau trong doanh nghiệp bao gồm Admin, Giám đốc, Nhân sự (HR) và Nhân viên. Mỗi nhóm người dùng sẽ được cấp tài khoản đăng nhập riêng cùng với quyền truy cập phù hợp với vai trò của mình nhằm đảm bảo tính bảo mật và phân quyền chặt chẽ trong toàn bộ hệ thống.
+      Đối với tài khoản Admin, đây là tài khoản có quyền quản trị cao nhất trong hệ thống. Admin có quyền truy cập và quản lí toàn bộ dữ liệu của doanh nghiệp. Admin có thể thực hiện các chức năng như quản lí tài khoản người dùng, phân quyền truy cập, quản lí phòng ban, chức vụ, hợp đồng lao động, hồ sơ nhân viên, bảng lương, dữ liệu chấm công, nghỉ phép, ứng lương và các báo cáo thống kê tổng hợp. Ngoài ra, Admin còn có quyền kiểm tra lịch sử hoạt động của người dùng trên hệ thống nhằm đảm bảo tính minh bạch và kiểm soát tốt quá trình vận hành hệ thống.
+      Tài khoản Giám đốc là tài khoản dành cho người lãnh đạo cao nhất của doanh nghiệp. Giám đốc có vai trò theo dõi và giám sát toàn bộ tình hình nhân sự của công ty thông qua các báo cáo và thống kê tổng hợp. Hệ thống cho phép Giám đốc xem báo cáo số lượng nhân viên, tình hình biến động nhân sự, bảng lương, tình trạng chấm công, tiến độ làm việc và hiệu suất của từng nhân viên hoặc từng phòng ban. Ngoài ra Giám đốc còn có thể phê duyệt các quyết định quan trọng như tăng lương, điều chuyển công tác, phê duyệt hợp đồng lao động, xét duyệt nghỉ phép hoặc xử lí các trường hợp khen thưởng và kỷ luật nhân viên.
+      Đối với bộ phận Nhân sự (HR), đây là nhóm người dùng trực tiếp quản lí và xử lí các nghiệp vụ nhân sự hằng ngày. Hệ thống hỗ trợ HR quản lí toàn bộ hồ sơ nhân viên từ khi tiếp nhận nhân sự mới cho đến khi nhân viên nghỉ việc. Khi một nhân viên mới gia nhập công ty, HR sẽ tiến hành nhập đầy đủ các thông tin cá nhân của nhân viên vào hệ thống như mã nhân viên, họ tên, ngày sinh, giới tính, số căn cước công dân, địa chỉ, số điện thoại, email, quốc tịch, mã số thuế, tài khoản ngân hàng và các thông tin liên quan khác. Đồng thời hệ thống cũng cho phép lưu trữ thông tin công việc của nhân viên bao gồm phòng ban, chức vụ, ngày vào làm, loại nhân sự, trạng thái làm việc và mức lương cơ bản.
+      Mỗi nhân viên trong hệ thống sẽ được cấp một mã nhân viên duy nhất nhằm tránh tình trạng trùng lặp dữ liệu. Hệ thống có cơ chế kiểm tra và cảnh báo nếu phát hiện trùng số CCCD hoặc mã nhân viên trong quá trình nhập liệu nhằm đảm bảo tính toàn vẹn dữ liệu. Ngoài ra, hệ thống còn hỗ trợ HR dễ dàng tìm kiếm và tra cứu nhân viên theo nhiều tiêu chí khác nhau như mã nhân viên, họ tên, phòng ban hoặc chức vụ.
+      Trong quá trình làm việc, nhân viên có thể phát sinh nhiều biến động như chuyển phòng ban, thay đổi chức vụ, tăng lương hoặc nghỉ việc. Hệ thống cho phép lưu trữ toàn bộ lịch sử công tác của nhân viên nhằm phục vụ cho việc theo dõi và tra cứu khi cần thiết. Ví dụ hệ thống có thể ghi nhận nhân viên từng làm việc tại phòng Kinh doanh, sau đó được điều chuyển sang phòng Marketing hoặc được thăng chức từ nhân viên lên trưởng nhóm. Việc lưu trữ lịch sử này giúp doanh nghiệp dễ dàng theo dõi quá trình phát triển của nhân viên trong công ty.
+      Bên cạnh chức năng quản lí hồ sơ nhân viên, hệ thống còn hỗ trợ quản lí hợp đồng lao động. Đây là một trong những chức năng quan trọng giúp doanh nghiệp theo dõi thời hạn hợp đồng và tránh tình trạng hợp đồng hết hạn nhưng chưa được xử lí. Hệ thống cho phép quản lí nhiều loại hợp đồng khác nhau như hợp đồng thử việc, hợp đồng ngắn hạn, hợp đồng dài hạn hoặc hợp đồng không thời hạn. Thông tin hợp đồng bao gồm mã hợp đồng, loại hợp đồng, ngày ký, ngày bắt đầu, ngày kết thúc, mức lương cơ bản và các điều khoản liên quan.
+      Ngoài việc lưu trữ hợp đồng, hệ thống còn hỗ trợ theo dõi thời hạn hợp đồng và tự động gửi thông báo khi hợp đồng sắp hết hạn. Điều này giúp bộ phận nhân sự chủ động hơn trong việc gia hạn hoặc thanh lý hợp đồng lao động. Khi nhân viên nghỉ việc, hệ thống sẽ lưu lại lý do nghỉ việc, ngày nghỉ việc và quyết định nghỉ việc nhằm phục vụ cho công tác thống kê và quản lí biến động nhân sự.
+      Một chức năng vô cùng quan trọng khác của hệ thống là quản lí chấm công. Hệ thống có khả năng kết nối với máy chấm công vân tay để tự động ghi nhận thời gian làm việc của nhân viên. Dữ liệu chấm công bao gồm giờ vào làm, giờ tan ca, số giờ tăng ca, số phút đi muộn và số phút về sớm của nhân viên. So với phương pháp xử lí thủ công bằng file Excel trước đây, hệ thống giúp tự động hóa hoàn toàn quá trình tổng hợp dữ liệu chấm công, giảm đáng kể khối lượng công việc cho phòng nhân sự.
+      Hệ thống cũng hỗ trợ xử lí các trường hợp thiếu check-in hoặc thiếu check-out, đồng thời cho phép HR cập nhật ghi chú điều chỉnh khi cần thiết. Dữ liệu chấm công được lưu trữ tập trung và có thể tra cứu theo ngày, tháng hoặc theo từng nhân viên. Điều này giúp doanh nghiệp dễ dàng theo dõi tình hình chuyên cần và đánh giá ý thức làm việc của nhân viên.
+      Ngoài chấm công, hệ thống còn hỗ trợ quản lí nghỉ phép trực tuyến. Thay vì sử dụng các mẫu đơn giấy như trước đây, nhân viên có thể gửi đơn xin nghỉ phép trực tiếp trên hệ thống. Nhân viên chỉ cần nhập thông tin lý do nghỉ, thời gian nghỉ và loại nghỉ phép. Sau đó đơn sẽ được chuyển đến trưởng phòng hoặc HR để xét duyệt. Hệ thống hỗ trợ nhiều loại nghỉ khác nhau như nghỉ phép năm, nghỉ ốm, nghỉ thai sản, nghỉ việc riêng có lương hoặc nghỉ không lương.
+      Toàn bộ lịch sử nghỉ phép của nhân viên đều được lưu trữ trên hệ thống nhằm đảm bảo tính minh bạch và thuận tiện cho việc tra cứu sau này. Hệ thống cũng tự động tính toán số ngày phép còn lại của nhân viên để tránh tình trạng nghỉ vượt quá số ngày quy định.
+      Một trong những chức năng quan trọng và nhạy cảm nhất của hệ thống là quản lí lương. Hệ thống hỗ trợ tự động tính lương dựa trên dữ liệu chấm công và các quy định của doanh nghiệp. Việc tính lương sẽ dựa trên nhiều yếu tố như lương cơ bản, số ngày công thực tế, số giờ tăng ca, phụ cấp, thưởng, các khoản khấu trừ, bảo hiểm xã hội, bảo hiểm y tế, bảo hiểm thất nghiệp và thuế thu nhập cá nhân.
+      Hệ thống giúp giảm thiểu tối đa các sai sót thường gặp khi tính lương thủ công trên Excel như sai công thức hoặc nhầm lẫn dữ liệu giữa các nhân viên. Sau khi hoàn tất tính toán, hệ thống sẽ tự động tạo bảng lương tổng hợp và phiếu lương chi tiết cho từng nhân viên. Nhân viên có thể đăng nhập vào hệ thống để xem phiếu lương cá nhân của mình mà không thể xem thông tin lương của người khác nhằm đảm bảo tính bảo mật.
+      Ngoài ra, hệ thống còn hỗ trợ quản lí ứng lương cho nhân viên. Trong trường hợp nhân viên có nhu cầu ứng trước lương, nhân viên có thể gửi yêu cầu trực tiếp trên hệ thống. Sau khi được HR hoặc Giám đốc phê duyệt, khoản tiền ứng sẽ được lưu trữ và tự động khấu trừ vào kỳ lương tiếp theo.
+      Bên cạnh các chức năng quản lí cơ bản, hệ thống còn hỗ trợ quản lí đánh giá hiệu suất làm việc của nhân viên. Hệ thống cho phép theo dõi tiến độ công việc, đánh giá KPI, ghi nhận thành tích, khen thưởng, kỷ luật và quá trình thăng tiến của nhân viên trong công ty. Điều này giúp doanh nghiệp dễ dàng đánh giá năng lực nhân viên và xây dựng các chính sách phát triển nguồn nhân lực phù hợp.
+      Hệ thống cũng hỗ trợ quản lí các biểu mẫu hành chính như đơn xin nghỉ phép, đơn ứng lương, phiếu đánh giá nhân viên, quyết định tăng lương, quyết định điều chuyển công tác hoặc biên bản kỷ luật. Các biểu mẫu có thể được in trực tiếp hoặc xuất ra file Excel và PDF nhằm phục vụ cho công tác lưu trữ và xử lí hồ sơ.
+      Ngoài ra, hệ thống còn cung cấp nhiều chức năng thống kê và báo cáo nhằm hỗ trợ ban lãnh đạo trong công tác quản trị doanh nghiệp. Hệ thống có thể tạo báo cáo số lượng nhân viên theo phòng ban, báo cáo chấm công, báo cáo lương, báo cáo hợp đồng lao động, báo cáo nhân viên nghỉ việc hoặc báo cáo tình hình tăng ca của nhân viên. Các báo cáo này giúp ban lãnh đạo dễ dàng theo dõi tình hình nhân sự và đưa ra các quyết định quản lí phù hợp.
+      Không chỉ đáp ứng các yêu cầu chức năng, hệ thống còn đảm bảo các yêu cầu phi chức năng quan trọng như bảo mật dữ liệu, phân quyền người dùng, sao lưu dữ liệu định kỳ, đảm bảo tính toàn vẹn dữ liệu và nâng cao hiệu suất xử lí thông tin. Mỗi người dùng chỉ được phép truy cập vào những chức năng phù hợp với quyền hạn của mình nhằm hạn chế rò rỉ thông tin nội bộ.
+      Nhìn chung, hệ thống quản lí nhân sự đóng vai trò vô cùng quan trọng trong việc hiện đại hóa công tác quản trị nhân sự của doanh nghiệp. Việc ứng dụng hệ thống giúp doanh nghiệp tiết kiệm thời gian, giảm chi phí quản lí, hạn chế sai sót trong quá trình xử lí nghiệp vụ và nâng cao hiệu quả hoạt động của công ty. Đồng thời hệ thống còn góp phần xây dựng môi trường làm việc chuyên nghiệp, minh bạch và phù hợp với xu hướng chuyển đổi số trong doanh nghiệp hiện nay.
+2.2 Yêu cầu chức năng
+      Yêu cầu chức năng là những chức năng nghiệp vụ mà hệ thống quản lí nhân sự cần phải đáp ứng để phục vụ cho hoạt động quản lí nhân sự trong doanh nghiệp. Các chức năng này giúp hệ thống thực hiện việc lưu trữ, xử lí, tra cứu và quản lí dữ liệu nhân sự một cách chính xác, nhanh chóng và hiệu quả. Hệ thống được chia thành nhiều nhóm chức năng khác nhau nhằm đáp ứng đầy đủ các nghiệp vụ thực tế trong doanh nghiệp.
+      Nhóm chức năng quản lí danh mục
+      Đây là nhóm chức năng nền tảng của hệ thống vì toàn bộ dữ liệu nghiệp vụ đều liên quan đến các danh mục cơ bản. Việc quản lí danh mục giúp chuẩn hóa dữ liệu, tránh nhập liệu trùng lặp và hỗ trợ liên kết giữa các chức năng trong hệ thống.
+      Hệ thống cần cho phép người quản trị hoặc bộ phận nhân sự thực hiện việc thêm mới, cập nhật và xóa các phòng ban trong công ty. Mỗi phòng ban sẽ bao gồm các thông tin như mã phòng ban, tên phòng ban, trưởng phòng, ngày thành lập và mô tả chức năng hoạt động của phòng ban đó. Ngoài ra hệ thống cũng cần hỗ trợ tìm kiếm và tra cứu thông tin phòng ban nhanh chóng khi cần thiết.
+      Bên cạnh quản lí phòng ban, hệ thống còn hỗ trợ quản lí chức vụ của nhân viên trong công ty như nhân viên, trưởng nhóm, trưởng phòng hoặc giám đốc. Mỗi chức vụ sẽ có mã chức vụ, tên chức vụ, phụ cấp chức vụ và mô tả công việc tương ứng. Chức năng này giúp doanh nghiệp dễ dàng phân quyền người dùng và tính toán phụ cấp lương cho nhân viên.
+      Ngoài ra hệ thống còn hỗ trợ quản lí các loại hợp đồng lao động khác nhau như hợp đồng thử việc, hợp đồng ngắn hạn, hợp đồng dài hạn hoặc hợp đồng không thời hạn. Việc quản lí danh mục loại hợp đồng giúp doanh nghiệp thuận tiện trong việc theo dõi và xử lí thời hạn lao động của nhân viên.
+      Hệ thống cũng cần hỗ trợ chức năng tra cứu danh mục nhằm giúp người dùng nhanh chóng tìm kiếm thông tin liên quan đến phòng ban, chức vụ hoặc loại hợp đồng trong quá trình làm việc.
+      Nhóm chức năng quản lí nhân viên
+      Đây là nhóm chức năng trung tâm và quan trọng nhất của toàn bộ hệ thống quản lí nhân sự. Chức năng này giúp doanh nghiệp lưu trữ và quản lí toàn bộ thông tin cá nhân cũng như thông tin công việc của nhân viên.
+      Hệ thống cho phép bộ phận nhân sự thêm mới nhân viên vào hệ thống khi có nhân sự mới gia nhập công ty. Các thông tin cần lưu trữ bao gồm mã nhân viên, họ tên, ngày sinh, giới tính, địa chỉ, số điện thoại, email, số CCCD, trình độ học vấn, hình ảnh nhân viên và các thông tin liên quan khác.
+      Ngoài thông tin cá nhân, hệ thống còn lưu trữ thông tin công việc của nhân viên như phòng ban làm việc, chức vụ, ngày vào làm, loại nhân sự, mức lương cơ bản và trạng thái làm việc hiện tại. Mỗi nhân viên sẽ được cấp một mã nhân viên duy nhất nhằm tránh trùng lặp dữ liệu trong hệ thống.
+      Trong quá trình làm việc, nhân viên có thể được điều chuyển sang phòng ban khác hoặc thay đổi chức vụ. Vì vậy hệ thống cần hỗ trợ chức năng điều chuyển phòng ban và lưu lại lịch sử thay đổi công tác của nhân viên để phục vụ cho việc tra cứu sau này.
+      Hệ thống cũng cần quản lí trạng thái làm việc của nhân viên như đang thử việc, chính thức, tạm nghỉ hoặc đã nghỉ việc. Điều này giúp doanh nghiệp dễ dàng theo dõi tình hình nhân sự và quản lí biến động lao động trong công ty.
+      Ngoài ra hệ thống còn hỗ trợ tìm kiếm và tra cứu nhân viên theo nhiều tiêu chí khác nhau như mã nhân viên, họ tên, phòng ban hoặc chức vụ nhằm giúp bộ phận nhân sự tiết kiệm thời gian trong quá trình làm việc.
+      Nhóm chức năng quản lí hợp đồng lao động
+      Hợp đồng lao động là một phần quan trọng trong công tác quản lí nhân sự của doanh nghiệp. Hệ thống cần hỗ trợ quản lí toàn bộ thông tin liên quan đến hợp đồng lao động của nhân viên.
+      Khi nhân viên hoàn thành thời gian thử việc và bắt đầu làm việc chính thức, bộ phận nhân sự sẽ tiến hành lập hợp đồng lao động trên hệ thống. Thông tin hợp đồng bao gồm mã hợp đồng, loại hợp đồng, ngày ký, ngày bắt đầu, ngày kết thúc, mức lương cơ bản và các điều khoản liên quan.
+      Trong quá trình làm việc, hợp đồng lao động có thể được gia hạn hoặc thay đổi. Vì vậy hệ thống cần hỗ trợ chức năng gia hạn hợp đồng nhằm giúp doanh nghiệp dễ dàng quản lí thời hạn hợp đồng của nhân viên.
+      Khi nhân viên nghỉ việc hoặc chấm dứt hợp đồng lao động, hệ thống cần hỗ trợ chức năng thanh lý hợp đồng để lưu lại thông tin nghỉ việc và lịch sử hợp đồng của nhân viên.
+      Ngoài ra hệ thống cần có khả năng theo dõi và thông báo các hợp đồng sắp hết hạn nhằm giúp bộ phận nhân sự chủ động xử lí gia hạn hoặc thanh lý hợp đồng đúng thời gian quy định.
+      Nhóm chức năng quản lí chấm công
+      Chức năng chấm công giúp doanh nghiệp theo dõi thời gian làm việc và tình hình chuyên cần của nhân viên hằng ngày. Hệ thống cần hỗ trợ kết nối với máy chấm công vân tay hoặc cho phép nhập liệu thủ công trong trường hợp cần thiết.
+      Hệ thống cần ghi nhận đầy đủ các thông tin chấm công như ngày làm việc, giờ vào, giờ ra, ca làm việc, số phút đi muộn, số phút về sớm và số giờ tăng ca của nhân viên.
+      Ngoài việc ghi nhận thời gian làm việc, hệ thống còn hỗ trợ quản lí nghỉ phép cho nhân viên. Nhân viên có thể gửi đơn xin nghỉ phép trực tiếp trên hệ thống và chờ phê duyệt từ trưởng phòng hoặc bộ phận nhân sự. Các loại nghỉ phép bao gồm nghỉ phép năm, nghỉ ốm, nghỉ thai sản, nghỉ không lương hoặc nghỉ việc riêng.
+      Dựa trên dữ liệu chấm công và nghỉ phép, hệ thống sẽ tự động tính toán số ngày công thực tế của từng nhân viên trong tháng. Chức năng này giúp giảm đáng kể khối lượng công việc xử lí thủ công cho bộ phận nhân sự.
+      Ngoài ra hệ thống còn hỗ trợ theo dõi thời gian tăng ca của nhân viên để phục vụ cho quá trình tính lương và đánh giá hiệu suất làm việc.
+      Nhóm chức năng quản lí lương
+      Đây là chức năng quan trọng và có tính nhạy cảm cao trong hệ thống quản lí nhân sự. Hệ thống cần hỗ trợ tự động tính lương dựa trên các dữ liệu liên quan như ngày công, lương cơ bản, phụ cấp, thưởng, phạt và các khoản khấu trừ theo quy định của công ty.
+      Hệ thống cần tự động tính toán lương cho nhân viên dựa trên công thức lương mà doanh nghiệp áp dụng. Các khoản như tiền tăng ca, phụ cấp ăn trưa, phụ cấp trách nhiệm, thưởng hiệu suất hoặc các khoản phạt đi muộn đều phải được tính toán chính xác.
+      Ngoài ra hệ thống cần hỗ trợ quản lí các khoản thưởng và kỷ luật của nhân viên nhằm đảm bảo tính minh bạch trong công tác quản lí lương.
+      Sau khi hoàn tất quá trình tính lương, hệ thống sẽ lập bảng lương tổng hợp cho toàn bộ công ty và cho phép in phiếu lương chi tiết cho từng nhân viên. Nhân viên có thể đăng nhập để xem phiếu lương của mình nhưng không được phép xem bảng lương của người khác nhằm đảm bảo tính bảo mật thông tin.
+      Nhóm chức năng báo cáo thống kê
+      Hệ thống cần hỗ trợ nhiều loại báo cáo và thống kê nhằm phục vụ cho công tác quản lí và ra quyết định của ban lãnh đạo doanh nghiệp.
+      Đối với báo cáo nhân sự, hệ thống cần thống kê tổng số nhân viên hiện có, số lượng nhân viên theo từng phòng ban, số nhân viên nghỉ việc hoặc tình hình biến động nhân sự trong công ty.
+      Đối với báo cáo lương, hệ thống cần hỗ trợ thống kê tổng quỹ lương của doanh nghiệp, bảng lương theo phòng ban hoặc thống kê chi tiết thu nhập của nhân viên.
+      Đối với báo cáo chấm công, hệ thống cần thống kê số ngày công, số lần đi muộn, số giờ tăng ca và tình hình nghỉ phép của nhân viên.
+      Ngoài ra hệ thống còn hỗ trợ báo cáo hợp đồng lao động nhằm theo dõi các hợp đồng còn hiệu lực, hợp đồng sắp hết hạn hoặc hợp đồng đã thanh lý.
+      Nhóm chức năng Quản lý Ứng lương 
+Hệ thống cho phép nhân viên gửi yêu cầu ứng trước một khoản lương nhất định trong tháng. Yêu cầu này sẽ được gửi đến bộ phận Quản lý hoặc Giám đốc để phê duyệt. Hệ thống tự động ghi nhận số tiền ứng và liên kết với phân hệ Tính lương để tự động khấu trừ vào cuối kỳ.
+      Nhóm chức năng Phân công và Báo cáo công việc 
+Ngoài quản lý nhân sự cơ bản, hệ thống tích hợp phân hệ giao việc (Phân công). Quản lý có thể giao task cho nhân viên với thời hạn (Deadline) cụ thể. Nhân viên có thể tạo các Báo cáo công việc (Work Report) hàng ngày để báo cáo kết quả thực hiện, giúp Giám đốc đánh giá được hiệu suất (KPI) thực tế.
+      Nhóm chức năng Nhật ký hệ thống (Audit Log) và Bảo mật 
+Hệ thống yêu cầu lưu vết (tracking) toàn bộ các hành động nhạy cảm. Mọi thao tác như Đăng nhập, Thêm/Sửa/Xóa dữ liệu nhân viên, Chốt lương đều được ghi lại tự động bao gồm: Tên người thực hiện, thời gian, và chi tiết hành động. Tính năng này giúp tăng tính minh bạch và truy vết lỗi khi có sự cố.
+2.3 Yêu cầu phi chức năng
+      Bên cạnh các yêu cầu chức năng, hệ thống quản lí nhân sự còn cần đáp ứng các yêu cầu phi chức năng nhằm đảm bảo hệ thống hoạt động ổn định, an toàn và hiệu quả.
+      Yêu cầu về bảo mật
+      Do hệ thống quản lí nhiều thông tin quan trọng và nhạy cảm của doanh nghiệp nên tính bảo mật là yêu cầu bắt buộc.
+      Hệ thống cần hỗ trợ chức năng đăng nhập bằng tài khoản và mật khẩu nhằm kiểm soát người dùng truy cập vào hệ thống. Mỗi người dùng sẽ được phân quyền rõ ràng theo vai trò như Admin, Giám đốc, HR hoặc Nhân viên.
+      Các dữ liệu quan trọng như mật khẩu, thông tin lương hoặc thông tin cá nhân của nhân viên cần được mã hóa nhằm tránh rò rỉ dữ liệu và đảm bảo an toàn thông tin.
+      Yêu cầu về tính toàn vẹn dữ liệu
+      Hệ thống cần đảm bảo dữ liệu được lưu trữ chính xác và nhất quán trong suốt quá trình hoạt động.
+      Hệ thống không cho phép trùng mã nhân viên hoặc trùng số CCCD nhằm tránh sai lệch dữ liệu.
+      Ngoài ra hệ thống không được phép xóa phòng ban nếu vẫn còn nhân viên thuộc phòng ban đó nhằm đảm bảo tính liên kết dữ liệu.
+      Hệ thống cũng không cho phép tính lương khi chưa có dữ liệu chấm công nhằm đảm bảo kết quả tính lương chính xác và đầy đủ.
+      Yêu cầu về hiệu năng
+      Hệ thống cần đảm bảo tốc độ xử lí nhanh và ổn định khi có nhiều người dùng truy cập cùng lúc.
+      Các thao tác tìm kiếm, tra cứu, cập nhật dữ liệu hoặc xuất báo cáo cần được thực hiện nhanh chóng nhằm hỗ trợ công việc hiệu quả cho người dùng.
+      Yêu cầu về giao diện
+      Giao diện hệ thống cần được thiết kế đơn giản, thân thiện và dễ sử dụng đối với mọi người dùng.
+      Các chức năng cần được bố trí rõ ràng, dễ thao tác và hiển thị thông tin trực quan nhằm giúp người dùng dễ dàng sử dụng hệ thống mà không gặp nhiều khó khăn.
+      Yêu cầu về khả năng mở rộng
+      Hệ thống cần được thiết kế theo hướng dễ nâng cấp và mở rộng trong tương lai.
+      Doanh nghiệp có thể dễ dàng bổ sung thêm các chức năng mới hoặc tích hợp với các hệ thống khác mà không ảnh hưởng đến dữ liệu và hoạt động hiện tại của hệ thống.
+      Yêu cầu về sao lưu dữ liệu
+      Hệ thống cần hỗ trợ chức năng sao lưu dữ liệu định kỳ nhằm đảm bảo an toàn dữ liệu khi xảy ra sự cố.
+      Ngoài ra hệ thống cũng cần hỗ trợ phục hồi dữ liệu khi có lỗi phát sinh như mất điện, hỏng thiết bị hoặc lỗi hệ thống nhằm tránh mất mát thông tin quan trọng của doanh nghiệp.
+2.4  Biểu mẫu:
+
+
+
+               Hình 2.41: Biểu mẫu Hồ sơ nhân viên của công ty bằng file excel 
+                              
+
+                             Hình 2.4.2: Biểu mẫu bảng chấm công của nhân viên 
+
+
+
+
+
+
+                  Hình 2.4.3: Biểu mẫu bảng thanh toán lương của nhân viên 
+
+
+
+                                        Hình 2.4.4: Biểu mẫu hợp đồng lao động 
+
+
+
+2.5  Điểm mạnh so với các hệ thống khác: 
+Hệ thống quản lý nhân sự được xây dựng với nhiều ưu điểm nổi bật hơn so với các phương pháp quản lý truyền thống bằng giấy tờ hoặc file Excel rời rạc. Khác với các hệ thống truyền thống khô khan, hệ thống được thiết kế theo chuẩn UI/UX hiện đại, hỗ trợ chế độ Tối/Sáng (Dark Mode/Light Mode) mang lại trải nghiệm thân thiện cho người dùng. Bảng điều khiển (Dashboard) sử dụng Chart.js để vẽ biểu đồ trực quan về cơ cấu nhân sự và phân bổ quỹ lương, giúp Ban lãnh đạo nhanh chóng nắm bắt tình hình mà không cần tổng hợp thủ công từ nhiều nguồn.
+Điểm mạnh lớn nhất của hệ thống là khả năng quản lý dữ liệu tập trung và đồng bộ toàn bộ thông tin nhân sự trên cùng một nền tảng duy nhất. Trước đây, doanh nghiệp thường phải lưu trữ hồ sơ nhân viên, dữ liệu chấm công, hợp đồng lao động và bảng lương ở nhiều file Excel khác nhau hoặc bằng hồ sơ giấy, dẫn đến việc tra cứu khó khăn, dễ thất lạc dữ liệu và mất rất nhiều thời gian xử lý. Khi cần tìm thông tin của một nhân viên đã nghỉ việc hoặc kiểm tra lịch sử tăng lương của nhân viên lâu năm, bộ phận nhân sự phải mở lại nhiều file cũ hoặc tìm kiếm hồ sơ giấy trong kho lưu trữ, gây tốn thời gian và dễ xảy ra sai sót. Với hệ thống mới, tất cả dữ liệu được lưu trữ tập trung và liên kết chặt chẽ với nhau, giúp việc tra cứu và cập nhật thông tin trở nên nhanh chóng, chính xác và thuận tiện hơn rất nhiều.
+Ngoài ra, hệ thống còn có khả năng tự động hóa nhiều nghiệp vụ quan trọng mà trước đây phải thực hiện hoàn toàn thủ công. Ví dụ như việc tính lương, tổng hợp ngày công, tính tăng ca, tính phụ cấp hoặc theo dõi hợp đồng lao động đều được xử lý tự động trên hệ thống. Điều này giúp giảm đáng kể khối lượng công việc cho bộ phận nhân sự, hạn chế sai sót do nhập liệu thủ công và nâng cao độ chính xác trong quá trình xử lý dữ liệu. Trong các hệ thống quản lý cũ sử dụng Excel, chỉ cần kéo sai công thức hoặc nhập nhầm dữ liệu là có thể dẫn đến sai lệch bảng lương của toàn bộ nhân viên. Hệ thống mới giúp khắc phục hoàn toàn những hạn chế đó bằng cách tự động tính toán dựa trên dữ liệu thực tế đã được lưu trữ trong cơ sở dữ liệu.
+Một ưu điểm rất quan trọng khác của hệ thống là khả năng phân quyền và bảo mật dữ liệu cao. Trong phương pháp quản lý cũ, file Excel thường được lưu chung trên máy tính nội bộ nên bất kỳ ai có file đều có thể xem được thông tin lương hoặc hồ sơ nhân viên, gây ra nguy cơ rò rỉ thông tin nội bộ. Hệ thống quản lý nhân sự mới được xây dựng với cơ chế đăng nhập bằng tài khoản riêng và phân quyền rõ ràng: Admin có toàn quyền quản lý hệ thống, HR được phép chỉnh sửa hồ sơ nhân sự, Giám đốc được xem báo cáo tổng hợp, còn nhân viên chỉ có thể xem thông tin cá nhân và bảng lương của chính mình. Đặc biệt, hệ thống áp dụng bảo mật mã hóa BCrypt cao cấp. Mật khẩu của người dùng không lưu dưới dạng chuỗi văn bản thuần (plain-text) mà được băm (hash) bằng thuật toán BCrypt. Thậm chí quản trị viên database cũng không thể biết được mật khẩu thực sự của nhân viên, chống hoàn toàn nguy cơ rò rỉ dữ liệu.
+Hệ thống cũng mang lại sự minh bạch cao hơn trong công tác quản lý nhân sự. Nhân viên có thể chủ động theo dõi thông tin cá nhân, ngày công, lịch sử nghỉ phép và phiếu lương chi tiết của mình trực tiếp trên hệ thống để biết rõ mình được hưởng bao nhiêu phụ cấp, bị trừ bao nhiêu tiền bảo hiểm hoặc bị phạt bao nhiêu do đi muộn. Điều này giúp hạn chế tranh chấp, giảm khiếu nại về lương và tạo sự minh bạch giữa doanh nghiệp với người lao động.
+Bên cạnh đó, hệ thống còn hỗ trợ quản lý nghỉ phép và chấm công một cách hiện đại hơn rất nhiều. Thay vì quy trình xin chữ ký giấy rườm rà và dễ thất lạc, hệ thống mới cho phép nhân viên gửi đơn nghỉ phép trực tuyến ngay trên phần mềm và theo dõi trạng thái xét duyệt trực tiếp. Đồng thời, dữ liệu nghỉ phép sẽ tự động liên kết với dữ liệu chấm công và tính lương, giúp giảm đáng kể khối lượng công việc xử lý thủ công.
+Ngoài việc quản lý nhân sự hằng ngày, hệ thống còn hỗ trợ mạnh mẽ cho công tác thống kê và báo cáo. Ban lãnh đạo có thể nhanh chóng xem được báo cáo số lượng nhân viên theo phòng ban, báo cáo tăng ca, báo cáo lương hoặc tình hình biến động nhân sự trong công ty được cập nhật nhanh chóng và chính xác.
+Cuối cùng, hệ thống được xây dựng theo hướng hiện đại nên có khả năng mở rộng và nâng cấp trong tương lai. Doanh nghiệp có thể dễ dàng bổ sung thêm chức năng mới như đánh giá KPI, quản lý tuyển dụng, tích hợp email thông báo hoặc kết nối với ứng dụng di động mà không ảnh hưởng đến dữ liệu hiện tại, đáp ứng sự phát triển lâu dài thay vì chỉ là giải pháp tạm thời. Nhìn chung, hệ thống quản lý nhân sự không chỉ giúp doanh nghiệp quản lý dữ liệu hiệu quả hơn mà còn góp phần hiện đại hóa toàn bộ quy trình quản trị, tiết kiệm chi phí vận hành, nâng cao tính minh bạch và tăng hiệu quả làm việc.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CHƯƠNG 3 : THIẾT KẾ VÀ XÂY DỰNG CƠ SỞ DỮ LIỆU
+3.1. Sơ đồ chức năng của chương trình (BFD):
+3.1.1. Sơ đồ hệ thống quản lý nhân sự:
+      
+3.1.2. Sơ đồ quản lý danh mục: 
+      
+	3.1.3. Sơ đồ quản lý phòng ban:
+      
+
+
+
+3.1.4. Sơ đồ quản lý chức vụ: 
+	
+	3.1.5. Sơ đồ quản lý nhân viên: 
+	
+	3.1.6.  Sơ đồ quản lý chấm công: 
+	
+	
+	
+	3.1.7. Sơ đồ quản lý lương: 
+	
+	
+	
+	3.1.8. Sơ đồ lập bảng lương: 
+	
+
+
+	3.1.9. Sơ đồ quản lý hợp đồng: 
+	
+	
+3.1.10. Sơ đồ lập hợp đồng: 
+	
+	
+3.1.11.  Sơ đồ thống kê và báo cáo: 
+	
+	
+
+
+3.1.12. Sơ đồ báo cáo nhân sự: 
+	      
+	
+3.3. Mô hình thực thể kết hợp (ERD):
+
+3.4 Sơ đồ mô hình quan hệ:
+
+
+3.5 Lược đồ cơ sở dữ liệu 
+	3.5.1. Cơ sở dữ liệu: 
+Users (Id, Username, Password, Role, Email, HoTen)
+Employees (Id, MaNV, HoTen, GioiTinh, NgaySinh, CCCD, SDT, Email, NgayVaoLam, PhongBanId, ChucVuId)
+PhongBans (Id, TenPhongBan, MoTa)
+ChucVus (Id, TenChucVu, HeSoPhuCap)
+HopDongs (Id, MaNV, LoaiHopDong, NgayKy, NgayHetHan, LuongCoBan, TrangThai)
+ChamCongs (Id, MaNV, NgayChamCong, GioVao, GioRa, SoGioLam, TrangThai, GhiChu)
+PhieuNghiPheps (Id, MaNV, LoaiNghiPhep, NgayBatDau, NgayKetThuc, LyDo, TrangThai)
+KhenThuongKyLuats (Id, MaNV, Loai, SoTien, LyDo, NgayQuyetDinh)
+UngLuongs (Id, MaNV, SoTien, NgayYeuCau, TrangThai, LyDo)
+BangLuongs (Id, MaNV, Thang, Nam, LuongCoBan, PhuCap, TienThuong, TienPhat, KhauTru, ThucLinh)
+PhanCongs (Id, MaNV, TenCongViec, MoTa, NgayGiao, HanChot, TrangThai)
+WorkReports (Id, Username, TenKhachHang, NoiDungCongViec, KetQua, ThoiGianBatDau, ThoiGianKetThuc)
+SystemLogs (Id, Username, Action, Details, Timestamp)
+3.5.2. Mô tả chi tiết:
+ROLESTTTên thuộc tínhKiểu dữ liệuMGTRàng buộcÝ nghĩa / Ghi chú1RoleIDIntSố nguyênKhóa chínhMã vai trò2RoleNameNvarchar50Không trùngTên vai trò (Admin, HR, User)3MoTaNvarchar100Bảng 3.5.2.1: Thông tin bảng ROLE (Phân quyền hệ thống)
+
+
+
+
+
+USERSTTTên thuộc tínhKiểu dữ liệuMGTRàng buộcÝ nghĩa / Ghi chú1UserIDIntSố nguyênKhóa chínhID tài khoản2RoleIDIntSố nguyênKhóa ngoạiLiên kết đến bảng ROLE3UsernameNvarchar50Không trùngTên đăng nhập4PasswordVarchar15Không rỗngMật khẩu truy cập5IsActiveBit1/0Đúng/SaiTài khoản có đang hoạt động khôngBảng 3.5.2.2: Thông tin bảng USER (Tài khoản người dùng)
+NHANVIENSTTTên thuộc tínhKiểu dữ liệuMGTRàng buộcÝ nghĩa / Ghi chú1MANVIntSố nguyênKhóa chínhMã số định danh duy nhất2HOTENNvarchar50Không rỗngHọ và tên nhân viên3CCCDVarchar12Không trùngSố Căn cước công dân4NGAYSINHDateNgàyKhông rỗngNgày tháng năm sinh5GIOITINHBit0/1Nam/NữGiới tính nhân viên6MAPBIntSố nguyênKhóa ngoạiLiên kết bảng PHONG_BAN7MACVIntSố nguyênKhóa ngoạiLiên kết bảng CHUC_VUBảng 3.5.2.3: Thông tin bảng NHANVIEN
+CHAMCONGSTTTên thuộc tínhKiểu dữ liệuMGTRàng buộcÝ nghĩa / Ghi chú1MACCIntSố nguyênKhóa chínhMã bảng chấm công2THANGInt1 - 12Không rỗngTháng chấm công3NAMIntYYYYKhông rỗngNăm chấm công4SONGAYCONGFloat>=0Không rỗngTổng ngày làm việc thực tế5SOGIOTANGCAFloat>=0Không rỗngTổng giờ làm thêm6MANVIntSố nguyênKhóa ngoạiChấm công cho nhân viên nàoBảng 3.5.2.4: Thông tin bảng CHAMCONG
+LUONGSTTTên thuộc tínhKiểu dữ liệuMGTRàng buộcÝ nghĩa / Ghi chú1MALUONGIntSố nguyênKhóa chínhMã phiếu lương2LUONGCOBANDecimal> 0Không rỗngMức lương hợp đồng3PHUCAPDecimal>= 0Mặc định 0Phụ cấp chức vụ, ăn trưa4KHAUTRUDecimal>=0Mặc định 0Thuế, bảo hiểm, phạt5THUCLINHDecimal>0Tổng hợpLương thực nhận của NVBảng 3.5.2.5: Thông tin bảng LUONG
+PHIEU_NGHI_PHEPSTTTên thuộc tínhKiểu dữ liệuMGTRàng buộcÝ nghĩa / Ghi chú1MAPHIEUIntSố nguyênKhóa chínhMã phiếu nghỉ phép2MANVIntSố nguyênKhóa ngoạiNhân viên xin nghỉ3NgayBatDauDateNgàyKhông rỗngNgày bắt đầu nghỉ4NgayKetThucDateNgàyKhông rỗngNgày kết thúc nghỉ5LyDoNvarchar200Lý do nghỉ phép6TrangThaiNvarchar50Chờ duyệtTình trạng phê duyệt của quản lýBảng 3.5.2.6: Thông tin bảng PHIEU_NGHI_PHEP
+KHEN_THUONG_KY_LUATSTTTên thuộc tínhKiểu dữ liệuMGTRàng buộcÝ nghĩa / Ghi chú1MaKTKLIntSố nguyênKhóa chínhMã số quyết định2MaNVIntSố nguyênKhóa ngoạiNhân viên bị/được áp dụng3LoaiNvarchar50Thưởng/PhạtHình thức áp dụng4SoTienDecimal>=0Không rỗngSố tiền thưởng hoặc phạt5NoiDungNvarchar250Chi tiết lý do khen thưởng/kỷ luật6NgayQDDateNgàyKhông rỗngNgày ra quyết địnhBảng 3.5.2.7: Thông tin bảng KHEN_THUONG_KY_LUAT
+PHONG_BANSTTTên thuộc tínhKiểu dữ liệuMGTRàng buộcÝ nghĩa / Ghi chú1IdIntSố nguyênKhóa chínhMã tự tăng định danh phòng ban2TenPhongBanNvarchar100Không rỗngTên gọi của phòng ban3MoTaNvarchar500Mô tả chức năng, nhiệm vụBảng 3.5.2.8: Thông tin bảng PHONG_BAN
+CHUC_VUSTTTên thuộc tínhKiểu dữ liệuMGTRàng buộcÝ nghĩa / Ghi chú1IdIntSố nguyênKhóa chínhMã tự tăng định danh chức vụ2TenChucVuNvarchar100Không rỗngTên chức danh (Trưởng phòng, NV...)3HeSoPhuCapDecimal>= 0Không rỗngHệ số phụ cấp trách nhiệmBảng 3.5.2.9: Thông tin bảng CHUC_VU
+
+
+
+
+
+
+HOP_DONGSTTTên thuộc tínhKiểu dữ liệuMGTRàng buộcÝ nghĩa / Ghi chú1IdIntSố nguyênKhóa chínhMã tự tăng định danh hợp đồng2MaNVVarchar50Khóa ngoạiNhân viên sở hữu hợp đồng3LoaiHopDongNvarchar50Không rỗngThử việc, Có thời hạn...4NgayKyDateNgàyKhông rỗngNgày bắt đầu ký hợp đồng5NgayHetHanDateNgàyNgày hết hiệu lực hợp đồng6LuongCoBanDecimal>= 0Không rỗngMức lương cơ bản thỏa thuận7TrangThaiNvarchar50Không rỗngHiệu lực, Đã thanh lý...Bảng 3.5.2.10: Thông tin bảng HOP_DONG
+
+
+
+
+
+
+
+UNG_LUONGSTTTên thuộc tínhKiểu dữ liệuMGTRàng buộcÝ nghĩa / Ghi chú1IdIntSố nguyênKhóa chínhMã tự tăng định danh đơn ứng2MaNVVarchar50Khóa ngoạiNhân viên nộp đơn3SoTienDecimal> 0Không rỗngSố tiền xin ứng trước4NgayYeuCauDateTimeNgày giờKhông rỗngThời điểm nộp đơn5TrangThaiNvarchar50Chờ duyệtTrạng thái phê duyệt6LyDoNvarchar200Không rỗngLý do xin ứng trước lươngBảng 3.5.2.11: Thông tin bảng UNG_LUONG
+
+
+
+
+
+
+
+
+PHAN_CONGSTTTên thuộc tínhKiểu dữ liệuMGTRàng buộcÝ nghĩa / Ghi chú1IdIntSố nguyênKhóa chínhMã định danh công việc2MaNVVarchar50Khóa ngoạiNhân viên được giao việc3TenCongViecNvarchar200Không rỗngTiêu đề công việc được giao4MoTaNvarcharMaxMô tả chi tiết yêu cầu5NgayGiaoDateTimeNgày giờKhông rỗngThời điểm bắt đầu giao việc6HanChotDateTimeNgày giờKhông rỗngHạn chót (Deadline)7TrangThaiNvarchar50Mới giaoMới giao, Đang làm...Bảng 3.5.2.12: Thông tin bảng PHAN_CONG
+WORK_REPORTSSTTTên thuộc tínhKiểu dữ liệuMGTRàng buộcÝ nghĩa / Ghi chú1IdIntSố nguyênKhóa chínhMã tự tăng định danh báo cáo2UsernameVarchar50Không rỗngTên đăng nhập của người lập BC3TenKhachHangNvarchar100Khách hàng liên quan (nếu có)4NoiDungCongViecNvarcharMaxKhông rỗngNội dung đã thực hiện5KetQuaNvarcharMaxKhông rỗngĐánh giá kết quả công việcBảng 3.5.2.13: Thông tin bảng WORK_REPORTS
+SYSTEM_LOGSSTTTên thuộc tínhKiểu dữ liệuMGTRàng buộcÝ nghĩa / Ghi chú1IdIntSố nguyênKhóa chínhMã tự tăng định danh log2UsernameVarchar50Hệ thốngTài khoản thực hiện hành động3ActionNvarchar100Không rỗngLoại hành động (Thêm/Sửa/Xóa)4DetailsNvarcharMaxKhông rỗngChi tiết dữ liệu đã thay đổi5TimestampDateTimeHiện tạiKhông rỗngThời gian chính xác của sự kiệnBảng 3.5.2.14: Thông tin bảng SYSTEM_LOGS
+3.6. Ràng buộc toàn vẹn
+3.6.1. Ràng buộc miền giá trị 
+R1: Trạng thái hoạt động tài khoản người dùng chỉ nhận giá trị Đúng hoặc Sai.
+• Nội dung: Với mọi tài khoản thuộc bảng USER, thuộc tính trạng thái hoạt động (ISACTIVE) chỉ được phép nhận giá trị là 1 (Đúng/Hoạt động) hoặc 0 (Sai/Khóa).
+• Bối cảnh: Quan hệ USER
+• Bảng tầm ảnh hưởng:
+R1ThêmXóaSửaUSER+-+(ISACTIVE)R2: Giới tính của nhân viên phải tuân theo quy định.
+• Nội dung: Với mọi nhân viên thuộc bảng NHAN_VIEN, thuộc tính giới tính (GIOITINH) chỉ được phép nhận các giá trị trong danh mục quy định (Nam hoặc Nữ).
+• Bối cảnh: Quan hệ NHAN_VIEN
+• Bảng tầm ảnh hưởng:
+R2ThêmXóaSửaNHAN_VIEN+-+(GIOITINH)3.6.2. Ràng buộc liên thuộc tính 
+R3: Ngày ký hợp đồng lao động không được sau ngày hết hạn hợp đồng.
+• Nội dung: Với mọi hợp đồng thuộc bảng HOP_DONG, thuộc tính Ngày ký (NGAYKY) luôn luôn phải nhỏ hơn hoặc bằng thuộc tính Ngày hết hạn (NGAYHETHAN).
+• Bối cảnh: Quan hệ HOP_DONG
+• Bảng tầm ảnh hưởng:
+R3ThêmXóaSửaHOP_DONG+-+(NGAYKY, NGAYHETHAN)R4: Ngày bắt đầu nghỉ phép không được sau ngày kết thúc nghỉ phép.
+• Nội dung: Với mọi phiếu xin nghỉ thuộc bảng PHIEU_NGHI_PHEP, thuộc tính Ngày bắt đầu nghỉ (NGAYBATDAU) luôn luôn phải nhỏ hơn hoặc bằng thuộc tính Ngày kết thúc nghỉ (NGAYKETTHUC).
+• Bối cảnh: Quan hệ PHIEU_NGHI_PHEP
+• Bảng tầm ảnh hưởng:
+R4ThêmXóaSửaPHIEU_NGHI_PHEP+-+(NGAYBATDAU, NGAYKETTHUC)3.6.3. Ràng buộc liên bộ 
+R5: Mã số nhân viên và số Căn cước công dân của mỗi người phải là duy nhất.
+• Nội dung: Với hai nhân viên bất kỳ khác nhau thuộc bảng NHAN_VIEN, Mã số nhân viên (MANV) và số Căn cước công dân (CCCD) của họ bắt buộc phải khác nhau, không được trùng lặp.
+• Bối cảnh: Quan hệ NHAN_VIEN
+• Bảng tầm ảnh hưởng:
+R5ThêmXóaSửaNHAN_VIEN+-* (Khóa chính)R6: Mỗi nhân viên chỉ có một dòng chấm công duy nhất trong một tháng cụ thể.
+• Nội dung: Với hai dòng dữ liệu bất kỳ trong bảng CHAM_CONG, nếu thuộc về cùng một nhân viên (MANV) và trong cùng một tháng (THANG), cùng một năm (NAM) thì hai dòng đó không được phép tồn tại đồng thời (tránh trùng lặp bảng công).
+• Bối cảnh: Quan hệ CHAM_CONG
+• Bảng tầm ảnh hưởng:
+R6ThêmXóaSửaCHAM_CONG+-+(MANV, THANG, NAM)3.6.4. Ràng buộc tham chiếu / Khóa ngoại 
+R7: Phòng ban của nhân viên phải tồn tại trong danh mục phòng ban.
+• Nội dung: Với mọi nhân viên trong bảng NHAN_VIEN, thuộc tính Mã phòng ban (MAPB) của nhân viên đó bắt buộc phải tồn tại trong bảng danh mục phòng ban (PHONG_BAN).
+• Bối cảnh: Quan hệ NHAN_VIEN, PHONG_BAN
+• Bảng tầm ảnh hưởng:
+R7ThêmXóaSửaNHAN_VIEN+-+(MAPB)PHONG_BAN-+* (Khóa chính)3.6.5. Ràng buộc liên thuộc tính - nhiều quan hệ
+R8: Ngày ký kết hợp đồng lao động phải từ ngày nhân viên bắt đầu vào làm việc trở đi.
+• Nội dung: Với mọi hợp đồng trong bảng HOP_DONG, thuộc tính Ngày ký hợp đồng (NGAYKY) phải lớn hơn hoặc bằng thuộc tính Ngày vào làm (NGAYVAOLAM) của nhân viên sở hữu hợp đồng đó trong bảng NHAN_VIEN.
+• Bối cảnh: Quan hệ HOP_DONG, NHAN_VIEN
+• Bảng tầm ảnh hưởng:
+R8ThêmXóaSửaHOP_DONG+-+(NGAYKY, MANV)NHAN_VIEN-++(NGAYVAOLAM)3.6.6. Ràng buộc do thuộc tính tổng hợp
+R9: Giá trị lương thực lĩnh phải khớp theo công thức tính toán tài chính.
+• Nội dung: Với mọi dòng lương trong bảng LUONG, thuộc tính Lương thực lĩnh (THUCLINH) bắt buộc phải bằng: Lương cơ bản cộng Phụ cấp trừ đi các khoản Khấu trừ (THUCLINH = LUONGCOBAN + PHUCAP - KHAUTRU).
+• Bối cảnh: Quan hệ LUONG
+• Bảng tầm ảnh hưởng:
+R9ThêmXóaSửaLUONG+-+(LUONGCOBAN, PHUCAP, KHAUTRU, THUCLINH)
+
+
+3.7 Đánh giá và chuẩn hóa sơ cở dữ liệu 
+Xét lược đồ quan hệ ROLE(ROLE_ID, ROLENAME, MOTA)
+• PTH:
+F₁ = {ROLE_ID → ROLENAME, MOTA}
+• Khóa: {ROLE_ID}
+   Xét dạng chuẩn: Vì F₁ có vế trái chứa khóa nên lược đồ quan hệ ROLE đạt BCNF.
+Xét lược đồ quan hệ USER(USER_ID, USERNAME, PASSWORD, STATUS, ISACTIVE, ROLE_ID)
+• PTH:
+F₁ = {USER_ID → USERNAME, PASSWORD, STATUS, ISACTIVE, ROLE_ID}
+• Khóa: {USER_ID}
+   Xét dạng chuẩn: Vì F₁ có vế trái chứa khóa nên lược đồ quan hệ USER đạt BCNF.
+Xét lược đồ quan hệ CHUCVU(MACV, TENCV, HESOPHUCAP)
+• PTH:
+F₁ = {MACV → TENCV, HESOPHUCAP}
+• Khóa: {MACV}
+   Xét dạng chuẩn: Vì F₁ có vế trái chứa khóa nên lược đồ quan hệ CHUCVU đạt BCNF.
+Xét lược đồ quan hệ NHANVIEN(MANV, HOTEN, NGAYSINH, GIOITINH, CCCD, SDT, EMAIL, NGAYVAOLAM, MAPB, MACV)
+• PTH:
+F₁ = {MANV → HOTEN, NGAYSINH, GIOITINH, CCCD, SDT, EMAIL, NGAYVAOLAM, MAPB, MACV}
+F₂ = {CCCD → MANV}
+• Khóa: {MANV}
+   Xét dạng chuẩn: Vì F₁ có vế trái chứa khóa nên lược đồ quan hệ NHANVIEN đạt BCNF.
+Xét lược đồ quan hệ HOPDONG(MAHD, LOAIHD, NGAYKY, NGAYHETHAN, NOIDUNG, MANV)
+• PTH:
+F₁ = {MAHD → LOAIHD, NGAYKY, NGAYHETHAN, NOIDUNG, MANV}
+• Khóa: {MAHD}
+   Xét dạng chuẩn: Vì F₁ có vế trái chứa khóa nên lược đồ quan hệ HOPDONG đạt BCNF.
+Xét lược đồ quan hệ CHAMCONG(MACC, THANG, NAM, TRANGTHAI, SONGAYCONG, SOGIOTANGCA, SONGAYNGHI, MANV)
+• PTH:
+F₁ = {MACC → THANG, NAM, TRANGTHAI, SONGAYCONG, SOGIOTANGCA, SONGAYNGHI, MANV}
+• Khóa: {MACC}
+   Xét dạng chuẩn: Vì F₁ có vế trái chứa khóa nên lược đồ quan hệ CHAMCONG đạt BCNF.
+Xét lược đồ quan hệ PHIEUNGHIPHEP(MAPHIEU, NGAYBATDAU, NGAYKETTHUC, LYDO, TRANGTHAI, MANV)
+• PTH:
+F₁ = {MAPHIEU → NGAYBATDAU, NGAYKETTHUC, LYDO, TRANGTHAI, MANV}
+• Khóa: {MAPHIEU}
+   Xét dạng chuẩn: Vì F₁ có vế trái chứa khóa nên lược đồ quan hệ PHIEUNGHIPHEP đạt BCNF.
+Xét lược đồ quan hệ KHENTHUONGKYLUAT(MAKTKL, HINHTHUC, LOAI, NOIDUNG, SOTIEN, NGAYQUYETDINH, MANV)
+• PTH:
+F₁ = {MAKTKL → HINHTHUC, LOAI, NOIDUNG, SOTIEN, NGAYQUYETDINH, MANV}
+• Khóa: {MAKTKL}
+   Xét dạng chuẩn: Vì F₁ có vế trái chứa khóa nên lược đồ quan hệ KHENTHUONGKYLUAT đạt BCNF.
+
+Xét lược đồ quan hệ PHONGBAN(MAPB, TENPB, MA_TRUONGPHONG, DIADIEM)
+• PTH:
+F₁ = {MAPB → TENPB, MA_TRUONGPHONG, DIADIEM}
+• Khóa: {MAPB}
+   Xét dạng chuẩn: Vì F₁ có vế trái chứa khóa nên lược đồ quan hệ PHONGBAN đạt BCNF.
+Xét lược đồ quan hệ LUONG(MALUONG, THANG, NAM, LUONGCOBAN, PHUCAP, KHAUTRU, THUCLINH, MACC)
+• PTH:
+F₁ = {MALUONG → THANG, NAM, LUONGCOBAN, PHUCAP, KHAUTRU, THUCLINH, MACC}
+• Khóa: {MALUONG}
+   Xét dạng chuẩn: Vì F₁ có vế trái chứa khóa nên lược đồ quan hệ LUONG đạt BCNF.
+
+CHƯƠNG 4 : TRIỂN KHAI HỆ THỐNG
+4.1. Kiến trúc hệ thống tổng thể và Môi trường phát triển
+Quá trình triển khai hệ thống quản trị nhân sự được thực hiện trong môi trường lập trình hiện đại nhằm đáp ứng tối đa các yêu cầu khắt khe về mặt hiệu năng, khả năng mở rộng và tính bảo mật của một phần mềm cấp doanh nghiệp (Enterprise-level).
+Môi trường lập trình (IDE): Microsoft Visual Studio 2022 được lựa chọn làm công cụ phát triển chính. Đây là một môi trường phát triển tích hợp mạnh mẽ, hỗ trợ tuyệt vời cho công tác gỡ lỗi (Debugging), phân tích luồng dữ liệu và quản lý mã nguồn (Source Control) qua Git.
+Nền tảng công nghệ lõi (Backend Framework): Ứng dụng được xây dựng trên nền tảng ASP.NET Core 9.0 (MVC). Đây là phiên bản framework mới nhất của Microsoft, nổi bật với khả năng xử lý đa luồng (multi-threading) bất đồng bộ cực kỳ mạnh mẽ, giúp hệ thống chịu tải tốt ngay cả khi hàng trăm nhân viên cùng truy cập vào thời điểm chốt lương hoặc chấm công đầu giờ sáng. Nền tảng này cho phép cấu trúc mã nguồn một cách rõ ràng thông qua mô hình Model - View - Controller.
+Công nghệ truy xuất Dữ liệu (ORM): Đồ án ứng dụng Entity Framework Core (EF Core) cùng cách tiếp cận Code-First. Việc ứng dụng kỹ thuật Code-First mang lại lợi ích to lớn: người lập trình chỉ cần định nghĩa các lớp thực thể (Entities) bằng ngôn ngữ C# theo mô hình hướng đối tượng, sau đó EF Core thông qua cơ chế Migrations sẽ tự động dịch các class này thành các bảng, cột và các ràng buộc toàn vẹn (khóa chính, khóa ngoại) trong hệ quản trị cơ sở dữ liệu SQL Server. Điều này giúp loại bỏ triệt để các lỗi cú pháp khi thao tác thủ công bằng lệnh SQL thuần.
+Hệ quản trị Cơ sở dữ liệu: Hệ thống sử dụng Microsoft SQL Server, đảm bảo tính bền vững (ACID) của dữ liệu tài chính như bảng lương, thưởng, phạt.
+4.2. Cấu trúc mô hình MVC và cơ chế Dependency Injection (DI)
+Hệ thống được tổ chức một cách nghiêm ngặt theo mô hình MVC, tách biệt hoàn toàn giữa giao diện, luồng xử lý và dữ liệu:
+Lớp Model: Đóng vai trò là trung tâm định nghĩa cấu trúc dữ liệu và các quy tắc nghiệp vụ cơ bản. Các Model như BangLuong, ChamCong, HopDong được thiết kế đảm bảo chuẩn chuẩn hóa 3NF, đi kèm với các Data Annotations để xác thực dữ liệu đầu vào (Validation) ngay từ phía máy chủ.
+Lớp Controller: Là bộ não điều phối luồng dữ liệu. Các Controller như BangLuongController, FingerprintApiController tiếp nhận yêu cầu từ người dùng (HTTP GET/POST), truy vấn dữ liệu từ SQL thông qua EF Core, thực hiện các thuật toán tính toán phức tạp (như trừ số tiền đã ứng, cộng tiền thưởng) và đóng gói dữ liệu trả về cho lớp View.
+Cơ chế Tiêm phụ thuộc (Dependency Injection): Một điểm sáng về mặt kiến trúc phần mềm trong đồ án này là việc vận dụng triệt để IoC Container của .NET Core. Các dịch vụ hệ thống cốt lõi như AuditService (dịch vụ ghi log) và PasswordService (dịch vụ mã hóa) được đăng ký dưới dạng Scoped hoặc Transient tại Program.cs. Nhờ đó, các Controller chỉ cần gọi giao diện của các Service này thông qua hàm khởi tạo (Constructor) mà không cần khởi tạo trực tiếp đối tượng, giảm sự phụ thuộc cứng (tight-coupling), giúp hệ thống vô cùng dễ bảo trì và nâng cấp.
+4.3. Hệ thống Dashboard Thống kê và Phân tích Trực quan
+Hình 4.3.1: Giao diện trang tổng quan (Dashboard) hệ thống
+Mô tả: 
+Trang tổng quan (Dashboard) được thiết kế hiện đại, đóng vai trò như một trung tâm chỉ huy số. Thay vì những bảng biểu khô khan, hệ thống tích hợp trực tiếp thư viện Chart.js để biến đổi dữ liệu nhân sự thành các biểu đồ sinh động, giúp Ban giám đốc nắm bắt tình hình công ty chỉ trong nháy mắt.
+Chức năng chính hiển thị:
+• Thống kê tổng quan: Hiển thị tức thời tổng số nhân sự, số phòng ban và tỷ lệ đi làm chuyên cần trong ngày.
+• Biểu đồ cơ cấu nhân sự: Phân tích trực quan tỷ lệ nhân viên phân bổ theo từng phòng ban dưới dạng biểu đồ tròn (Doughnut Chart).
+• Biểu đồ quỹ lương: Theo dõi và dự báo biến động ngân sách lương của công ty qua các tháng bằng biểu đồ cột (Bar Chart).	
+• Cảnh báo tự động: Tự động rà soát và hiển thị danh sách các nhân viên sắp hết hạn hợp đồng trong vòng 30 ngày tới.
+4.4. Tích hợp API Điểm danh Vân tay Tự động
+Hình 4.4.1: Giao diện quản lý chấm công nhân viên
+Mô tả: 
+Đây là phân hệ giải quyết bài toán cốt lõi của doanh nghiệp. Hệ thống không yêu cầu HR nhập tay giờ giấc mà mở sẵn một cổng giao tiếp (RESTful API) để máy quét vân tay tự động "bắn" dữ liệu điểm danh về máy chủ ngay khi nhân viên quẹt thẻ.
+Chức năng chính hiển thị:
+• Đồng bộ thời gian thực: Ghi nhận chính xác đến từng giây thời điểm Check-in và Check-out của nhân viên.
+• Xử lý logic thông minh: Tự động tính toán số giờ làm việc (Duration) và đối chiếu với ca làm việc chuẩn (7.5h) để quyết định nhân viên làm đủ ngày hay nửa ngày.
+• Bộ lọc tra cứu linh hoạt: Cho phép bộ phận Nhân sự lọc dữ liệu chấm công theo khoảng thời gian, theo phòng ban hoặc tìm kiếm đích danh một nhân viên.
+• Chống gian lận: Dữ liệu đẩy từ phần cứng lên được mã hóa và không cho phép nhân viên tự ý chỉnh sửa, đảm bảo tính minh bạch tuyệt đối.
+4.5. Phân hệ Tính Lương Tự động & Xuất Phiếu Lương (Payroll)
+Hình 4.5.1: Giao diện quản lý và tính toán bảng lương
+Mô tả: 
+Thuật toán tính lương phức tạp được tự động hóa hoàn toàn. Hệ thống tự động thu thập và đan chéo dữ liệu từ 4 phân hệ khác nhau (Chấm công, Hợp đồng, Thưởng/Phạt, Ứng lương) để tổng hợp ra con số thu nhập cuối cùng chỉ với một thao tác click chuột.
+Chức năng chính hiển thị:
+• Tính toán động: Tự động lấy Lương cơ bản nhân với số ngày công thực tế.
+• Khấu trừ thông minh: Tự động dò tìm các khoản nhân viên đã ứng trước trong tháng và các quyết định phạt để trừ vào lương.
+• Cộng gộp phụ cấp: Tự động cộng thêm phụ cấp chức vụ và các khoản thưởng nóng (thành tích xuất sắc).
+• Xuất phiếu lương (Payslip) cá nhân: Sinh ra phiếu báo lương chi tiết cho từng nhân viên, minh bạch mọi khoản thu/chi.
+4.6. Cơ chế Bảo mật Đa lớp & Ghi vết Hệ thống (Audit Log)
+Hình 4.6.1: Giao diện nhật ký hoạt động hệ thống (System Logs)
+Mô tả: 
+Đối với hệ thống lưu trữ dữ liệu tài chính và thông tin cá nhân, bảo mật là yếu tố sống còn. Đồ án xây dựng một hàng rào bảo vệ vững chắc từ khâu đăng nhập cho đến việc kiểm soát và lưu vết mọi hành vi thay đổi dữ liệu của người dùng.
+Chức năng chính hiển thị:
+• Mã hóa băm (BCrypt): Toàn bộ mật khẩu được băm một chiều (Hash) kết hợp với chuỗi Salt ngẫu nhiên, chống lại hoàn toàn các đợt tấn công giải mã.
+• Phân quyền Role-based: Kiểm soát chặt chẽ 3 nhóm quyền: Admin (Toàn quyền), HR (Nghiệp vụ) và User (Nhân viên), sử dụng Cookie Authentication bảo mật.
+• Truy vết Audit Log: Tự động ghi ngầm vào CSDL mọi thao tác nhạy cảm: Ai là người vừa xóa hợp đồng? Ai vừa sửa mức lương? Sửa lúc mấy giờ?
+• Khóa tài khoản khẩn cấp: Admin có quyền vô hiệu hóa (Deactivate) ngay lập tức tài khoản của nhân viên đã nghỉ việc để chặn truy cập.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CHƯƠNG 5: KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN
+5.1. Tổng kết và Đánh giá Kết quả đạt được
+Trải qua quá trình khảo sát thực trạng, phân tích nghiệp vụ, thiết kế kiến trúc và viết mã triển khai, đồ án "Hệ thống Quản lý Nhân sự tích hợp API" đã hoàn thành xuất sắc các mục tiêu đề ra ban đầu. Đồ án không chỉ dừng lại ở mức độ lưu trữ cơ sở dữ liệu học thuật mà đã hiện thực hóa thành công một hệ thống Mini-ERP (Enterprise Resource Planning) có thể áp dụng trực tiếp cho các doanh nghiệp vừa và nhỏ. Những kết quả nổi bật bao gồm:
+Về thiết kế và chuẩn hóa dữ liệu: Đã phân tích và mô hình hóa thành công CSDL quan hệ với 13 bảng thực thể đạt chuẩn 3NF (Third Normal Form). Hệ thống triệt tiêu hoàn toàn sự dị thường và dư thừa dữ liệu, đảm bảo tính nhất quán tuyệt đối giữa các mô-đun: Nhân sự - Hợp đồng - Chấm công - Lương thưởng - Phân công công việc.
+Về phát triển chức năng nghiệp vụ: Số hóa và tự động hóa thành công vòng đời quản trị nhân sự. Điểm sáng lớn nhất là sự liên kết dữ liệu liền mạch: dữ liệu từ API chấm công tự động chảy vào bảng tổng hợp ngày công, thông tin tạm ứng lương tự động được đối chiếu, và các quyết định kỷ luật/khen thưởng lập tức được áp dụng vào công thức tính lương cuối tháng. Việc này giúp cắt giảm 80% thời gian chốt lương thủ công của bộ phận kế toán.
+Về ứng dụng công nghệ và bảo mật: Vận dụng triệt để sức mạnh của .NET Core 9.0 với mô hình lập trình hướng đối tượng. Áp dụng thành công thuật toán mã hóa mật khẩu cấp độ cao (BCrypt) và triển khai thành công tính năng "Nhật ký hệ thống" (Audit Log Tracking), giúp mọi thao tác đều được kiểm soát và truy vết, mang lại sự yên tâm tuyệt đối cho chủ doanh nghiệp.
+Về trải nghiệm người dùng (UX/UI): Xây dựng thành công hệ thống Dashboard trực quan với các biểu đồ phân tích Real-time. Giao diện được thiết kế theo trường phái Luxury, hỗ trợ tính năng Dark Mode tân tiến giúp bảo vệ mắt cho bộ phận hành chính nhân sự khi phải làm việc liên tục trên phần mềm.
+
+5.2. Những khó khăn và Hạn chế còn tồn tại
+Dù đã cố gắng tích hợp nhiều công nghệ hiện đại, song do khuôn khổ thời gian của một đồ án tốt nghiệp cũng như giới hạn về nguồn lực phần cứng, hệ thống vẫn còn một vài khía cạnh có thể cải thiện:
+Khả năng đồng bộ hóa thời gian thực (Real-time): Hiện tại, khi có nhân viên nộp đơn xin nghỉ phép hay ứng lương, bộ phận quản lý phải tải lại trang (Refresh) để thấy dữ liệu mới. Hệ thống chưa tích hợp được giao thức WebSockets (như SignalR) để tạo ra các bong bóng thông báo (Push Notification) hiển thị ngay lập tức như mạng xã hội.
+Nghiệp vụ Thuế và Bảo hiểm: Thuật toán tính lương hiện tại mới dừng ở việc xử lý lương cơ bản, công, thưởng, phạt và tạm ứng. Việc tính toán thuế thu nhập cá nhân (TNCN) theo biểu thuế lũy tiến từng phần, cũng như tỷ lệ trích nộp các quỹ Bảo hiểm (BHXH, BHYT, BHTN) theo quy định mới nhất của Nhà nước chưa được tích hợp tự động vào công thức.
+Sự thiếu vắng nền tảng Di động (Mobile platform): Nhân viên hiện nay chỉ có thể thao tác qua trình duyệt Web. Chưa có ứng dụng riêng trên điện thoại để nhân viên tra cứu phiếu lương cá nhân (Payslip) hoặc quẹt thẻ vân tay từ xa thông qua GPS.
+5.3. Định hướng nghiên cứu và Phát triển trong tương lai (Tầm nhìn dài hạn)
+Sự phát triển của công nghệ là không ngừng nghỉ. Để biến hệ thống này từ một phần mềm Mini-ERP thành một nền tảng quản trị thông minh toàn diện, nhóm nghiên cứu đề xuất các hướng nâng cấp và mở rộng quy mô (Scale-up) cực kỳ tiềm năng trong giai đoạn tiếp theo:
+5.3.1. Tích hợp Trí tuệ nhân tạo tạo sinh (Generative AI) và Học máy (Machine Learning)
+Xây dựng Chatbot Trợ lý Nhân sự ảo (AI HR Assistant): Tích hợp API của các mô hình ngôn ngữ lớn (LLMs) như OpenAI GPT hoặc Google Gemini trực tiếp vào hệ thống. Trợ lý ảo này sẽ được "huấn luyện" bằng tài liệu nội quy công ty, luật lao động hiện hành. Khi đó, nhân viên có thể chat trực tiếp để hỏi các câu như: "Năm nay tôi còn bao nhiêu ngày phép?", "Chính sách nghỉ thai sản hiện tại là gì?", AI sẽ tự động truy xuất cơ sở dữ liệu và trả lời ngay lập tức, giải phóng hoàn toàn thời gian tư vấn của bộ phận HR.
+AI phân tích và Đánh giá hiệu suất (Predictive Analytics): Áp dụng các thuật toán Machine Learning để phân tích chéo dữ liệu về số lần đi muộn, lịch sử tăng lương và tiến độ hoàn thành công việc (Bảng WorkReports). AI có thể đưa ra cảnh báo sớm cho Ban Giám đốc về các nhân sự có "nguy cơ nghỉ việc cao" để kịp thời có chính sách giữ chân nhân tài, hoặc gợi ý mức thưởng xứng đáng dựa trên năng suất.
+Tự động hóa đọc hồ sơ ứng viên (OCR & AI Parsing): Phát triển thêm phân hệ Tuyển dụng. Khi ứng viên nộp CV dạng PDF, hệ thống sử dụng công nghệ nhận dạng ký tự quang học (OCR) kết hợp AI để tự động "đọc" và bóc tách các trường thông tin: Họ tên, Kinh nghiệm, Kỹ năng, tự động điền vào Database mà không cần người nhập liệu.
+5.3.2. Mở rộng Hệ sinh thái nền tảng
+Phát triển Mobile Application (iOS/Android): Sử dụng các framework như Flutter hoặc React Native để xây dựng ứng dụng di động đi kèm. Ứng dụng di động sẽ hỗ trợ nhân viên thực hiện check-in/check-out qua nhận diện khuôn mặt (FaceID tích hợp trí tuệ nhân tạo AI Deep Learning chống làm giả) và định vị vị trí (GPS Geofencing) dành cho nhân viên đi công tác ngoài thị trường.
+Tích hợp Cloud và Microservices: Trong trường hợp công ty mở rộng quy mô lên hàng nghìn nhân sự, kiến trúc hệ thống hiện tại (Monolithic) sẽ được đập bỏ và tái cấu trúc sang kiến trúc Vi dịch vụ (Microservices). Mỗi phân hệ (Lương, Chấm công, Hợp đồng) sẽ chạy trên một cụm Docker Container riêng biệt và được triển khai trên nền tảng điện toán đám mây AWS hoặc Azure, mang lại khả năng chịu tải không giới hạn và tính sẵn sàng cao (High Availability).
+Việc theo đuổi các định hướng này không chỉ mang lại giá trị thực tiễn khổng lồ cho doanh nghiệp mà còn mở ra cơ hội ứng dụng các công nghệ dẫn đầu xu hướng thế giới vào lĩnh vực Quản trị nguồn nhân lực.
+

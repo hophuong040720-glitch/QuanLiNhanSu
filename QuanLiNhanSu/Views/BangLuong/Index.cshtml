@@ -64,6 +64,10 @@
                                     <td class="text-end text-danger">@item.TienPhat.ToString("N0") đ</td>
                                     <td class="text-end fw-bold text-success fs-6">@item.ThucLanh.ToString("N0") đ</td>
                                     <td class="text-center">
+                                        <a asp-action="Detail" asp-route-maNV="@item.MaNV" asp-route-thang="@item.Thang" asp-route-nam="@item.Nam"
+                                           class="btn btn-sm btn-luxury rounded-pill fw-bold shadow-sm me-1">
+                                            <i class="bi bi-eye me-1"></i> Chi tiết
+                                        </a>
                                         <button onclick="inPhieuLuong('@item.MaNV', '@item.Thang', '@item.Nam', @item.LuongCoBan, @item.TienUng, @item.TienThuong, @item.TienPhat, @item.ThucLanh)" class="btn btn-sm btn-outline-dark rounded-pill fw-bold shadow-sm">
                                             <i class="bi bi-printer me-1"></i> In
                                         </button>

@@ -3,6 +3,9 @@ using System;
 using System.Threading.Tasks;
 using QuanLiNhanSu.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
+using QuanLiNhanSu.Hubs;
+using Microsoft.Extensions.Configuration;
 
 namespace QuanLiNhanSu.Controllers
 {
@@ -12,11 +15,15 @@ namespace QuanLiNhanSu.Controllers
     {
         private readonly AppDbContext _context;
         private readonly Services.AuditService _audit;
+        private readonly IHubContext<ChamCongHub> _hubContext;
+        private readonly IConfiguration _configuration;
 
-        public FingerprintController(AppDbContext context, Services.AuditService audit) 
+        public FingerprintController(AppDbContext context, Services.AuditService audit, IHubContext<ChamCongHub> hubContext, IConfiguration configuration) 
         { 
             _context = context; 
             _audit = audit;
+            _hubContext = hubContext;
+            _configuration = configuration;
         }
 
         public class FingerprintData
@@ -28,6 +35,13 @@ namespace QuanLiNhanSu.Controllers
         [HttpPost("scan")]
         public async Task<IActionResult> ReceiveScanData([FromBody] FingerprintData data)
         {
+            // 1. KIỂM TRA BẢO MẬT API KEY (Tránh việc dùng Postman gọi bừa bãi)
+            var expectedApiKey = _configuration.GetValue<string>("FingerprintApiKey");
+            if (!Request.Headers.TryGetValue("X-API-KEY", out var extractedApiKey) || extractedApiKey != expectedApiKey)
+            {
+                return Unauthorized(new { status = "error", message = "API Key không hợp lệ hoặc bị thiếu!" });
+            }
+
             if (string.IsNullOrEmpty(data.MaNV))
                 return BadRequest(new { status = "error", message = "Thiếu mã nhân viên!" });
 
@@ -57,7 +71,11 @@ namespace QuanLiNhanSu.Controllers
                 
                 await _audit.LogAsync("System", "Check-In Vân Tay", "ChamCong", $"NV {data.MaNV} check-in từ thiết bị {data.DeviceId}.");
 
-                return Ok(new { status = "success", action = "CheckIn", message = "Ghi nhận giờ vào thành công!" });
+                // PUSH THÔNG BÁO SIGNALR LÊN TRÌNH DUYỆT
+                var msg = "Ghi nhận giờ vào thành công!";
+                await _hubContext.Clients.All.SendAsync("ReceiveFingerprintScan", data.MaNV, "CheckIn", msg);
+
+                return Ok(new { status = "success", action = "CheckIn", message = msg });
             }
             else if (attendanceToday.GioRa == null)
             {
@@ -84,10 +102,16 @@ namespace QuanLiNhanSu.Controllers
                 
                 await _audit.LogAsync("System", "Check-Out Vân Tay", "ChamCong", $"NV {data.MaNV} check-out từ thiết bị {data.DeviceId}. Tổng giờ: {attendanceToday.SoGioLam}.");
 
-                return Ok(new { status = "success", action = "CheckOut", message = $"Ghi nhận giờ ra thành công! Tổng giờ: {attendanceToday.SoGioLam} tiếng." });
+                // PUSH THÔNG BÁO SIGNALR LÊN TRÌNH DUYỆT
+                var msg = $"Ghi nhận giờ ra thành công! Tổng giờ: {attendanceToday.SoGioLam} tiếng.";
+                await _hubContext.Clients.All.SendAsync("ReceiveFingerprintScan", data.MaNV, "CheckOut", msg);
+
+                return Ok(new { status = "success", action = "CheckOut", message = msg });
             }
 
-            return Ok(new { status = "warning", message = "Nhân viên này đã hoàn thành chấm công ra vào trong ngày!" });
+            var warningMsg = "Nhân viên này đã hoàn thành chấm công ra vào trong ngày!";
+            await _hubContext.Clients.All.SendAsync("ReceiveFingerprintScan", data.MaNV, "Warning", warningMsg);
+            return Ok(new { status = "warning", message = warningMsg });
         }
 
         [HttpGet("status/{maNV}")]

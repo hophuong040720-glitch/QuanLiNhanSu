@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using QuanLiNhanSu.Models;
 using QuanLiNhanSu.Services;
+using QuanLiNhanSu.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,7 @@ builder.Services.AddScoped<PasswordService>();
 builder.Services.AddScoped<AuditService>();
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -118,5 +120,6 @@ using (var scope = app.Services.CreateScope())
 // =====================================================================
 
 app.MapControllers();
+app.MapHub<ChamCongHub>("/chamconghub");
 
 app.Run();

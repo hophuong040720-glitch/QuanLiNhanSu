@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Quản Lý Nhân Sự</title>
     
-    <!-- Google Fonts: Inter & Outfit -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
@@ -15,162 +15,227 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/QuanLiNhanSu.styles.css" asp-append-version="true" />
     
-    <!-- Tránh FOUC (Flash of Unstyled Content) cho Dark Mode -->
+    <!-- Tránh FOUC cho Dark Mode -->
     <script>
         if (localStorage.getItem('theme') === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
         }
     </script>
 </head>
-<body>
-    <div class="wrapper">
-        <!-- SIDEBAR -->
-        <nav id="sidebar">
-            <div class="sidebar-header d-flex align-items-center justify-content-center">
-                <i class="bi bi-award-fill text-gold fs-2"></i>
-                <h4 class="m-0 ms-2 fw-bold text-gradient-gold">HR SYSTEM</h4>
-            </div>
+<body class="top-nav-layout">
 
-            <ul class="sidebar-menu">
-                <li class="small text-muted fw-bold mb-2 mt-2 px-3 text-uppercase" style="font-size: 0.75rem;">Tổng Quan</li>
-                <li>
-                    <a asp-controller="Home" asp-action="Index">
-                        <i class="bi bi-grid-1x2-fill"></i> <span>Dashboard</span>
-                    </a>
-                </li>
-                
-                @if (User.Identity!.IsAuthenticated)
-                {
-                    <li class="small text-muted fw-bold mb-2 mt-4 px-3 text-uppercase" style="font-size: 0.75rem;">Quản Lý Nhân Sự</li>
-                    <li>
-                        <a asp-controller="Employees" asp-action="Index">
-                            <i class="bi bi-people-fill"></i> <span>Hồ sơ nhân viên</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-controller="HopDong" asp-action="Index">
-                            <i class="bi bi-file-earmark-text-fill"></i> <span>Hợp đồng lao động</span>
-                        </a>
-                    </li>
-                    
-                    <li class="small text-muted fw-bold mb-2 mt-4 px-3 text-uppercase" style="font-size: 0.75rem;">Thời Gian & Tiền Lương</li>
-                    <li>
-                        <a asp-controller="ChamCong" asp-action="Index">
-                            <i class="bi bi-fingerprint"></i> <span>Chấm công</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-controller="NghiPhep" asp-action="Index">
-                            <i class="bi bi-calendar-event"></i> <span>Nghỉ phép</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-controller="UngLuong" asp-action="Index">
-                            <i class="bi bi-cash-coin"></i> <span>Ứng lương</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-controller="KhenThuongKyLuat" asp-action="Index">
-                            <i class="bi bi-award-fill"></i> <span>Khen thưởng/Kỷ luật</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-controller="BangLuong" asp-action="Index">
-                            <i class="bi bi-wallet2"></i> <span>Bảng lương</span>
-                        </a>
-                    </li>
+    <!-- ===== TOP NAVBAR STICKY ===== -->
+    @if (User.Identity!.IsAuthenticated)
+    {
+        <nav class="top-main-navbar navbar navbar-expand-lg sticky-top" id="mainNavbar">
+            <div class="container-fluid px-4">
 
-                    <li class="small text-muted fw-bold mb-2 mt-4 px-3 text-uppercase" style="font-size: 0.75rem;">Khác</li>
-                    <li>
-                        <a asp-controller="PhanCong" asp-action="Index">
-                            <i class="bi bi-card-checklist"></i> <span>Công việc</span>
-                        </a>
-                    </li>
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <li>
-                            <a asp-controller="SystemLog" asp-action="Index">
-                                <i class="bi bi-shield-lock-fill"></i> <span>Nhật ký hệ thống</span>
+                <!-- LOGO & TÊN CÔNG TY (Góc trái) -->
+                <a class="navbar-brand d-flex align-items-center gap-2 me-4" asp-controller="Home" asp-action="Index">
+                    <div class="brand-icon">
+                        <i class="bi bi-award-fill"></i>
+                    </div>
+                    <div>
+                        <span class="brand-name">HT Technology</span>
+                        <span class="brand-sub d-none d-md-block">HR Management System</span>
+                    </div>
+                </a>
+
+                <!-- HAMBURGER (Mobile) -->
+                <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                    <i class="bi bi-list fs-4 text-gold"></i>
+                </button>
+
+                <!-- MENU CHÍNH -->
+                <div class="collapse navbar-collapse" id="navbarMain">
+                    <ul class="navbar-nav me-auto align-items-lg-center gap-lg-1">
+
+                        <!-- Dashboard -->
+                        <li class="nav-item">
+                            <a class="nav-link top-nav-link" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-grid-1x2-fill me-1"></i> Dashboard
                             </a>
                         </li>
-                    }
-                }
-            </ul>
 
-            <!-- Footer Sidebar (User Info & Theme Toggle) -->
-            <div class="sidebar-footer">
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <div class="user-info d-flex align-items-center mb-3">
-                        <div class="bg-gold-light rounded-circle p-2 me-2 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
-                            <i class="bi bi-person-fill text-gold fs-5"></i>
+                        <!-- Hồ sơ nhân viên (Dropdown) -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link top-nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-people-fill me-1"></i> Hồ sơ nhân viên
+                            </a>
+                            <ul class="dropdown-menu top-dropdown-menu shadow-lg border-0">
+                                <li>
+                                    <a class="dropdown-item top-dropdown-item" asp-controller="Employees" asp-action="Index">
+                                        <i class="bi bi-list-ul me-2 text-gold"></i> Danh sách nhân viên
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item top-dropdown-item" asp-controller="Employees" asp-action="Create">
+                                        <i class="bi bi-person-plus-fill me-2 text-success"></i> Thêm mới nhân viên
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item top-dropdown-item" asp-controller="HopDong" asp-action="Index">
+                                        <i class="bi bi-file-earmark-text-fill me-2 text-primary"></i> Hợp đồng lao động
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider my-1"></li>
+                                <li>
+                                    <a class="dropdown-item top-dropdown-item" asp-controller="KhenThuongKyLuat" asp-action="Index">
+                                        <i class="bi bi-award-fill me-2 text-warning"></i> Khen thưởng & Kỷ luật
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Chấm công -->
+                        <li class="nav-item">
+                            <a class="nav-link top-nav-link" asp-controller="ChamCong" asp-action="Index">
+                                <i class="bi bi-fingerprint me-1"></i> Chấm công
+                            </a>
+                        </li>
+
+                        <!-- Tiền lương (Dropdown) -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link top-nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-wallet2 me-1"></i> Tiền lương
+                            </a>
+                            <ul class="dropdown-menu top-dropdown-menu shadow-lg border-0">
+                                <li>
+                                    <a class="dropdown-item top-dropdown-item" asp-controller="BangLuong" asp-action="Index">
+                                        <i class="bi bi-table me-2 text-gold"></i> Bảng lương tổng hợp
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item top-dropdown-item" asp-controller="UngLuong" asp-action="Index">
+                                        <i class="bi bi-cash-coin me-2 text-success"></i> Quản lý ứng lương
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item top-dropdown-item" asp-controller="NghiPhep" asp-action="Index">
+                                        <i class="bi bi-calendar-event me-2 text-info"></i> Phiếu nghỉ phép
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Báo cáo (Dropdown) -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link top-nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-bar-chart-fill me-1"></i> Báo cáo
+                            </a>
+                            <ul class="dropdown-menu top-dropdown-menu shadow-lg border-0">
+                                <li>
+                                    <a class="dropdown-item top-dropdown-item" asp-controller="WorkReports" asp-action="Index">
+                                        <i class="bi bi-journal-text me-2 text-primary"></i> Báo cáo công việc
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item top-dropdown-item" asp-controller="PhanCong" asp-action="Index">
+                                        <i class="bi bi-card-checklist me-2 text-success"></i> Phân công nhiệm vụ
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Cài đặt (chỉ Admin) -->
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link top-nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-gear-fill me-1"></i> Cài đặt
+                                </a>
+                                <ul class="dropdown-menu top-dropdown-menu shadow-lg border-0">
+                                    <li>
+                                        <a class="dropdown-item top-dropdown-item" asp-controller="SystemLog" asp-action="Index">
+                                            <i class="bi bi-shield-lock-fill me-2 text-danger"></i> Nhật ký hệ thống
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+
+                    <!-- GÓC PHẢI: Thông báo + User Profile + Theme Toggle -->
+                    <div class="d-flex align-items-center gap-2 ms-auto">
+
+                        <!-- Nút Dark Mode -->
+                        <button class="btn btn-sm top-action-btn" id="theme-toggle" title="Chuyển chế độ Sáng/Tối">
+                            <i class="bi bi-moon-stars-fill" id="theme-icon"></i>
+                        </button>
+
+                        <!-- Chuông thông báo -->
+                        <div class="dropdown">
+                            <button class="btn btn-sm top-action-btn position-relative" title="Thông báo" data-bs-toggle="dropdown" id="bellDropdown" aria-expanded="false">
+                                <i class="bi bi-bell-fill"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.6rem;">3</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end top-dropdown-menu shadow-lg border-0" style="min-width:250px;">
+                                <li class="px-3 py-2 fw-bold border-bottom">Thông báo mới</li>
+                                <li><a class="dropdown-item py-2" href="#"><small>Hệ thống vừa cập nhật tính năng Face ID.</small></a></li>
+                                <li><a class="dropdown-item py-2" href="#"><small>Bạn có 1 phiếu lương tháng này cần xác nhận.</small></a></li>
+                            </ul>
                         </div>
-                        <div style="line-height: 1.2;">
-                            <div class="fw-bold fs-6">@User.Identity.Name</div>
-                            <small class="text-muted">@User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value</small>
+
+                        <!-- User Profile Dropdown -->
+                        <div class="dropdown">
+                            <button class="btn user-profile-btn dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" id="userDropdown" aria-expanded="false">
+                                <div class="user-avatar-top">
+                                    <i class="bi bi-person-fill"></i>
+                                </div>
+                                <div class="d-none d-md-block text-start lh-1">
+                                    <div class="fw-bold" style="font-size:0.85rem;">@User.Identity.Name</div>
+                                    <div class="text-muted" style="font-size:0.72rem;">@User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value</div>
+                                </div>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end top-dropdown-menu shadow-lg border-0" style="min-width:200px;">
+                                <li>
+                                    <a class="dropdown-item top-dropdown-item" asp-controller="Employees" asp-action="MyProfile">
+                                        <i class="bi bi-person-badge me-2 text-primary"></i> Hồ sơ của tôi
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider my-1"></li>
+                                <li>
+                                    <a class="dropdown-item top-dropdown-item text-danger" asp-controller="Account" asp-action="Logout">
+                                        <i class="bi bi-box-arrow-right me-2"></i> Đăng xuất
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                }
-                
-                <div class="d-flex justify-content-between">
-                    <button class="btn btn-sm btn-light border shadow-sm w-100" id="theme-toggle" title="Chuyển chế độ Sáng/Tối">
-                        <i class="bi bi-moon-stars-fill text-dark"></i>
-                    </button>
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <a asp-controller="Account" asp-action="Logout" class="btn btn-sm btn-danger ms-2 shadow-sm" title="Đăng xuất">
-                            <i class="bi bi-box-arrow-right"></i>
-                        </a>
-                    }
                 </div>
             </div>
         </nav>
-
-        <!-- MAIN CONTENT AREA -->
-        <div id="content">
-            <!-- TOP NAVBAR -->
-            <nav class="navbar top-navbar d-flex justify-content-between align-items-center sticky-top">
-                <div class="d-flex align-items-center">
-                    <button type="button" id="sidebar-toggle" class="btn btn-light shadow-sm me-3 border">
-                        <i class="bi bi-list fs-5"></i>
-                    </button>
-                    <nav aria-label="breadcrumb" class="d-none d-md-block">
-                        <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item text-muted"><a asp-controller="Home" asp-action="Index" class="text-decoration-none text-muted">Home</a></li>
-                            <li class="breadcrumb-item active fw-bold text-dark" aria-current="page">@ViewData["Title"]</li>
-                        </ol>
-                    </nav>
+    }
+    else
+    {
+        <!-- Navbar cho khách (chưa đăng nhập) -->
+        <nav class="top-main-navbar navbar sticky-top" id="mainNavbar">
+            <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+                <a class="navbar-brand d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
+                    <div class="brand-icon"><i class="bi bi-award-fill"></i></div>
+                    <span class="brand-name">HT Technology HR</span>
+                </a>
+                <div class="d-flex gap-2">
+                    <a class="btn btn-outline-gold rounded-pill px-4 fw-bold" asp-controller="Account" asp-action="Login">Đăng nhập</a>
                 </div>
-                
-                <div>
-                    @if (!User.Identity.IsAuthenticated)
-                    {
-                        <a class="btn btn-outline-gold rounded-pill px-4 me-2 fw-bold" asp-controller="Account" asp-action="Register">Đăng ký</a>
-                        <a class="btn btn-luxury rounded-pill px-4 fw-bold shadow-sm" asp-controller="Account" asp-action="Login">Đăng nhập</a>
-                    }
-                    else
-                    {
-                        <a asp-controller="Employees" asp-action="MyProfile" class="btn btn-light rounded-pill px-3 shadow-sm border fw-bold text-primary">
-                            <i class="bi bi-person-badge me-1"></i> Hồ sơ của tôi
-                        </a>
-                    }
-                </div>
-            </nav>
-
-            <!-- RENDER BODY -->
-            <div class="container-fluid p-4 p-md-5">
-                <main role="main">
-                    @RenderBody()
-                </main>
             </div>
-            
-            <!-- FOOTER -->
-            <footer class="text-center py-4 text-muted small mt-auto">
-                <div class="container-fluid border-top pt-3">
-                    &copy; 2026 - HT Technology HR System - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-decoration-none text-gold-dark fw-bold">Chính sách bảo mật</a>
-                </div>
-            </footer>
+        </nav>
+    }
+
+    <!-- ===== NỘI DUNG CHÍNH ===== -->
+    <div class="top-nav-content">
+        <div class="container-fluid p-4 p-md-5">
+            <main role="main">
+                @RenderBody()
+            </main>
         </div>
+
+        <!-- FOOTER -->
+        <footer class="text-center py-4 text-muted small mt-auto">
+            <div class="container-fluid border-top pt-3">
+                &copy; 2026 - HT Technology HR System - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-decoration-none text-gold-dark fw-bold">Chính sách bảo mật</a>
+            </div>
+        </footer>
     </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -178,25 +243,46 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
-    <!-- SWEETALERT2 NOTIFICATIONS -->
+    <!-- SWEETALERT2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @if (TempData["Success"] != null)
     {
         <script>
-            Swal.fire({
-                icon: 'success', title: 'Thành công', text: @Html.Raw(Json.Serialize(TempData["Success"])),
-                toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true
-            });
+            Swal.fire({ icon: 'success', title: 'Thành công', text: @Html.Raw(Json.Serialize(TempData["Success"])), toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true });
         </script>
     }
     @if (TempData["Error"] != null)
     {
         <script>
-            Swal.fire({
-                icon: 'warning', title: 'Cảnh báo', text: @Html.Raw(Json.Serialize(TempData["Error"])),
-                toast: true, position: 'top-end', showConfirmButton: false, timer: 4000, timerProgressBar: true
-            });
+            Swal.fire({ icon: 'warning', title: 'Cảnh báo', text: @Html.Raw(Json.Serialize(TempData["Error"])), toast: true, position: 'top-end', showConfirmButton: false, timer: 4000, timerProgressBar: true });
         </script>
     }
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            if (themeIcon) {
+                themeIcon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+            }
+        }
+        applyTheme(localStorage.getItem('theme') || 'light');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-theme');
+                applyTheme(current === 'dark' ? 'light' : 'dark');
+            });
+        }
+
+        // Active nav link highlight
+        document.querySelectorAll('.top-nav-link').forEach(link => {
+            if (link.href === window.location.href) {
+                link.classList.add('active');
+            }
+        });
+    </script>
 </body>
 </html>

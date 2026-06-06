@@ -266,3 +266,166 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
         transform: translateY(0);
     }
 }
+
+/* ================= 7. TOP NAVBAR LAYOUT ================= */
+body.top-nav-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--bg-secondary);
+    background-image: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-secondary) 100%);
+}
+
+/* Main Navbar */
+.top-main-navbar {
+    background: var(--bg-glass) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 0;
+    height: 64px;
+    z-index: 1030;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+}
+
+[data-theme="dark"] .top-main-navbar {
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+
+/* Brand */
+.navbar-brand { text-decoration: none; padding: 8px 0; }
+.brand-icon {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 1.2rem;
+    flex-shrink: 0;
+}
+.brand-name {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700; font-size: 1rem;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: block;
+}
+.brand-sub { font-size: 0.68rem; color: var(--text-muted); display: block; margin-top: -2px; }
+
+/* Nav Links */
+.top-nav-link {
+    color: var(--text-secondary) !important;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 8px 12px !important;
+    border-radius: 8px;
+    transition: all 0.2s;
+    display: flex; align-items: center;
+}
+.top-nav-link:hover, .top-nav-link.active {
+    color: var(--gold-primary) !important;
+    background: var(--gold-light) !important;
+}
+.top-nav-link.dropdown-toggle::after { margin-left: 4px; }
+
+/* Dropdown Menu */
+.top-dropdown-menu {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    padding: 6px !important;
+    margin-top: 8px !important;
+    backdrop-filter: blur(16px);
+    min-width: 220px;
+    animation: fadeInDown 0.2s ease;
+}
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.top-dropdown-item {
+    padding: 8px 14px !important;
+    border-radius: 8px !important;
+    font-size: 0.875rem !important;
+    color: var(--text-primary) !important;
+    font-weight: 500;
+    transition: all 0.15s;
+    display: flex; align-items: center;
+}
+.top-dropdown-item:hover {
+    background: var(--bg-secondary) !important;
+    color: var(--gold-primary) !important;
+}
+
+/* Action Buttons (Theme, Bell) */
+.top-action-btn {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color) !important;
+    background: var(--bg-card) !important;
+    color: var(--text-secondary) !important;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+}
+.top-action-btn:hover {
+    border-color: var(--gold-primary) !important;
+    color: var(--gold-primary) !important;
+}
+
+/* User Profile Button */
+.user-profile-btn {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    padding: 6px 12px !important;
+    color: var(--text-primary) !important;
+    transition: all 0.2s;
+}
+.user-profile-btn:hover, .user-profile-btn:focus {
+    border-color: var(--gold-primary) !important;
+    box-shadow: 0 0 0 3px var(--gold-light) !important;
+}
+.user-profile-btn::after { display: none; }
+.user-avatar-top {
+    width: 30px; height: 30px;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 1rem;
+    flex-shrink: 0;
+}
+
+/* Content area */
+.top-nav-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Payslip styles */
+.payslip-metric-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+.payslip-metric-card:hover { transform: translateY(-3px); }
+.payslip-metric-value { font-size: 1.6rem; font-weight: 700; }
+.payslip-metric-label { font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+
+/* Btn outline gold */
+.btn-outline-gold {
+    border: 1.5px solid var(--gold-primary);
+    color: var(--gold-primary);
+    background: transparent;
+}
+.btn-outline-gold:hover {
+    background: var(--gold-primary);
+    color: #fff;
+}
+
+/* Text gold dark */
+.text-gold-dark { color: var(--gold-dark) !important; }
+.text-gold { color: var(--gold-primary) !important; }
