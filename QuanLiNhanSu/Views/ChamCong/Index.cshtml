@@ -113,12 +113,39 @@
                         </div>
                     </div>
 
-                    <div class="text-start mt-3 border-top pt-3">
-                        <label class="form-label small fw-bold text-muted">KẾT QUẢ TÍNH CÔNG</label>
-                        <select name="trangThai" class="form-select luxury-input" required>
-                            <option value="Đi làm">🟢 Đủ ca (Khớp sinh trắc học)</option>
-                            <option value="Nửa ngày">🟡 Nửa ca (Có phép/Lý do)</option>
+                    <!-- Tuỳ chọn Ca làm việc -->
+                    <div class="mt-3 text-start bg-light p-3 rounded-3 border">
+                        <label class="form-label small fw-bold text-muted mb-2"><i class="bi bi-clock-history me-1"></i> TUỲ CHỌN CA LÀM</label>
+                        <select name="mockShiftType" class="form-select form-select-sm shadow-sm border-0">
+                            <option value="full">Chấm công Đi làm (Cả ngày)</option>
+                            <option value="half">Chấm công Nửa ngày (Sáng/Chiều)</option>
                         </select>
+                    </div>
+
+                    <div class="text-start mt-3 border-top pt-3">
+                        <label class="form-label small fw-bold text-muted">TRẠNG THÁI HÔM NAY</label>
+                        @{
+                            var currentUser = User.Identity!.Name;
+                            var todayRecord = Model.FirstOrDefault(c => c.MaNV == currentUser && c.NgayChamCong.Date == DateTime.Today);
+                        }
+                        @if (todayRecord == null)
+                        {
+                            <div class="alert alert-info border-0 py-2 mb-0">
+                                <i class="bi bi-info-circle me-1"></i> Bạn chưa Check-in hôm nay.
+                            </div>
+                        }
+                        else if (todayRecord.GioRa == null)
+                        {
+                            <div class="alert alert-success border-0 py-2 mb-0">
+                                <i class="bi bi-check-circle me-1"></i> Đã Check-in lúc <b>@todayRecord.GioVao?.ToString("HH:mm")</b>. Hãy quay lại Check-out cuối ca!
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-secondary border-0 py-2 mb-0">
+                                <i class="bi bi-check-all me-1"></i> Đã hoàn thành chấm công hôm nay. Tổng: <b>@todayRecord.SoGioLam.ToString("0.0")h</b>
+                            </div>
+                        }
                     </div>
                 </form>
             </div>
@@ -136,20 +163,37 @@
                         <thead class="table-light">
                             <tr>
                                 @if (isAdminOrAccountant) { <th>MÃ NV</th> }
-                                <th>THỜI GIAN QUÉT</th>
+                                <th>NGÀY</th>
+                                <th class="text-center">GIỜ VÀO</th>
+                                <th class="text-center">GIỜ RA</th>
+                                <th class="text-center">SỐ GIỜ LÀM</th>
                                 <th>PHƯƠNG THỨC</th>
                                 <th>TRẠNG THÁI</th>
                             </tr>
                         </thead>
                         <tbody>
                             @if (!Model.Any()) {
-                                <tr><td colspan="@(isAdminOrAccountant ? 4 : 3)" class="text-center py-4 text-muted">Hệ thống chưa ghi nhận dữ liệu.</td></tr>
+                                <tr><td colspan="@(isAdminOrAccountant ? 7 : 6)" class="text-center py-4 text-muted">Hệ thống chưa ghi nhận dữ liệu.</td></tr>
                             }
                             @foreach (var log in Model) {
                                 <tr>
                                     @if (isAdminOrAccountant) { <td class="fw-bold text-gold-dark">@log.MaNV</td> }
-                                    <td>@log.NgayChamCong.ToString("dd/MM/yyyy HH:mm:ss")</td>
-                                    
+                                    <td class="fw-bold">@log.NgayChamCong.ToString("dd/MM/yyyy")</td>
+                                    <td class="text-center">
+                                        @if (log.GioVao != null) {
+                                            <span class="badge bg-success rounded-pill px-3">@log.GioVao.Value.ToString("HH:mm")</span>
+                                        } else {
+                                            <span class="text-muted">—</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        @if (log.GioRa != null) {
+                                            <span class="badge bg-info text-dark rounded-pill px-3">@log.GioRa.Value.ToString("HH:mm")</span>
+                                        } else {
+                                            <span class="badge bg-warning text-dark rounded-pill px-3">Chưa Check-out</span>
+                                        }
+                                    </td>
+                                    <td class="text-center fw-bold">@(log.SoGioLam > 0 ? log.SoGioLam.ToString("0.0") + "h" : "—")</td>
                                     <td>
                                         @if(log.GhiChu != null && log.GhiChu.Contains("Face ID")) {
                                             <span class="badge bg-dark"><i class="bi bi-person-bounding-box text-info me-1"></i>Face ID</span>
@@ -158,8 +202,9 @@
                                         }
                                     </td>
                                     <td>
-                                        @if (log.TrangThai == "Đi làm") { <span class="badge bg-success">Hợp lệ</span> }
-                                        else { <span class="badge bg-warning text-dark">Nửa ca</span> }
+                                        @if (log.TrangThai == "Đi làm") { <span class="badge bg-success">Đủ ca</span> }
+                                        else if (log.TrangThai == "Nửa ngày") { <span class="badge bg-warning text-dark">Nửa ca</span> }
+                                        else { <span class="badge bg-secondary">@log.TrangThai</span> }
                                     </td>
                                 </tr>
                             }

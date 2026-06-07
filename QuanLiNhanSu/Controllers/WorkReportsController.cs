@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuanLiNhanSu.Models;
 
-[Authorize(Roles = "Admin,Employee")]
+[Authorize]
 public class WorkReportsController : Controller
 {
     private readonly AppDbContext _context;
@@ -17,11 +17,19 @@ public class WorkReportsController : Controller
     public IActionResult Create() => View();
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult Create(WorkReport report)
     {
         report.Username = User.Identity.Name;
-        _context.WorkReports.Add(report);
-        _context.SaveChanges();
-        return RedirectToAction(nameof(Index));
+        ModelState.Remove("Username"); // Bỏ qua validation do trường này tự gán
+
+        if (ModelState.IsValid)
+        {
+            _context.WorkReports.Add(report);
+            _context.SaveChanges();
+            TempData["Success"] = "Đã gửi báo cáo công việc!";
+            return RedirectToAction(nameof(Index));
+        }
+        return View(report);
     }
 }

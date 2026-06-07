@@ -242,16 +242,43 @@ namespace QuanLiNhanSu.Controllers
             var employee = await _context.Employees.FindAsync(id);
             if (employee != null)
             {
-                var linkedAccount = await _context.Users.FirstOrDefaultAsync(u => u.Username == employee.MaNV);
-                if (linkedAccount != null)
-                    _context.Users.Remove(linkedAccount);
+                var maNV = employee.MaNV;
+                
+                // Xóa tài khoản đăng nhập liên kết
+                var linkedAccount = await _context.Users.FirstOrDefaultAsync(u => u.Username == maNV);
+                if (linkedAccount != null) _context.Users.Remove(linkedAccount);
+
+                // XÓA DỮ LIỆU RÁC LIÊN QUAN (TRÁNH LỖI MỒ CÔI)
+                var bangLuongs = _context.BangLuongs.Where(b => b.MaNV == maNV);
+                _context.BangLuongs.RemoveRange(bangLuongs);
+
+                var chamCongs = _context.ChamCongs.Where(c => c.MaNV == maNV);
+                _context.ChamCongs.RemoveRange(chamCongs);
+
+                var ungLuongs = _context.UngLuongs.Where(u => u.MaNV == maNV);
+                _context.UngLuongs.RemoveRange(ungLuongs);
+
+                var phanCongs = _context.PhanCongs.Where(p => p.MaNV == maNV);
+                _context.PhanCongs.RemoveRange(phanCongs);
+
+                var khenThuongs = _context.KhenThuongKyLuats.Where(k => k.MaNV == maNV);
+                _context.KhenThuongKyLuats.RemoveRange(khenThuongs);
+
+                var hopDongs = _context.HopDongs.Where(h => h.MaNV == maNV);
+                _context.HopDongs.RemoveRange(hopDongs);
+
+                var phieuNghi = _context.PhieuNghiPheps.Where(p => p.MaNV == maNV);
+                _context.PhieuNghiPheps.RemoveRange(phieuNghi);
+
+                var workReports = _context.WorkReports.Where(w => w.Username == maNV);
+                _context.WorkReports.RemoveRange(workReports);
 
                 await _audit.LogAsync(User.Identity!.Name!, "Xóa nhân viên", "Employees",
-                    $"Xóa nhân viên: {employee.MaNV} - {employee.HoTen}. Tài khoản liên kết đã bị xóa theo.");
+                    $"Xóa nhân viên: {maNV} - {employee.HoTen} và toàn bộ dữ liệu liên quan.");
 
                 _context.Employees.Remove(employee);
                 await _context.SaveChangesAsync();
-                TempData["Success"] = "Đã xóa nhân viên và tài khoản liên kết thành công!";
+                TempData["Success"] = "Đã xóa nhân viên và dọn dẹp sạch sẽ toàn bộ dữ liệu liên quan!";
             }
             return RedirectToAction(nameof(Index));
         }

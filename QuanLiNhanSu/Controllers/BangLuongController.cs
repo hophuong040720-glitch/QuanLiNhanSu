@@ -16,7 +16,17 @@ namespace QuanLiNhanSu.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var sheets = await _context.BangLuongs.OrderByDescending(b => b.Nam).ThenByDescending(b => b.Thang).ThenBy(b => b.MaNV).ToListAsync();
+            // Lấy danh sách MaNV hợp lệ hiện tại
+            var validEmpIds = await _context.Employees.Select(e => e.MaNV).ToListAsync();
+
+            // Chỉ lấy các bảng lương của nhân viên còn tồn tại
+            var sheets = await _context.BangLuongs
+                .Where(b => validEmpIds.Contains(b.MaNV))
+                .OrderByDescending(b => b.Nam)
+                .ThenByDescending(b => b.Thang)
+                .ThenBy(b => b.MaNV)
+                .ToListAsync();
+
             return View(sheets);
         }
 
@@ -25,7 +35,21 @@ namespace QuanLiNhanSu.Controllers
             // Lấy thông tin phiếu lương
             var bangLuong = await _context.BangLuongs
                 .FirstOrDefaultAsync(b => b.MaNV == maNV && b.Thang == thang && b.Nam == nam);
-            if (bangLuong == null) return NotFound();
+            if (bangLuong == null) 
+            {
+                // Nếu chưa có bảng lương, tạo một bản ghi rỗng để hiển thị giao diện trống
+                bangLuong = new BangLuong 
+                {
+                    MaNV = maNV,
+                    Thang = thang,
+                    Nam = nam,
+                    LuongCoBan = 0,
+                    TienThuong = 0,
+                    TienPhat = 0,
+                    TienUng = 0,
+                    ThucLanh = 0
+                };
+            }
 
             // Lấy thông tin nhân viên
             var emp = await _context.Employees

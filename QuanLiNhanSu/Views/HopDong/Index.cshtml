@@ -48,6 +48,7 @@
                     {
                         <tr><td colspan="7" class="text-center py-4 text-muted">Chưa có dữ liệu hợp đồng.</td></tr>
                     }
+                    @{ int stt = 1; }
                     @foreach (var item in Model)
                     {
                         var status = "";
@@ -71,7 +72,7 @@
                         }
 
                         <tr>
-                            <td class="ps-3 fw-bold text-dark">#@item.MaHD</td>
+                            <td class="ps-3 fw-bold text-dark">#@(stt++)</td>
                             <td><span class="badge bg-gold text-dark border">@item.MaNV</span></td>
                             <td class="fw-semibold">@item.LoaiHD</td>
                             <td>@item.NgayKy.ToString("dd/MM/yyyy")</td>

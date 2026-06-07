@@ -48,14 +48,15 @@ namespace QuanLiNhanSu.Controllers
                 ModelState.AddModelError("NgayKetThuc", "Ngày kết thúc không được nhỏ hơn ngày bắt đầu.");
             }
 
+            // Mặc định gán mã NV hiện tại (Employee tự xin nghỉ)
+            if (!User.IsInRole("Admin") && !User.IsInRole("Nhân sự"))
+            {
+                model.MaNV = User.Identity!.Name!;
+                ModelState.Remove("MaNV"); // Bỏ qua validation HTML của trường này vì đã gán bằng code
+            }
+            
             if (ModelState.IsValid)
             {
-                // Mặc định gán mã NV hiện tại (Employee tự xin nghỉ)
-                if (!User.IsInRole("Admin") && !User.IsInRole("Nhân sự"))
-                {
-                    model.MaNV = User.Identity!.Name!;
-                }
-                
                 model.TrangThai = "Chờ duyệt";
                 _context.PhieuNghiPheps.Add(model);
                 await _context.SaveChangesAsync();
